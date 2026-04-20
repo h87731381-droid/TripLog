@@ -40,7 +40,7 @@ input{ outline: none; }
 
 /* --------------------------------------------------------- */
 
-// Main Layout
+// Page Layout
 
 .main{
   background: url('/imgs/bgimg.jpg') no-repeat center/cover; 
@@ -70,12 +70,16 @@ input{ outline: none; }
       align-items: center;
       justify-content: space-between;
 
+      & a:hover{ color: #58D3FF; }
+      
       nav{
         display: flex;
         gap: 15px;
         align-items: center;
 
-        .icon {   
+        a.active{ color: #58D3FF; }
+
+        .icon{   
           display: flex;
           align-items: center;
           font-size: 1.1em;
