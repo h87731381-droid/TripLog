@@ -22,7 +22,7 @@ export default function GeocoderMap() {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
-  const [marker, setMarker] = useState(null);
+  const [markers, setMarkers] = useState([]);
   const [response, setResponse] = useState("");
   const [input, setInput] = useState("");
 
@@ -43,10 +43,6 @@ export default function GeocoderMap() {
         const location = result.results[0].geometry.location;
 
         mapRef.current.panTo(location);
-        setMarker({
-          lat: location.lat(),
-          lng: location.lng(),
-        });
 
         setResponse(JSON.stringify(result, null, 2));
       })
@@ -56,24 +52,15 @@ export default function GeocoderMap() {
   };
 
   const handleMapClick = (e) => {
-    if (!geocoderRef.current) return;
+    const newMarker = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng(),
+    };
 
-    geocoderRef.current
-      .geocode({ location: e.latLng })
-      .then((result) => {
-        const location = result.results[0].geometry.location;
-
-        setMarker({
-          lat: location.lat(),
-          lng: location.lng(),
-        });
-
-        setResponse(JSON.stringify(result, null, 2));
-      });
+    setMarkers((prev) => [...prev, newMarker]);
   };
 
   const handleClear = () => {
-    setMarker(null);
     setResponse("");
   };
 
@@ -98,8 +85,18 @@ export default function GeocoderMap() {
         zoom={8}
         onLoad={onLoad}
         onClick={handleMapClick}
+        options={{
+          streetViewControl: false,
+          fullscreenControl: false,
+          mapTypeControl: false,
+        }}
       >
-        {marker && <Marker position={marker} />}
+        {markers.map((m, idx) => (
+          <Marker
+            key={idx}
+            position={{ lat: m.lat, lng: m.lng }}
+          />
+        ))}
       </GoogleMap>
 
       <pre style={{ marginTop: "10px" }}>{response}</pre>

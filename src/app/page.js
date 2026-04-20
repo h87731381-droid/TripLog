@@ -1,10 +1,18 @@
-import GeocoderMap  from "./comp/GeocoderMap";
+"use client"
+import Image from "next/image";
+import styles from "./page.module.css";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Home() {
+  const router = useRouter();
+  setTimeout(function(){ router.push('/pages'); },0)
+
   return (
-    <main>
-      <h1>Google Geocoder</h1>
-      <GeocoderMap />
-    </main>
+    <h2>
+      Splash Screen
+    </h2>
   );
 }
