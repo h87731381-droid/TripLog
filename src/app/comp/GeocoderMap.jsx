@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   GoogleMap,
   Marker,
@@ -13,11 +13,31 @@ const containerStyle = {
 };
 
 const center = {
-  lat: -34.397,
-  lng: 150.644,
+  lat: 37.7469904,
+  lng: 127.0499178,
 };
 
-export default function GeocoderMap() {
+export default function GeocoderMap({ selectedAddress }) {
+  useEffect(() => {
+  if (!geocoderRef.current || !selectedAddress) return;
+
+  geocoderRef.current
+    .geocode({ address: selectedAddress })
+    .then((result) => {
+      const location = result.results[0].geometry.location;
+
+      const newMarker = {
+        lat: location.lat(),
+        lng: location.lng(),
+      };
+
+      mapRef.current.panTo(location);
+
+      setMarkers((prev) => [...prev, newMarker]);
+    })
+    .catch((e) => console.error(e));
+}, [selectedAddress]);
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
@@ -51,14 +71,14 @@ export default function GeocoderMap() {
       });
   };
 
-  const handleMapClick = (e) => {
+  /* const handleMapClick = (e) => {
     const newMarker = {
       lat: e.latLng.lat(),
       lng: e.latLng.lng(),
     };
 
     setMarkers((prev) => [...prev, newMarker]);
-  };
+  }; */
 
   const handleClear = () => {
     setResponse("");
@@ -82,9 +102,9 @@ export default function GeocoderMap() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={8}
+        zoom={16}
         onLoad={onLoad}
-        onClick={handleMapClick}
+        /* onClick={handleMapClick} */
         options={{
           streetViewControl: false,
           fullscreenControl: false,
