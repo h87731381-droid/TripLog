@@ -1,14 +1,15 @@
 "use client"
-import Image from "next/image";
-import styles from "./page.module.css";
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
-
-
+import { useEffect } from "react"; 
 
 export default function Home() {
   const router = useRouter();
-  setTimeout(function(){ router.push('/pages'); },0)
+
+  useEffect(() => {
+    const timer = setTimeout(function(){ router.push('/pages'); }, 2000); 
+    return () => clearTimeout(timer);
+  }, [router]); // router가 준비되면 한 번 실행
 
   return (
     <h2>
