@@ -1,11 +1,18 @@
-import GeocoderMap  from "./comp/GeocoderMap";
-import attStyle from './pages/attrantions/attrantions.scss';
+"use client"
+import Image from "next/image";
+import styles from "./page.module.css";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Home() {
+  const router = useRouter();
+  setTimeout(function(){ router.push('/pages'); },0)
+
   return (
-    <main className={attStyle}>
-      <h1>Google Geocoder</h1>
-      <GeocoderMap />
-    </main>
+    <h2>
+      Splash Screen
+    </h2>
   );
 }

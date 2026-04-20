@@ -1,9 +1,18 @@
-import React from 'react'
+import Link from "next/link";
+import Header from "./Header";
 
-function layout() {
+export default function RootLayout({ children }) {
+
   return (
-    <div>layout</div>
-  )
-}
+  
+        <div className="main">
+          <Header />
+          <h1 className="logo" >TRIPLOG</h1>
 
-export default layout
+          <main className="container">
+            {children} 
+          </main>
+        </div>
+     
+  );
+}
