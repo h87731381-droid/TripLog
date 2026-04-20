@@ -1,9 +1,12 @@
 import React from 'react'
 
-function page() {
+function gallery() {
   return (
-    <div>page</div>
+    <div>
+      <div>갤러리</div>
+      <div></div>
+    </div>
   )
 }
 
-export default page
+export default gallery
