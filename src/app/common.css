@@ -76,10 +76,16 @@ input {
   align-items: center;
   justify-content: space-between;
 }
+.main .menu-bar .menu a:hover {
+  color: #58D3FF;
+}
 .main .menu-bar .menu nav {
   display: flex;
   gap: 15px;
   align-items: center;
+}
+.main .menu-bar .menu nav a.active {
+  color: #58D3FF;
 }
 .main .menu-bar .menu nav .icon {
   display: flex;
@@ -103,5 +109,5 @@ input {
   margin-top: 5px;
   min-height: 75vh;
   height: auto;
-  padding: 40px;
+  padding: 20px 40px;
 }/*# sourceMappingURL=common.css.map */
