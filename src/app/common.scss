@@ -42,8 +42,13 @@ input{ outline: none; }
 
 // Page Layout
 
+/* --------------------------------------------------------- */
+
+// Desktop (기본 / 1024px 이상)
+
 .main{
   background: url('/imgs/bgimg.jpg') no-repeat center/cover; 
+  background-attachment: fixed;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -53,6 +58,7 @@ input{ outline: none; }
     color: white;
     background-color: rgba(0, 0, 0, 0.6);
     width: 100vw;
+    display: flex;
     justify-content: center;
     position: fixed;
     top: 0;
@@ -64,37 +70,59 @@ input{ outline: none; }
     
     .menu{
       width: 80vw;
-      margin: 0 auto;
       padding: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       & a:hover{ color: #58D3FF; }
-      
-      nav{
+
+      .user{
         display: flex;
-        gap: 15px;
-        align-items: center;
-
-        a.active{ color: #58D3FF; }
-
-        .icon{   
+        align-items: end;
+        font-weight: 100;
+        .user-name{ font-weight: 400; }
+        .comment{ white-space: pre-wrap; }
+        
+        .user-bnt{
+          margin-left: 10px;
+          font-size: small;
+          font-weight: 300;
           display: flex;
-          align-items: center;
-          font-size: 1.1em;
-          cursor: pointer;
-          &.active{ color: #58D3FF; }
+          gap: 5px;
+
+          button{
+            color: inherit;
+            &:hover{ color: #58D3FF; }
+          }
         }
       }
       
+      nav{
+        .burger{ color: white; display: none; }
+        .menu-list{
+          display: flex;
+          gap: 15px;
+          align-items: center;
+  
+          a.active{ color: #58D3FF; }
+        }
+      }
+    }
+
+    .icon{   
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;      
+      cursor: pointer;
+      &.active{ color: #58D3FF; }
     }
   }
 
   .logo{
     font-size: 6rem;
     color: white;
-    text-shadow: 2px 2px 7px rgba(25, 20, 55, 0.3);
+    text-shadow: 2px 2px 7px rgba(20, 60, 75, 0.3);
     margin-top: 30px;
   }
 
@@ -102,10 +130,162 @@ input{ outline: none; }
     background-color: white;
     border-radius: 40px; 
     width: 75vw;
-    margin-top: 5px;
-    
+    margin-top: 5px; 
+    margin-bottom: 3vh;   
     min-height: 75vh; 
     height: auto; 
-    padding: 40px;
+    padding: 20px 40px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+
+    .title{  
+      h1{
+          font-family: 'GangwonEduHyeonokT';
+          font-size: 4rem; 
+          position: relative;
+          z-index: 5;
+          
+          &::after{
+            content: "";
+            position: absolute;
+            z-index: -1;
+            left: 0;
+            bottom: 35%;
+            width: 100%;
+            height: 15px;
+            background-color: #58D3FF; 
+          }
+      }
+    }
+  }
+}
+
+// Tablet Landscape (951px ~ 1024px)
+
+@media (max-width: 1024px) {
+  body{ font-size: 15px;}
+
+  .main{
+    .menu-bar .menu{ width: 90vw; }
+
+    .logo{ font-size: 4.5rem; }
+
+    .container{ 
+      width: 90vw; 
+      margin-top: 0px;
+      padding: 10px 20px; 
+
+      .title h1{ font-size: 2.7rem; }
+    }
+  }
+}
+
+// Tablet Portrait (950px 이하)
+
+@media (max-width: 950px) {
+  body{ font-size: 15px;}
+
+  .main{
+    .menu-bar{     
+      .menu{
+        width: 90vw;
+
+        .user{
+          display: flex;
+          align-items: end;
+          font-weight: 100;
+          span{ font-weight: 300; }
+          
+          .user-bnt{
+            margin-left: 10px;
+            font-size: small;
+            font-weight: 300;
+            display: flex;
+            gap: 5px;
+
+            button{
+              color: inherit;
+              &:hover{ color: #58D3FF; }
+            }
+          }
+        }      
+
+        nav{
+          .burger{ display: block; }
+          &:hover .menu-list{ display: flex; }
+
+          .menu-list{
+            display: none;
+            position: absolute;
+            top: 100%; right: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            flex-direction: column;
+            padding: 10px 15px;
+            gap: 10px;
+            z-index: 1001;  
+          }
+        }
+      }
+
+      .icon{   
+        display: flex;
+        align-items: center;
+        font-size: 1.1rem;      
+        cursor: pointer;
+        &.active{ color: #58D3FF; }
+      }
+    }
+
+    .logo{ 
+      font-size: 3.5rem;
+      margin-top: 50px; 
+    }
+
+    .container{
+      min-height: 78vh;
+      .title h1{ font-size: 2.5rem; }
+    }
+  }
+}
+
+// Mobile (480px 이하)
+
+@media (max-width: 480px) {
+  body{ font-size: 15px;}
+
+  .main{
+    .menu-bar{     
+      .menu{
+        width: 90vw;
+
+        .user .comment{ display: none; }   
+
+        nav{
+          .burger{ display: block; }
+          &:hover .menu-list{ display: flex; }
+
+          .menu-list{
+            display: none;
+            position: absolute;
+            top: 100%; right: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            flex-direction: column;
+            padding: 10px 15px;
+            gap: 10px;
+            z-index: 1001;  
+          }
+        }
+      }
+      .icon{ margin-right: 5px;}
+    }
+
+    .logo{ 
+      font-size: 3.3rem;
+      margin-top: 30px; 
+    }
+
+    .container{
+      min-height: 78vh;
+      .title h1{ font-size: 2rem; }
+    }
   }
 }

@@ -1,1 +1,310 @@
-.body {margin: 0;}
+.container:has(.checklist){
+  background-image: 
+    linear-gradient(#e5e5e5 1px, transparent 1px),
+    linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+  background-size: 20px 20px; 
+} // 체크리스트에서만 배경 적용
+
+.modal-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .modal-content{
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+
+    .modal-content p{ 
+      font-size: 1rem; 
+      color: black; 
+    }
+  }
+}
+
+/* --------------------------------------------------------- */
+
+// Page Layout
+
+/* --------------------------------------------------------- */
+
+// Desktop (기본 / 1024px 이상)
+
+.checklist{ 
+  .title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title2{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  
+      span{font-size: 2em;}
+    }
+
+    h3{
+      font-family: 'GangwonEduHyeonokT';
+      font-size: 2.5rem;
+
+      span{ 
+        font-size: 1.5rem;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .list{
+    position: relative; // draggable 기준점
+    width: 100%;
+    min-height: 60vh;
+
+    &.active{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: start;
+      align-content: start;
+      .bundle{position: static;}
+    }
+
+    .bundle{
+      position: absolute;
+      left:0; top:0;
+      cursor: grab;
+
+      &:active { cursor: grabbing !important; }
+      &.editing {
+        border: 1px #58D3FF solid; 
+        .del-btn, .add-btn, .del-sub-btn { display: block; }
+      }
+
+      .del-btn, .add-btn, .del-sub-btn { display: none; }
+
+      overflow: hidden;
+      border: 1px transparent solid;
+      padding: 10px 10px 5px;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      margin-bottom: 10px;
+      width: 220px;
+
+      .edit-btn{
+        font-size: 1.2rem;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: gray;
+        cursor: pointer;
+      }
+
+      input{
+        font-family: 'GangwonEduHyeonokT'; 
+        border: none; 
+        background: transparent;
+        outline: none;
+        color: black;
+        &::placeholder { color: black; }
+      }
+      
+      .border{
+        border-bottom: 1px black solid;
+        height: 50px;
+        
+        .category{
+          -webkit-text-stroke: 0.5px black; 
+          width: fit-content; 
+          position: relative;
+          z-index: 5;
+          display: inline-block;
+          
+          .hidden-text {
+            display: inline-block;
+            visibility: hidden; 
+            white-space: pre; 
+            font-size: 2.5rem;
+            font-family: 'GangwonEduHyeonokT';
+            padding: 0 5px;  
+          }
+  
+          input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%;
+            font-size: 2.5rem;
+            -webkit-text-stroke: 0.5px black;
+            cursor: grab;
+            &:active { cursor: grabbing !important; }
+          }
+          
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            left: 0;
+            bottom: 35%;
+            width: 100%;
+            height: 15px;
+            background-color: yellow;
+          }
+        }
+      }
+      
+      .item-list{        
+        margin: 15px 0 5px;
+
+        .item{
+          display: flex;
+          align-items: center;
+  
+          .check-box{
+            appearance: auto; 
+            width: 15px;
+            height: 15px;
+            
+            flex: none;      
+            flex-shrink: 0; 
+          }
+  
+          .check-text{ 
+            font-size: 1.8rem;
+            flex: 1; 
+            min-width: 0;
+            margin: 0 3px;
+            cursor: grab;
+            &:active { cursor: grabbing !important; }            
+            &.done {
+              color: black;
+              text-decoration: line-through; 
+              opacity: 0.5; 
+            }
+          }
+
+          .del-sub-btn{ 
+            font-size: 1rem; 
+            color: gray;
+          }
+        }
+      }
+
+      .add-btn{
+        font-size: 1.5rem;
+        align-self: center;
+        cursor: pointer;
+      }
+
+    }
+  }
+}
+
+// Tablet Landscape (951px ~ 1024px)
+
+@media (max-width: 1024px) {
+  .checklist{ 
+    .title{
+      .title2{ span{font-size: 1.7em;} }
+      h3{
+        font-size: 2rem;
+        padding: 3px;
+        span{ font-size: 1.3rem; }
+      }
+    } 
+
+    .list{
+      .bundle{ width: 200px;        
+        .border{ height: 40px;          
+          .category{          
+            .hidden-text{ font-size: 2rem; }    
+            input { font-size: 2rem; }
+          }
+        }        
+        .item-list{ margin: 10px 0 5px;
+          .item{   
+            .check-box{ width: 13px; height: 13px; }    
+            .check-text{ font-size: 1.5rem; }
+          }
+        }
+      }
+    }
+  }  
+}
+
+// Tablet Portrait (950px 이하)
+
+@media (max-width: 950px) {
+  .checklist{ 
+    .title{
+      .title2{ span{font-size: 1.5em;} }
+      h3{
+        font-size: 1.8rem;
+        padding: 0;
+        span{ font-size: 1rem; }
+      }
+    } 
+
+    .list{
+      .bundle{ width: 200px;        
+        .border{ height: 37px;          
+          .category{          
+            .hidden-text, input{ font-size: 1.8rem; } 
+          }
+        }        
+        .item-list{ margin: 8px 0 5px;
+          .item{   
+            .check-box{ width: 13px; height: 13px; }    
+            .check-text{ font-size: 1.5rem; }
+          }
+        }
+      }
+    }
+  }  
+}
+
+// Mobile (480px 이하)
+
+@media (max-width: 480px) {
+  .checklist{ 
+    .title{
+      .title2{ span{font-size: 1.3em;} }
+      h3{
+        font-size: 1.7rem;
+        padding: 0;
+        span{ font-size: 1rem; }
+      }
+    } 
+
+    .list{
+      .bundle{ 
+        width: 50%; 
+        margin-bottom: 5px;
+
+        .edit-btn{ font-size: 1rem; top: 13px; }
+        .border{ height: 30px;           
+          .category{          
+            .hidden-text, input{ font-size: 1.3rem; } 
+          }
+        }        
+        .item-list{ margin: 5px 0 0;
+          .item{   
+            .check-box{ width: 11px; height: 11px; }    
+            .check-text{ font-size: 1.2rem; }
+          }
+        }
+        .add-btn{ font-size: 1.2rem; }
+      }
+    }
+  }  
+}
