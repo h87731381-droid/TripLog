@@ -87,11 +87,11 @@ export default function Header() {
             <button className="burger">☰</button>
             
             <div className="menu-list">
-              <Link href="/pages" className={pathname === '/pages' ? 'active' : ''}>여행일정</Link>
-              <Link href="/pages/attrantions" className={pathname === '/pages/attrantions' ? 'active' : ''}>추천관광지</Link>
-              <Link href="/pages/budget" className={pathname === '/pages/budget' ? 'active' : ''}>여행경비</Link>
-              <Link href="/pages/checkList" className={pathname === '/pages/checkList' ? 'active' : ''}>체크리스트</Link>
-              <Link href="/pages/gallery" className={pathname === '/pages/gallery' ? 'active' : ''}>갤러리</Link>
+              <Link href="/" className={pathname === '/pages' ? 'active' : ''}>여행일정</Link>
+              <Link href="/attrantions" className={pathname === '/pages/attrantions' ? 'active' : ''}>추천관광지</Link>
+              <Link href="/budget" className={pathname === '/pages/budget' ? 'active' : ''}>여행경비</Link>
+              <Link href="/checkList" className={pathname === '/pages/checkList' ? 'active' : ''}>체크리스트</Link>
+              <Link href="/gallery_main" className={pathname === '/pages/gallery' ? 'active' : ''}>갤러리</Link>
             </div>
           </nav>
         </div>
