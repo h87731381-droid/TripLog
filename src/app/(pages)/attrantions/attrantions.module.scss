@@ -1,0 +1,306 @@
+/* 샘플 팝업 */
+.SamplePopup {
+    position: fixed;
+    top: 57%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    z-index: 10;
+
+    .sampleClose {
+        font-size: 1.3em;
+        color: white;
+        position: absolute;
+        top: 255px;
+        right: 255px;
+        font-size: 1.5em;
+
+        span {
+            font-size: 0.8em;
+        }
+    }
+
+    img {
+        width: 100vw;
+        padding: 10px 0 20px;
+    }
+}
+
+/* 추천관광지 페이지 */
+.all {
+
+    color: #767676;
+
+    .content {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+
+
+        /* 왼쪽 컨텐츠 */
+        .attrantionsLeft {
+            width: 45%;
+
+            .title {
+                font-family: 'GangwonEduHyeonokT';
+                font-size: 4em;
+                color: black;
+            }
+
+            .region {
+                display: flex;
+                gap: 20px;
+
+                .regionCategory {
+                    display: flex;
+                    gap: 15px;
+                }
+            }
+
+            .map {
+                width: 100%;
+                position: sticky;
+                flex-shrink: 0;
+                top: 17%;
+            }
+        }
+
+
+
+        /* 오른쪽 컨텐츠 */
+        .contentRight {
+            padding: 35px 0 0 0;
+            width: 51%;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .attrantions {
+                display: flex;
+                justify-content: end;
+                gap: 10px;
+
+                .category {
+                    display: flex;
+                    gap: 10px;
+                    padding: 10px 0 50px 0;
+
+                    .menu {
+                        border-radius: 5px;
+                        padding: 0 10px;
+                        background-color: #eaedf1;
+                        color: #767676;
+                    }
+
+                    .active {
+                        border-radius: 5px;
+                        padding: 0 10px;
+                        background-color: #27678E;
+                        color: white;
+                    }
+                }
+            }
+
+            .list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 30px;
+
+                
+                .item {
+                    .thumbnail {
+                        position: relative;
+                        display: inline-block;
+                        width: 150px;
+                        height: 100px;
+                        border-radius: 10px;
+    
+                        /* 호버 아이콘 */
+                        span {
+                            position: absolute;
+                            top: 0px;
+                            left: 0px;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0, 0, 0, 0.4);
+                            border-radius: 10px;
+                            transition: 0.2s;
+                            opacity: 0;
+    
+                            &::after {
+                                content: '찜하기';
+                                position: absolute;
+                                bottom: 0px;
+                                left: 0;
+                                color: white;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                width: 100%;
+                                height: 100%;
+                            }
+                            img{display: none;}
+                        }
+
+                        &:hover span {
+                            opacity: 1;
+                            cursor: pointer;
+
+                            &::after {
+                                opacity: 1;
+                            }
+                            
+                        }
+
+                        &.active span {
+                            opacity: 1;
+                            cursor: pointer;
+
+                            &::after {
+                                opacity: 0;
+                            }
+
+                            >img {
+                                width: 100%;
+                                height: 100%;
+                                padding: 15px;
+                                display: block;
+                            }
+                        }
+                    }
+
+                    /* 썸넬이미지 */
+                    p>img {
+                        width: 150px;
+                        height: 100px;
+                        object-fit: cover;
+                        border-radius: 10px;
+                    }
+
+                    img {
+                        display: block;
+                    }
+
+                    .info {
+                        text-align: center;
+
+                        b {
+                            color: black;
+                            font-weight: 500;
+                            display: block;
+                            width: 7.5vw;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            margin: 0 auto;
+                            text-align: center;
+                        }
+
+                        p {
+                            width: 7.5vw;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                        }
+
+                        .link {
+                            background-color: #eaedf1;
+                            border-radius: 5px;
+                            padding: 0 5px;
+                            font-size: 0.9em;
+                            color: #767676;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* 미일정 페이지 */
+.noneAll {
+    .title {
+        font-family: 'GangwonEduHyeonokT';
+        font-size: 4em;
+        color: black;
+    }
+
+    .noneContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 40vh;
+        gap: 10px;
+
+        .subtitle {
+            color: black;
+            font-size: 2em;
+        }
+
+        button {
+            display: flex;
+            gap: 10px;
+            background-color: #27678E;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.4em;
+        }
+    }
+}
+
+/* 팝업창 */
+.popup {
+    position: fixed;
+    top: 57%;
+    left: 67%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+
+    .pHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .X {
+            font-size: 1.3em;
+            color: #767676;
+            cursor: pointer;
+        }
+    }
+
+    img {
+        width: 20vw;
+        padding: 10px 0 20px;
+    }
+
+    h3 {
+        margin-top: 0;
+        color: #27678E;
+    }
+
+    .popupInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .add {
+            display: flex;
+            gap: 20px;
+
+            b {
+                color: #27678E;
+                font-weight: 500;
+            }
+        }
+    }
+
+
+}

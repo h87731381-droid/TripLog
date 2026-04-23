@@ -1,4 +1,6 @@
-import "./common.scss"; 
+import "./common.scss";
+import Providers from "./comp/Provider";
+
 
 export const metadata = {
   title: "TRIPLOG - 나의 여행 기록",
@@ -10,9 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html>
       <body>
-  
-        {children} 
-         
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
