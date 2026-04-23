@@ -1,9 +1,14 @@
-import React from 'react'
+const { MongoClient } = require('mongodb');
+const url = process.env.MONGODB_URL;
 
-function mongodb() {
-  return (
-    <div>mongodb</div>
-  )
+//글로벌(전역) 변수 global.
+if (!global.mongoClientPromise) {
+    global.mongoClientPromise = new MongoClient(url).connect();
 }
 
-export default mongodb
+async function db() {
+    const client = await global.mongoClientPromise;
+    return client.db('tripLog');
+}
+
+export default db;
