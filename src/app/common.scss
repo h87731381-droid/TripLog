@@ -138,6 +138,7 @@ input{ outline: none; }
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
 
     .title{  
+      display: flex;
       h1{
           font-family: 'GangwonEduHyeonokT';
           font-size: 4rem; 

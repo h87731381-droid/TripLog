@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(function(){ router.push('/'); }, 0); 
+    const timer = setTimeout(function(){ router.push('/planner'); }, 0); 
     return () => clearTimeout(timer);
   }, [router]); // router가 준비되면 한 번 실행
 

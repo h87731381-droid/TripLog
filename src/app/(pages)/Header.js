@@ -73,7 +73,7 @@ export default function Header() {
               <span className="comment">님, 나만의 여행 지도를 그려볼까요?✨</span>
 
               <div className="user-bnt">
-                <Link href="/pages/before">나의 기록</Link>ㅣ
+                <Link href="/before">나의 기록</Link>ㅣ
                 <button className="logout" onClick={handleLogout}>로그아웃</button>
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function Header() {
             <button className="burger">☰</button>
             
             <div className="menu-list">
-              <Link href="/" className={pathname === '/pages' ? 'active' : ''}>여행일정</Link>
+              <Link href="/planner" className={pathname === '/pages' ? 'active' : ''}>여행일정</Link>
               <Link href="/attrantions" className={pathname === '/pages/attrantions' ? 'active' : ''}>추천관광지</Link>
               <Link href="/budget" className={pathname === '/pages/budget' ? 'active' : ''}>여행경비</Link>
               <Link href="/checkList" className={pathname === '/pages/checkList' ? 'active' : ''}>체크리스트</Link>

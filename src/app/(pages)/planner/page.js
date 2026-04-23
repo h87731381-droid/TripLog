@@ -1,12 +1,12 @@
 'use client'
 import React, { useState } from 'react'
 import './planner.scss'
-import PlanTextField from '../comp/PlanTextField';
-import PlanPopupPlace from '../comp/PlanPopupPlace';
-import PlanFullDay from '../comp/PlanFullDay';
+import PlanTextField from '../../comp/PlanTextField';
+import PlanPopupPlace from '../../comp/PlanPopupPlace';
+import PlanFullDay from '../../comp/PlanFullDay';
 import { FiSave } from "react-icons/fi";
-import PlanOneDayMap from '../comp/PlanOneDayMap';
-import PlanPopupScd from '../comp/PlanPopupScd';
+import PlanOneDayMap from '../../comp/PlanOneDayMap';
+import PlanPopupScd from '../../comp/PlanPopupScd';
 
 function page() {
   const [isOpen,setIsOpen]=useState(false)

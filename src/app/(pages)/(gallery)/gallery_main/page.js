@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react'
 import { FiPlusCircle } from "react-icons/fi";
-import styles from './gallery_main.scss'
+import './gallery_main.scss'
 import { useRouter } from 'next/navigation';
 
 // 처음 화면에 보여줄 폴더 데이터
@@ -19,7 +19,7 @@ function M_gallery() {
   return (
     <div className='gmain'>
 
-      <h1 className='gmain_title'>갤러리</h1>
+      <div className='title'><h1 >갤러리</h1></div>
 
       <div className='gmain_list'>
         {
