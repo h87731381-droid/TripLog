@@ -1,0 +1,221 @@
+.body {margin: 0;}
+
+.gsub_title{
+    font-size: 4em;
+    font-family: "GangwonEduHyeonokT";
+    display: inline-block;
+}
+
+.gsub_button{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 50px;
+}
+.gsub_button >span{
+    display: flex;
+    gap: 10px;
+}
+.gsub_button > span >button{
+    font-size: 20px;
+    color: white;
+    background-color: #B8ECFF;
+    border-radius: 20px;
+    padding: 3px 10px;
+}
+
+.gsub_list{
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    display: flex;
+}
+
+.gsub_clickimg{
+    flex-direction: column;
+    padding: 10px 10px 30px;
+    display: flex;
+    box-shadow: 0 4px 10px #0003;
+    position: sticky;
+    top: 100px;
+}
+.gsub_clickimg >span:nth-of-type(1){
+    justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+}
+.gsub_clickimg >span >svg{
+    cursor: pointer; 
+}
+.gsub_clickimg >div{
+    width: 350px; height: 450px;
+    padding: 10px;
+}
+.gsub_clickimg >div >img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.gsub_clickimg >span:nth-of-type(2){
+    justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+.gsub_clickimg >span >button{
+    color: white;
+    background-color: #AED1E6;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+.gsub_clickimg >input{
+    font-size: 20px;
+    border: none;
+    text-align: center;
+    background-color: transparent;
+}
+.gsub_clickimg >input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+.gsub_clickimg >input:focus::placeholder {
+  color: transparent;
+}
+
+.gsub_contents{
+    width: 66%;
+}
+.gsub_Tversion{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #27678E;
+}
+.gsub_Tversion >input{
+    font-size: 24px;
+    color: #27678E;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+    width: 220px;
+}
+.gsub_Tversion >input::placeholder {
+  color: rgba(39, 103, 142, 0.4)
+}
+.gsub_Tversion >input:focus::placeholder {
+  color: transparent;
+}
+.gsub_Tversion >svg{
+    stroke: #27678E;
+    width: 24px; height: 24px;
+    cursor: pointer; 
+}
+
+.gsub_images{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    width: 100%;
+    padding-top: 15px;
+}
+.gsub_img{ 
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+.gsub_img >figure{
+    width: 200px; height: 200px;
+    position: relative;
+}
+.gsub_img >figure >img{
+    width: 100%; height: 100%;
+}
+.gsub_img >figure >figcaption{
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 0; left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+.gsub_img >figure >figcaption >svg{
+    width: 30px; height: 30px;
+    fill: white;
+    cursor: pointer; 
+}
+.gsub_add{width: 100px; height: 200px;}
+.gsub_add >svg{width: 20px; height: 20px;}
+
+.gsub_popup{
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    left: 0; top: 0; 
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pop{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    gap: 30px;
+    box-shadow: 0 4px 10px #0003;
+    padding: 20px 20px 35px;
+    border-radius: 20px;
+}
+.pop >span{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+.pop >span >svg{
+    width: 20px; height: 20px;
+    stroke: #C3C3C3;
+    cursor: pointer; 
+}
+.pop >input:nth-of-type(1){
+    font-size: 20px;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+}
+.pop >input:nth-of-type(1)::placeholder{
+    color: rgba(0, 0, 0, 0.4)
+}
+.pop >input:nth-of-type(1):focus::placeholder{
+    color: transparent;
+}
+.pop >input:nth-of-type(2){
+    color: gray;
+    width: 190px;
+}
+.pop >input:nth-of-type(2)::-webkit-file-upload-button{
+    background-color: #B8ECFF;
+    color: white;
+    font-size: 18px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer; 
+}
+.pop >button{
+    width: 100px;
+    font-size: 20px;
+    background-color: #B8ECFF;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+}

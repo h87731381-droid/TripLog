@@ -1,1 +1,167 @@
 .body {margin: 0;}
+
+
+.budget_title{
+    font-size: 4em;
+    font-family: "GangwonEduHyeonokT";
+    display: inline-block;
+}
+
+.container:has(.background){
+    background-image: linear-gradient(#c3c3c3 1px, transparent 1px);
+    background-size: 20px 40px;
+} 
+
+.category{
+    padding: 10px 30px;
+}
+.category select{
+    font-size: 16px;
+    border-color: #AEAEAE;
+}
+.category input{
+    font-size: 16px;
+    border: none;
+    margin: 0 5px;
+}
+.category input:nth-of-type(1),input:nth-of-type(2),input:nth-of-type(3){
+    width: 110px;
+    border-bottom: 1px solid #AEAEAE;
+}
+.category input:nth-of-type(4),:nth-of-type(5),:nth-of-type(6){
+    color: white;
+    background-color: #B8ECFF;
+    border: none;
+    border-radius: 20px;
+    padding: 0 10px;
+    cursor: pointer; 
+}
+
+.wrap{
+    display: flex;
+    align-items: flex-start;
+    padding: 20px 0;
+    gap: 100px;
+}
+
+.list{     
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 900px;
+    font-family: "GangwonEduHyeonokT";
+    display: flex;
+    justify-content: space-around;
+}
+.list_stay{
+    display: flex;
+    flex-direction: column;
+}
+.list_fare{
+    display: flex;
+    flex-direction: column;
+}
+.list_food{
+    display: flex;
+    flex-direction: column;
+}
+.list_other{
+    display: flex;
+    flex-direction: column;
+}
+.list_title{
+    font-size: 30px; 
+    display: inline-block;
+}
+.list_content{
+    font-size: 30px;
+}
+.list_content div{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.list_content div >div{
+    
+}
+.list_content div >span{
+    font-size: 20px;
+    color: #C3C3C3;
+}
+.list_content input{
+    font-size: 30px;
+    font-family: "GangwonEduHyeonokT";
+    width: 110px;
+    border: none;    
+    background-color: transparent;
+    color: #AEAEAE;
+}
+.list_content input:nth-of-type(3){
+    font-size: 20px;
+    font-family: "GangwonEduHyeonokT";
+    width: 110px;
+    border: none;    
+    background-color: transparent;
+    color: #AEAEAE;
+}
+.list_content input::placeholder{
+    color: rgba(0, 0, 0, 0.4)
+}
+.list_content input:focus::placeholder{
+    color: transparent;
+}
+.list_content span{
+    font-size: 15px;
+    cursor: pointer; 
+}
+
+
+.Receipt{
+    display: flex;
+    flex-direction: column;
+    width: 300px; 
+    background-color: white;
+    align-items: center;
+    border: 1px solid black;
+    padding: 30px 50px 50px;
+    gap: 50px;
+    transform: rotate(4deg);
+    position: sticky;
+    top: 100px;
+}
+.Receipt >h3{
+    font-size: 30px;
+}
+.Receipt >span{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-size: 15px;
+    width: 100%;
+}
+.Receipt >span >p{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+}
+.Receipt >span >p >span{}
+.Receipt >div{
+    font-size: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+.Receipt >div >span{}
+.Receipt >div >span >input{
+    width: 14px;
+    border: none;
+    background-color: transparent;
+    text-align: center;
+}
+.Receipt >div >span >input::placeholder{
+    color: rgba(0, 0, 0, 0.4)
+}
+.Receipt >div >span >input:focus::placeholder{
+    color: transparent;
+}
+

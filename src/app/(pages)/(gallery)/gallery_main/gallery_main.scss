@@ -1,0 +1,46 @@
+.body {margin: 0;}
+
+.gmain{}
+.gmain_title{
+    font-size: 4em;
+    font-family: "GangwonEduHyeonokT";
+    display: inline-block;
+}
+.gmain_list{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+.gmain_folder{
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.gmain_folder >div{
+    width: 200px; height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url(../../../../../public/imgs/gallery/galleryEmptyFold.png) center / cover no-repeat;
+}
+.gmain_folder >div >input{
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+    background-color: transparent;
+}
+.gmain_folder >div >input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+.gmain_folder >div >input:focus::placeholder {
+  color: transparent;
+}
+.gmain_folder >p{}
+.gmain_folder >p >span{}
+.gmain_folder >p >span >button{
+    font-size: 15px;
+}
+.gmain_add{width: 20px; height: 20px;}
+.gmain_add >svg{width: 100%; height: 100%;}
