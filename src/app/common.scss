@@ -70,7 +70,22 @@ input{ outline: none; }
       align-items: center;
       justify-content: space-between;
 
-      & a:hover{ color: #58D3FF; }
+      .userHandle {
+        display: flex;
+        gap: 20px;
+      }
+
+      .userLink{
+        color: inherit;
+
+        &:hover {
+          color: #58D3FF;
+        }
+      }
+
+      & a:hover,
+      button.userLink:hover
+      { color: #58D3FF; }
       
       nav{
         display: flex;
@@ -106,6 +121,6 @@ input{ outline: none; }
     
     min-height: 75vh; 
     height: auto; 
-    padding: 40px;
+    padding: 20px 40px;
   }
 }

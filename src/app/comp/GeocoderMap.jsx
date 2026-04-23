@@ -1,15 +1,13 @@
 "use client";
 
+import { GoogleMap, Marker, Polyline, useLoadScript } from "@react-google-maps/api";
 import { useState, useRef, useCallback, useEffect } from "react";
-import {
-  GoogleMap,
-  Marker,
-  useLoadScript,
-} from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
-  height: "500px",
+  height: "550px",
+  borderRadius: "10px",
+  border: "1px solid #A1BCE4",
 };
 
 const center = {
@@ -17,31 +15,37 @@ const center = {
   lng: 127.0499178,
 };
 
+
 export default function GeocoderMap({ selectedAddress }) {
   useEffect(() => {
-  if (!geocoderRef.current || !selectedAddress) return;
+    if (!geocoderRef.current || !selectedAddress) return;
 
-  geocoderRef.current
-    .geocode({ address: selectedAddress })
-    .then((result) => {
-      const location = result.results[0].geometry.location;
+    geocoderRef.current
+      .geocode({ address: selectedAddress })
+      .then((result) => {
+        const location = result.results[0].geometry.location;
 
-      const newMarker = {
-        lat: location.lat(),
-        lng: location.lng(),
-      };
+        const newMarker = {
+          lat: location.lat(),
+          lng: location.lng(),
+        };
 
-      mapRef.current.panTo(location);
+        mapRef.current.panTo(location);
 
-      setMarkers((prev) => [...prev, newMarker]);
-    })
-    .catch((e) => console.error(e));
-}, [selectedAddress]);
+        setMarkers((prev) => [...prev, newMarker]);
+        setPath((prev) => [...prev, newMarker]);
+
+        setPath((prev) => [...prev, newMarker]);
+      })
+      .catch((e) => console.error(e));
+  }, [selectedAddress]);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    libraries: ["geometry", "places"],
   });
 
+  const [path, setPath] = useState([]);
   const [markers, setMarkers] = useState([]);
   const [response, setResponse] = useState("");
   const [input, setInput] = useState("");
@@ -49,12 +53,28 @@ export default function GeocoderMap({ selectedAddress }) {
   const mapRef = useRef(null);
   const geocoderRef = useRef(null);
 
+  const getDistance = (p1, p2) => {
+    if (!window.google?.maps?.geometry) {
+      console.warn("geometry not loaded yet");
+      return null;
+    }
+
+    const point1 = new window.google.maps.LatLng(p1.lat, p1.lng);
+    const point2 = new window.google.maps.LatLng(p2.lat, p2.lng);
+
+    return window.google.maps.geometry.spherical.computeDistanceBetween(
+      point1,
+      point2
+    );
+  };
+
   const onLoad = useCallback((map) => {
     mapRef.current = map;
     geocoderRef.current = new window.google.maps.Geocoder();
   }, []);
 
   const handleGeocode = () => {
+    if (!isLoaded) return;
     if (!geocoderRef.current || !input) return;
 
     geocoderRef.current
@@ -62,23 +82,36 @@ export default function GeocoderMap({ selectedAddress }) {
       .then((result) => {
         const location = result.results[0].geometry.location;
 
+        const newMarker = {
+          lat: location.lat(),
+          lng: location.lng(),
+        };
+
         mapRef.current.panTo(location);
 
-        setResponse(JSON.stringify(result, null, 2));
+        setMarkers((prev) => {
+          const updated = [...prev, newMarker];
+
+          setPath(updated.map((p) => ({ lat: p.lat, lng: p.lng })));
+
+          if (updated.length >= 2) {
+            const d = getDistance(
+              updated[updated.length - 2],
+              updated[updated.length - 1]
+            );
+
+            if (d !== null) {
+              console.log("두 점 거리(m):", Math.round(d));
+            }
+          }
+
+          return updated;
+        });
       })
       .catch((e) => {
         alert("Geocode 실패: " + e);
       });
   };
-
-  /* const handleMapClick = (e) => {
-    const newMarker = {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-    };
-
-    setMarkers((prev) => [...prev, newMarker]);
-  }; */
 
   const handleClear = () => {
     setResponse("");
@@ -88,7 +121,7 @@ export default function GeocoderMap({ selectedAddress }) {
 
   return (
     <div>
-      <div style={{ marginBottom: "10px" }}>
+      {/* <div style={{ marginBottom: "10px" }}>
         <input
           type="text"
           placeholder="Enter a location"
@@ -97,20 +130,32 @@ export default function GeocoderMap({ selectedAddress }) {
         />
         <button onClick={handleGeocode}>Geocode</button>
         <button onClick={handleClear}>Clear</button>
-      </div>
+      </div> */}
 
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={16}
         onLoad={onLoad}
-        /* onClick={handleMapClick} */
+        
+        /* 스트립트 뷰 제거 */
         options={{
           streetViewControl: false,
           fullscreenControl: false,
           mapTypeControl: false,
         }}
       >
+        {path.length >= 2 && (
+          <Polyline
+            path={path}
+            options={{
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 4,
+            }}
+          />
+        )}
+
         {markers.map((m, idx) => (
           <Marker
             key={idx}
