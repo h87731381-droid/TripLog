@@ -1,0 +1,27 @@
+.loading {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  background: rgba(39, 103, 142, 0.9);
+  backdrop-filter: blur(6px);
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  display: none; /* 이거 없으면 유령로딩 생긴다 */
+}
+.loading.on{
+  display: flex;
+}
+.loadingText {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 10px 0 0; 
+}

@@ -2,16 +2,15 @@ import getDB from '@/app/lib/mongodb'
 
 export async function GET() {
 
-    const db = await getDB();
-    const result = await db.collection('attrantions').find().toArray();
-
+    //const db = await getDB();
+    //const result = await db.collection('attrantions').find().toArray();
+    
     const apiKey = process.env.KOREA_ATTRANTIONS_API_KEY;
-
-    const url = `https://apis.data.go.kr/B551011/KorService2/areaBasedList2?MobileOS=etc&MobileApp=test&_type=json&pageNo=1&numOfRows=50&serviceKey=${apiKey}`;
+    const url = `https://apis.data.go.kr/B551011/KorService2/areaBasedList2?MobileOS=etc&MobileApp=test&serviceKey=${apiKey}&pageNo=1&numOfRows=1000&_type=json`;
+    
 
     const res = await fetch(url);
-    const data = await res.json();
-    console.log(data)
+    const data = await res.json();    
 
     return Response.json(data);
 }
