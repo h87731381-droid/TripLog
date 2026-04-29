@@ -1,4 +1,5 @@
 import "./common.scss";
+import "./splash.scss";
 import Providers from "./comp/Provider";
 
 

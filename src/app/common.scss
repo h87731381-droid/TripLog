@@ -53,6 +53,35 @@ input{ outline: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
+
+  overflow-y: auto;
+  -ms-overflow-style: none; // IE, Edge
+  scrollbar-width: none; // Firefox
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+
+  .delivery-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; 
+    width: 100%;
+
+    .plane{
+      position: absolute;
+      bottom: -115px;
+      left: 50%; 
+      transform: translateX(-50%);
+
+      img{
+        width: 6rem;
+        height: auto;
+      }
+    }
+
+  }
 
   .menu-bar{
     color: white;
@@ -167,8 +196,9 @@ input{ outline: none; }
   body{ font-size: 15px;}
 
   .main{
-    .menu-bar .menu{ width: 90vw; }
 
+    .delivery-wrapper .plane{ bottom: -140px; }   
+    .menu-bar .menu{ width: 90vw; }
     .logo{ font-size: 4.5rem; }
 
     .container{ 
@@ -187,6 +217,14 @@ input{ outline: none; }
   body{ font-size: 15px;}
 
   .main{
+
+    .delivery-wrapper{
+      .plane{
+        bottom: -50px;
+        img{ width: 4.5rem; }
+      }
+    }        
+
     .menu-bar{     
       .menu{
         width: 90vw;
@@ -213,9 +251,9 @@ input{ outline: none; }
 
         nav{
           .burger{ display: block; }
-          &:hover .menu-list{ display: flex; }
 
           .menu-list{
+            &.active{ display: flex; }
             display: none;
             position: absolute;
             top: 100%; right: 0;
@@ -255,18 +293,25 @@ input{ outline: none; }
   body{ font-size: 15px;}
 
   .main{
+
+    .delivery-wrapper{
+      .plane{
+        bottom: -25px;
+        img{ width: 2.5rem; }
+      }
+    }    
+
     .menu-bar{     
       .menu{
         width: 90vw;
 
-        .user .comment{ display: none; }   
-        
+        .user .comment{ display: none; }          
 
         nav{
           .burger{ display: block; }
-          &:hover .menu-list{ display: flex; }
 
           .menu-list{
+            &.active{ display: flex; }
             display: none;
             position: absolute;
             top: 100%; right: 0;

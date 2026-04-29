@@ -1,0 +1,330 @@
+// Desktop (기본 / 1024px 이상)
+.splash-bg{
+  position: relative;  
+  background: url('/imgs/bgimg.jpg') no-repeat center/cover fixed;
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden; 
+
+  .bg-overlay{
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+    
+    --angle: 0deg;
+    -webkit-mask-image: conic-gradient(transparent var(--angle), #000 0deg);
+    mask-image: conic-gradient(transparent var(--angle), #000 0deg);
+  } // gsap 모듈
+
+  .splash{
+    position: relative;
+    z-index: 5;
+    background-color: white;
+    border-radius: 40px; 
+    width: 75vw;
+    height: 75vh;  
+    margin: auto;   
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+
+    &.exit {
+        transform: translateY(120vh);
+        opacity: 0;
+    }
+
+    .s-text{
+        position: relative;
+        z-index: 10;
+        margin-top: 10vh;
+        margin-left: 7vh;
+
+        .s-title{
+            p{
+                font-family: 'GangwonEduHyeonokT';
+                -webkit-text-stroke: 0.5px black; 
+                line-height: 1;  
+                font-size: 2.3rem;
+            }
+            h1{
+                text-transform: uppercase;
+                font-size: 7rem;
+                font-weight: 800;
+                line-height: 1;  
+                color: #27678E;
+            }
+        }
+        
+        .summary{
+            margin-top: 5vh;
+            margin-left: 5vh;
+
+            .s-list{
+                font-family: 'GangwonEduHyeonokT';
+                font-size: 2rem;
+                line-height: 1.5;  
+    
+                li{
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    opacity: 0.3; 
+                    transition: all 0.5s ease;
+    
+                    &.active{
+                        opacity: 1; 
+                        transform: translateX(10px); 
+                        span{
+                        font-weight: 700;
+                        color: #27678E;
+                        }
+                    }
+
+                    &.passed, &.finished{
+                        opacity: 0.7;
+                        transform: translateX(5px);
+                    }
+
+                    &.finished{ opacity: 1 !important; }
+                }
+    
+                img{ 
+                    width: 0.9em;
+                    position: relative;
+                    bottom: 2px; 
+                }
+    
+            }
+        }
+    }
+
+    .s-img{
+        position: absolute;
+        bottom: 0;
+        right: -5vw; 
+        width: 100%; 
+        pointer-events: none; 
+        animation: slideIn 1s ease-out forwards;
+
+        img{
+            position: absolute;
+            bottom: -10vh;
+            right: 2vw;
+            width: 58%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+
+            &.show{
+                opacity: 1;
+                z-index: 1;
+            }
+        }
+    }
+
+
+    @keyframes slideIn{
+        from{ transform: translateX(20vw); }
+        to{ transform: translateX(0); }
+    }
+
+  }
+}
+
+// Tablet Landscape (951px ~ 1024px)
+@media (max-width: 1024px) {
+ .splash-bg{
+  .splash{
+    .s-text{
+        margin-top: 8vh;
+        margin-left: 5vh;
+
+        .s-title{
+            p{ font-size: 2.1rem; }
+            h1{ 
+                font-size: 6.3rem;
+                text-shadow:
+                    -2px -2px 0 #fff,  
+                    2px -2px 0 #fff,
+                    -2px  2px 0 #fff,
+                    2px  2px 0 #fff; 
+            }
+        }
+        
+        .summary{
+            margin-top: 9vh;
+            margin-left: 1vw;
+
+            .s-list{
+                font-size: 1.6rem;
+                line-height: 1.4;  
+            }
+        }
+    }
+
+    .s-img{
+        img{
+            bottom: -10vh;
+            right: -10vw;
+            width: 70%;
+        }
+    }
+  }
+}
+}
+
+// Tablet Portrait (950px 이하)
+@media (max-width: 950px) {
+.splash-bg{
+  .bg-overlay{   
+    --angle: 0deg;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    opacity: calc(1 - (var(--angle) / 360deg)); 
+    transition: clip-path 0.1s linear; 
+  } // gsap 모듈
+
+  .splash{
+    position: relative;
+    z-index: 5;
+    background-color: white;
+    border-radius: 40px; 
+    width: 75vw;
+    height: 75vh;  
+    margin: auto;   
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+
+    &.exit {
+        transform: translateY(120vh);
+        opacity: 0;
+    }
+
+    .s-text{
+        position: relative;
+        z-index: 10;
+        margin: 5vh auto;
+        text-align: center;
+        
+        .s-title{
+            p{ font-size: 5vw; }
+            h1{ font-size: 14vw; }
+        }
+        
+        .summary{
+            margin-top: 5vh;
+            margin-left: 5vh;
+
+            .s-list{
+                font-size: 5vw;
+                line-height: 1.5;     
+            }
+        }
+    }
+
+    .s-img{
+        right: auto;
+        left: 50%;
+        transform: translateX(-40%); 
+        bottom: 0;
+        height: 50%;
+        animation: slideUpMobile 1.2s ease-out forwards;
+
+        img{
+            right: auto;
+            left: 50%;
+            transform: translateX(-40%); 
+            
+            width: auto; 
+            height: 100%; 
+            bottom: 0;
+            object-fit: contain; 
+        }
+    }
+
+    @keyframes slideUpMobile{
+        from {
+            transform: translate(-40%, 50vh);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-40%, 15vh); 
+            opacity: 1;
+        }
+    }
+
+  }
+}
+
+
+}
+
+// Mobile (480px 이하)
+@media (max-width: 480px) {
+.splash-bg{
+  .bg-overlay{   
+    --angle: 0deg;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    opacity: calc(1 - (var(--angle) / 360deg)); 
+    transition: clip-path 0.1s linear; 
+  } // gsap 모듈
+
+  .splash{
+    .s-text{
+        margin: 5vh auto;
+        text-align: center;
+        
+        .s-title{
+            p{ font-size: 5vw; }
+            h1{ font-size: 14vw; }
+        }
+        
+        .summary{
+            margin-top: 3vh;
+            margin-left: 5vh;
+
+            .s-list{
+                font-size: 5vw;
+                line-height: 1.5;     
+            }
+        }
+    }
+
+    .s-img{
+        right: auto;
+        left: 50%;
+        transform: translateX(-35%); 
+        bottom: 0;
+        height: 50%;
+        animation: slideUpMobile 1.2s ease-out forwards;
+
+        img{
+            right: auto;
+            left: 50%;
+            transform: translateX(-35%); 
+            
+            width: auto; 
+            height: 100%; 
+            bottom: 0;
+            object-fit: contain; 
+        }
+    }
+
+    @keyframes slideUpMobile{
+        from {
+            transform: translate(-35%, 30vh);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-35%, 5vh); 
+            opacity: 1;
+        }
+    }
+
+  }
+}
+
+}
