@@ -51,7 +51,7 @@ export default function Header() {
                   <Link href="/attrantions" className={pathname === '/attrantions' ? 'active' : ''}>추천관광지</Link>
                   <Link href="/budget" className={pathname === '/budget' ? 'active' : ''}>여행경비</Link>
                   <Link href="/checkList" className={pathname === '/checkList' ? 'active' : ''}>체크리스트</Link>
-                  <Link href="/gallery_main" className={pathname === '/gallery' ? 'active' : ''}>갤러리</Link>
+                  <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>갤러리</Link>
                 </div>
               </nav>
             </div>
