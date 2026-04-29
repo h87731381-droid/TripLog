@@ -23,7 +23,7 @@ export default function Home() {
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisited");
     if (hasVisited) {
-      router.push('/checkList'); 
+      router.push('/planner'); 
     } else {
       setIsReady(true); 
     }
