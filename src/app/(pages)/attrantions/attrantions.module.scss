@@ -1,28 +1,140 @@
 /* 샘플 팝업 */
 .SamplePopup {
     position: fixed;
-    top: 57%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
+    top: 0;
+    left: 0;
+    /* transform: translate(-50%, -50%); */
     z-index: 10;
 
     .sampleClose {
         font-size: 1.3em;
-        color: white;
         position: absolute;
-        top: 255px;
-        right: 255px;
+        top: 20%;
+        right: 13%;
         font-size: 1.5em;
+        color: white;
+        /* background-color: #27678E; */
+        /* border: 1px solid grey; */
+        border-radius: 10px;
+        padding: 5px 15px;
+        z-index: 30;
+
+        /* 샘플 이미지 크기 */
+        @media (max-width: 1669px) {
+            top: 18%;
+            right: 8%;
+            font-size: 1.3em;
+        }
+
+        @media (max-width: 951px) {
+            top: 17%;
+            right: 5%;
+            font-size: 1.3em;
+        }
+
+        @media (max-width: 360px) {
+            top: 14%;
+            right: 5%;
+            font-size: 1.3em;
+        }
 
         span {
             font-size: 0.8em;
         }
     }
 
+    /* .SampleGuide {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        width: 100vw;
+        height: 102.5vh;
+        position: relative;
+
+        .guideRegion {
+            position: absolute;
+            top: 32%;
+            left: 13.5%;
+            display: flex;
+            gap: 10px;
+            width: 25%;
+            flex-shrink: 0;
+
+            >div {
+                padding: 5% 10%;
+                border: 5px dotted white;
+                border-radius: 15px;
+            }
+
+            >p {
+                width: 100%;
+            }
+        }
+
+        .guideMap {
+            position: absolute;
+            top: 60%;
+            left: 30%;
+
+            >div {
+                padding: 10px;
+                width: 65px;
+                border: 5px dotted white;
+                border-radius: 15px;
+
+                >img {
+                    width: 35px;
+                    height: 35px;
+                }
+            }
+
+            >p {
+                padding: 10px 0 0;
+                background-color: #7F7F7F;
+            }
+        }
+
+        .guideDetile {
+            position: absolute;
+            top: 52.5%;
+            left: 50%;
+
+            >div {
+                padding: 15px;
+                width: 130px;
+                border: 5px dotted white;
+                border-radius: 15px;
+            }
+
+            >p {
+                padding: 5px 0 0;
+                background-color: #7F7F7F;
+            }
+        }
+
+        .guideUpdate {
+            position: absolute;
+            top: 35%;
+            left: 57.5%;
+
+            >div {
+                padding: 60px;
+                width: 200px;
+                border: 5px dotted white;
+                border-radius: 15px;
+            }
+
+            >p {
+                padding: 5px 0 0;
+                background-color: #7F7F7F;
+            }
+        }
+    } */
+
+
     img {
         width: 100vw;
-        padding: 10px 0 20px;
+        height: 100vh;
+        object-fit: cover;
     }
 }
 
@@ -36,25 +148,57 @@
         align-items: stretch;
         justify-content: space-between;
 
+        @media (max-width: 767px) {
+            flex-direction: column;
+            align-items: initial;
+        }
 
         /* 왼쪽 컨텐츠 */
         .attrantionsLeft {
             width: 45%;
 
+            @media (max-width: 767px) {
+                width: 100%;
+            }
+
+
             .title {
+                display: inline-block;
                 font-family: 'GangwonEduHyeonokT';
-                font-size: 4em;
+                font-size: 4rem;
+                position: relative;
+                z-index: 5;
                 color: black;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    left: 0;
+                    bottom: 40%;
+                    width: 100%;
+                    height: 15px;
+                    background-color: #58D3ff;
+                }
+
+                @media (min-width: 460px) and (max-width: 486px) {
+                    font-size: 11vw;
+                }
+
+                @media (max-width: 459px) {
+                    font-size: 12vw;
+                }
             }
 
             .region {
                 display: flex;
                 gap: 20px;
+                padding: 0 10px;
 
-                .regionCategory {
+                /* .regionCategory {
                     display: flex;
                     gap: 15px;
-                }
+                } */
             }
 
             .map {
@@ -75,6 +219,28 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+
+            @media (min-width: 1259px) and (max-width: 1284px) {
+                width: 53%;
+            }
+
+            @media (min-width: 1100px) and (max-width: 1259px) {
+                width: 51%;
+            }
+
+            @media (max-width: 767px) {
+                width: 100%;
+                padding-top: 20px;
+            }
+
+            @media (max-width: 594px) {
+                display: flex;
+                flex-direction: column;
+            }
+
+            @media (max-width: 481px) {
+                gap: 0;
+            }
 
             .attrantions {
                 display: flex;
@@ -103,19 +269,38 @@
             }
 
             .list {
-                display: flex;
-                flex-wrap: wrap;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 30px;
 
-                
+                @media (min-width: 1284px) and (max-width: 1380px) {
+                    gap: 15px;
+                }
+
+                @media (min-width: 1260px) and (max-width: 1284px) {
+                    gap: 8px;
+                }
+
+
+
                 .item {
                     .thumbnail {
                         position: relative;
                         display: inline-block;
-                        width: 150px;
+                        width: 100%;
                         height: 100px;
                         border-radius: 10px;
-    
+
+                        @media (min-width: 1100px) and (max-width: 1259px) {
+                            width: 200px;
+                            height: 150px;
+                        }
+
+                        @media (max-width: 1099px) {
+                            width: 100%;
+                            height: auto;
+                        }
+
                         /* 호버 아이콘 */
                         span {
                             position: absolute;
@@ -127,7 +312,7 @@
                             border-radius: 10px;
                             transition: 0.2s;
                             opacity: 0;
-    
+
                             &::after {
                                 content: '찜하기';
                                 position: absolute;
@@ -139,8 +324,16 @@
                                 justify-content: center;
                                 width: 100%;
                                 height: 100%;
+
+                                /* 모바일에서 호버 기능 없애기 */
+                                @media (max-width: 481px) {
+                                    display: none;
+                                }
                             }
-                            img{display: none;}
+
+                            img {
+                                display: none;
+                            }
                         }
 
                         &:hover span {
@@ -150,7 +343,6 @@
                             &::after {
                                 opacity: 1;
                             }
-                            
                         }
 
                         &.active span {
@@ -170,12 +362,21 @@
                         }
                     }
 
-                    /* 썸넬이미지 */
+                    /* 리스트 썸넬이미지 */
                     p>img {
-                        width: 150px;
+                        width: 100%;
                         height: 100px;
                         object-fit: cover;
                         border-radius: 10px;
+
+                        @media (min-width: 1100px) and (max-width: 1259px) {
+                            width: 100%;
+                            height: 100%;
+                        }
+
+                        @media (max-width: 1099px) {
+                            width: 100%;
+                        }
                     }
 
                     img {
@@ -189,12 +390,16 @@
                             color: black;
                             font-weight: 500;
                             display: block;
-                            width: 7.5vw;
                             overflow: hidden;
                             white-space: nowrap;
                             text-overflow: ellipsis;
                             margin: 0 auto;
                             text-align: center;
+
+                            @media (max-width: 1024px) {
+                                font-size: 17px;
+                            }
+
                         }
 
                         p {
@@ -202,6 +407,8 @@
                             overflow: hidden;
                             white-space: nowrap;
                             text-overflow: ellipsis;
+                            width: 100%;
+
                         }
 
                         .link {
@@ -233,13 +440,18 @@
         align-items: center;
         height: 40vh;
         gap: 10px;
+        padding: 0 30px;
 
         .subtitle {
             color: black;
             font-size: 2em;
+
+            @media (max-width: 424px) {
+                font-size: 1.5em;
+            }
         }
 
-        button {
+        a {
             display: flex;
             gap: 10px;
             background-color: #27678E;
@@ -248,21 +460,61 @@
             padding: 10px 20px;
             border-radius: 5px;
             font-size: 1.4em;
+
+            @media (max-width: 379px) {
+                font-size: 1.2em;
+            }
+
+            >img {
+                @media (max-width: 379px) {
+                    width: 25px;
+                    height: auto;
+                }
+            }
         }
     }
 }
 
 /* 팝업창 */
+.overlay { // 팝업의 뒷배경
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    &.on{ display: block; opacity: 0; transform: translateY(30%); animation: ani 0.5s forwards; }
+    &.off{ display: none; opacity: 0;}
+
+    @keyframes ani {
+        100%{opacity: 1; transform: translateY(0%); }
+    }
+}
+
+
 .popup {
     position: fixed;
     top: 57%;
     left: 67%;
+
     transform: translate(-50%, -50%);
+
+
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    width: 380px;
     z-index: 10;
+
+    @media (max-width: 767px) {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @media (max-width: 490px) {
+        width: 80%;
+    }
 
     .pHeader {
         display: flex;
@@ -277,7 +529,7 @@
     }
 
     img {
-        width: 20vw;
+        width: 100%;
         padding: 10px 0 20px;
     }
 
@@ -287,20 +539,23 @@
     }
 
     .popupInfo {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 10px 0;
 
         .add {
-            display: flex;
-            gap: 20px;
+            display: contents;
 
             b {
                 color: #27678E;
                 font-weight: 500;
+                white-space: nowrap;
+
+                @media (max-width: 404px) {
+                    line-height: 1.4;
+                    word-break: keep-all;
+                }
             }
         }
     }
-
-
 }

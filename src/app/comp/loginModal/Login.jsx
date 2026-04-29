@@ -37,9 +37,9 @@ function Login({setShowLogin,showLogin,setIsLog}) {
                 <span>가입되어 있지 않아도 가입+로그인을 한번에!</span>
               </div>
               <div className={style.loginButtons}>
-                <button className={style.kakao} onClick={() => signIn('kakao')}>
-                  <img src="/imgs/attrantions/ri_kakao-talk-fill.svg" alt="" />
-                  <span>Kakao</span>
+                <button className={style.naver} onClick={() => signIn('naver')}>
+                  <img src="/imgs/attrantions/simple-icons_naver.svg" alt="" />
+                  <span>Naver</span>
                 </button>
                 <button className={style.google} onClick={() => signIn('google')}>
                   <img src="/imgs/attrantions/material-icon-theme_google.svg" alt="" />

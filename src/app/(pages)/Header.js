@@ -16,14 +16,25 @@ export default function Header() {
   const { data: session } = useSession();
   console.log(session)
 
+  // 로그인 팝업 열릴 때 스크롤 방지
+    useEffect(() => {
+      if (showLogin) {
+        document.body.style = "overflow:hidden;";
+      } else {
+        document.body.style = "overflow:visible;";
+      }
+    }, [showLogin]);
 
+
+    //sessionStorage에 로그인 데이터 저장하기
   useEffect(function () {
     if (session) {
       setIsLog(true)
-      //localStorage.setItem("session",JSON.stringify(session))
+      sessionStorage.setItem("session",JSON.stringify(session))
     }
     else {
       setIsLog(false)
+      sessionStorage.removeItem("session")
     }
   }, [session])
 
@@ -92,7 +103,7 @@ export default function Header() {
       }
 
       {
-        showLogin && <Login setShowLogin={setShowLogin} setIsLog={setIsLog} />
+        showLogin && <Login setShowLogin={setShowLogin} setIsLog={setIsLog} showLogin={showLogin} />
       }
     </>
   );
