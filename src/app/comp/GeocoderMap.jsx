@@ -26,26 +26,26 @@ export default function GeocoderMap({ itemMarkers }) {
     return (itemMarkers || []).map((item) => ({
       lat: Number(item.mapy),
       lng: Number(item.mapx),
-    }));
+    })).filter(m => !isNaN(m.lat) && !isNaN(m.lng));
   }, [itemMarkers]);
 
   useEffect(() => {
-  if (!mapRef.current || markers.length === 0) return;
+    if (!mapRef.current || markers.length === 0) return;
 
-  const bounds = new window.google.maps.LatLngBounds();
+    const bounds = new window.google.maps.LatLngBounds();
 
-  markers.forEach((m) => {
-    bounds.extend(new window.google.maps.LatLng(m.lat, m.lng));
-  });
+    markers.forEach((m) => {
+      bounds.extend(new window.google.maps.LatLng(m.lat, m.lng));
+    });
 
-  if (markers.length === 1) {
-    mapRef.current.setCenter(markers[0]);
-    mapRef.current.setZoom(19); // 단일 마커(첫 마커) 줌 조절
-    return;
-  }
+    if (markers.length === 1) {
+      mapRef.current.setCenter(markers[0]);
+      mapRef.current.setZoom(19); // 단일 마커(첫 마커) 줌 조절
+      return;
+    }
 
-  mapRef.current.fitBounds(bounds, 80); // 지도가 마커 따라감 + 패딩으로 과한 줌인 방지
-}, [markers]);
+    mapRef.current.fitBounds(bounds, 80); // 지도가 마커 따라감 + 패딩으로 과한 줌인 방지
+  }, [markers]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -62,10 +62,16 @@ export default function GeocoderMap({ itemMarkers }) {
 
   const mapRef = useRef(null);
   const geocoderRef = useRef(null);
+  const distanceServiceRef = useRef(null);
+
+  const [isMapReady, setIsMapReady] = useState(false); // 거리계산 변수
 
   const onLoad = useCallback((map) => {
     mapRef.current = map;
     geocoderRef.current = new window.google.maps.Geocoder();
+    distanceServiceRef.current = new window.google.maps.DistanceMatrixService(); // 구글 거리계산 가져오기
+
+    setIsMapReady(true);
   }, []);
 
   useEffect(() => {
@@ -88,6 +94,47 @@ export default function GeocoderMap({ itemMarkers }) {
       }
     );
   }, []);
+
+
+  // 거리계산
+  useEffect(() => {
+  if (markers.length < 2){
+    setResponse(""); // 마커 2개 이하면 초기화
+    return;
+  }
+
+  let totalDistance = 0;
+
+  for (let i = 0; i < markers.length - 1; i++) {
+    const origin = new window.google.maps.LatLng(
+      markers[i].lat,
+      markers[i].lng
+    );
+
+    const destination = new window.google.maps.LatLng(
+      markers[i + 1].lat,
+      markers[i + 1].lng
+    );
+
+    const distance =
+      window.google.maps.geometry.spherical.computeDistanceBetween(
+        origin,
+        destination
+      );
+
+    totalDistance += distance;
+  }
+
+  const km = (totalDistance / 1000).toFixed(2);
+
+  setResponse(`총 이동거리(직선기준): ${km} km`); // 출력 문구
+}, [markers]);
+
+  //거리계산 콘솔확인
+  /* useEffect(() => {
+    if (!window.google) return;
+    console.log("google loaded");
+  }, []); */
 
 
   if (!isLoaded) return <div>Loading...</div>;
