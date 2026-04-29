@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-
+/* .main{
+    .container{position: relative;}
+} */
 .body {margin: 0;}
 .planMake{
     display: flex;
@@ -69,6 +71,7 @@
                     button{
                         padding-right: 10px;
                         color:#27678E;
+                        font-size: 14px;
                     }
                 }
                 .datePick{
@@ -91,13 +94,64 @@
             .planPlace{
                 //background-color: #fff;
                 //margin:20px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                padding:10px;
                 .planPlaceSelect{
                     padding-bottom:20px;
+                    .planPlaceSelectTxt{
+                        display: flex;
+                        justify-content: space-between;
+                        button{
+                            //padding-right: 10px;
+                            color:#27678E;
+                            font-size: 14px;
+                            display: flex;
+                            vertical-align: middle;
+                        }
+                    }
                     input{cursor: pointer;}
+                    .MuiInputBase-root{
+                    background-color: #ffffff;
+                }
+                    
                 }
                 .planPlaceWish{
-                    input{
-                        
+                    .planPlaceWishCont{
+                         background-color: #F3F3F3;
+                         min-height: 56px;
+                         border-radius: 10px;
+                         display: flex;
+                         gap:10px;
+                         flex-wrap: wrap;
+                         padding:8px 14px;
+                         align-items: center;
+
+                         //관심있는 관광지 없을때
+                         .placeWishTxt{
+                            color:#adadad;
+                            font-weight:400;
+                         }
+
+                         //관심있는 관광지 없을때
+                         .placeWishList{
+                            background-color: #fff;
+                            border-radius: 20px;
+                            padding:4px 10px;
+                            display: flex;
+                            border:1px solid #ebebeb;
+                            align-items: center;
+
+                            span{font-weight: 400;}
+                            button{
+                                display: flex;
+                                vertical-align: -3px;
+                                margin-left: 6px;
+                                font-size: 16px;
+                                cursor: pointer;
+                            }
+
+                         }
                     }
                 }
 
@@ -192,44 +246,61 @@
             .pppContents{
                 margin-top:20px;
                 padding:20px;
-                padding-bottom:10px;
                 display: flex;
                 gap:20px;
                 background-color: #F3F3F3;
                 border-radius: 10px;
+                height: 590px;
                 .pppMap{
-                    width: 60%;
+                    width: 50%;
+                    flex:1;
+
                 }
                 .pppListEmpty{
-                    width: 40%;
+                    width: 48.8%;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
                     p:nth-of-type(1){
                         font-size: 18px;
-                        font-weight: 400;
+                        font-weight: 500;
                         padding-bottom:3px;
                     }
                     p:nth-of-type(2){
-                        color:#6C6C6C
+                        color:#6C6C6C;
+                        font-weight: 400;
                     }
     
                 }
                 .pppList{
-                    width: 40%;
+                    width: 50%;
+                    flex:1;
+                    display: flex;
+                        flex-direction: column;
+                        
+                        
                     .pppListTxt{
                         text-align:left;
                         padding-bottom:10px;
-                        p:nth-of-type(1){
-                            font-size: 20px;
-                            font-weight: 400;
-                            span{
-                                font-weight:700;
-                                padding-right:5px;
+                        >div{
+                            display: flex;
+                            justify-content: space-between;
+                            .pppListTxt1{
+                                font-size: 20px;
+                                font-weight: 400;
+                                span{
+                                    font-weight:700;
+                                    padding-right:5px;
+                                }
                             }
+                            button{
+                                color: #27678e;
+                                font-size:14px;
+                            }
+                            
                         }
-                        p:nth-of-type(2){
+                        .pppListTxt2{
                             color:#6C6C6C;
                             font-weight: 400;
                         }
@@ -238,16 +309,36 @@
                         display: flex;
                         flex-direction: column;
                         gap:10px;
-                        li{ 
+                        flex:1;
+                        overflow-y:auto;
+                        .pppListCont{ 
+                            cursor: pointer;
+                            position: relative;
                             display: flex;
                             background-color: #fff;
                             border-radius: 10px;
                             border:1px solid #ebebeb;
                             padding:8px;
-                            img{
-                                width: 40%;
+                            >img{
+                                width: 127px;
+                                height: 85px;
+                                object-fit: cover;
                                 border-radius: 10px;
                             }
+                            span{
+                                position: absolute;
+                                top: 0px;
+                                left: 0px;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0, 0, 0, 0.4);
+                                border-radius: 10px;
+                                transition: 0.2s;
+                                opacity: 0;
+                                img{display: none;}
+                            }
+                            svg{display: none;}
+                            
                             div{
                                 text-align: left;
                                 padding-left:10px;
@@ -261,6 +352,47 @@
                                     //line-height: 1.5;
                                 }
                             }
+                            
+                        
+                            &.active{
+                                border:1px solid #27678E;
+                                background-color: #c6e0f0;
+                                
+                            }
+                            &.active svg{
+                                position:absolute;
+                                display: block;
+                                fill: #27678E;
+                                top:3px;
+                                left:3px;
+                                font-size: 20px;
+                                background-color: #c6e0f0;
+                                border-radius: 20px;
+                                //border:1px solid #c6e0f0;
+                                box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.2);
+
+                            }
+                            &.active{
+                               div{
+                                p{}
+                               } 
+                            }
+                            &.active span {
+                            opacity: 1;
+                            cursor: pointer;
+
+                            &::after {
+                                opacity: 0;
+                            }
+
+                            >img {
+                                width: 100%;
+                                height: 100%;
+                                padding: 15px;
+                                display: block;
+                            }
+                        }
+                            
                         }
                     }
     
@@ -327,6 +459,8 @@
                  padding-left:40px;
                  font-size: 20px;
                  font-weight: 600;
+                 width: auto;
+                 text-align: left;
             }
             p:nth-of-type(2){
                 padding-left:15px;
@@ -342,7 +476,8 @@
             color:#27678E;
             font-weight: 600;
             border:1px solid #27678E;
-            margin-left:670px;
+            position:absolute;
+            right:15%;
             margin-top:30px;
             width: 80px;
             height: 40px;
@@ -356,134 +491,193 @@
    }
    //일정 전체 보기(기본값)=================================
    .planEditCont{
-    display: flex;
     width: 100%;
+    /* display: flex;
     gap:20px;
-       .planEditDay{
-        width:33.3333%;
-         .planEditDayTxt{
-           display: flex;
-           p:nth-of-type(1){
-            font-size: 30px;
-            font-weight: 600;
-           }
-           p:nth-of-type(2){
-            padding-top:17px;
-            padding-left: 20px;
-            color:#6C6C6C;
-           }
-           >a{
-            padding-top:17px ;
-            padding-left: 170px;
-            font-weight: 400;
-            font-size: 15px;
-            svg{
-                vertical-align: -5px;
-                font-size: 20px;
-            }
-           }
-         }
-         .planEditDayBox{
-            background-color: #F3F3F3;
-            min-height: 530px;
-            border-radius: 20px;
-            padding:20px;
-            width: 100%;
-            a{
-                background-color: #27678E;
-                color:white;
-                padding:12px 10px;
-                border-radius: 10px;
-                font-weight: 500;
-                display: block;
-                margin:0 auto;
-                width: 130px;
-                text-align: center;
-                svg{
-                    font-size: 20px;
-                    vertical-align: -4px;
-                    padding-left:3px;
-                }  
-            }
-            .planEditDayBoxEmpty{
-                    padding-top:10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); */
+       .slider{
+        overflow: hidden;
+        width: 100%;
+        .sliderTrack{
+            display: flex;
+            transition:transform 0.3s ease;
+            .page{//한페이지 최대 3칸가능한 grid
+                min-width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap:20px;
+
+                //하루 묶음(한 칸 내용)
+                .planEditDay{
+                 /* flex:0 0 33.3333%;  grow 0(남는 공간 x) shrink 0(줄어들지 x) 
+                 max-width:33.3333%; */
+                   position:relative;
+                  .planEditDayTxt{
                     display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    >div{
-                        padding-top:170px;
-                        p:nth-of-type(1){
-                            font-size: 18px;
-                            font-weight: 600;
-                            padding-bottom:3px;
-                        }
-                        p:nth-of-type(2){
-                            color:#6C6C6C;
-                            font-weight: 500;
+                    p:nth-of-type(1){
+                     font-size: 30px;
+                     font-weight: 600;
+                    }
+                    p:nth-of-type(2){
+                     padding-top:17px;
+                     padding-left: 20px;
+                     color:#6C6C6C;
+                    }
+                    >a{
+                     padding-top:18px ;
+                     //padding-left: 170px;
+                     font-weight: 400;
+                     font-size: 15px;
+                     position:absolute;
+                     right:0;
+                     svg{
+                         vertical-align: -5px;
+                         font-size: 20px;
+                     }
+                    }
+                  }
+                  .planEditDayBox{
+                     background-color: #F3F3F3;
+                     min-height: 530px;
+                     border-radius: 20px;
+                     padding:20px;
+                     width: 100%;
 
-                        }
+                     //일정추가 버튼
+                     a{
+                         background-color: #27678E;
+                         color:white;
+                         padding:12px 10px;
+                         border-radius: 10px;
+                         font-weight: 500;
+                         display: block;
+                         margin:0 auto;
+                         width: 130px;
+                         text-align: center;
+                         svg{
+                             font-size: 20px;
+                             vertical-align: -4px;
+                             padding-left:3px;
+                         }  
+                     }
 
-                    }
-            }
-            .planEditDayBoxFilled{
-                padding-top:10px;
-                .oneSchedule{
-                    display: flex;
-                    position: relative;
-                    .scdTime{
-                        line-height: 1.1;
-                        font-weight: 400;
-                    }
-                    .timeLine{
-                        .circle{
-                            color:#27678E;
-                            position:absolute;
-                            top:-3px;
-                            left:50px;
-                        }
-                    }
-                    .scdContent{
-                        border-left:1px solid #b3b3b3;
-                        padding-left:20px;
-                        margin-left:20px;
-                        padding-bottom:20px;
-                        .scdTitle{
-                            font-weight: 600;
-                            font-size: 18px;
-                            line-height: 1.0;
-                            padding-bottom:5px;
-    
-                        }
-                        .scdSpot{
-                            font-weight: 400;
-    
-                        }
-                        .scdMove{
-                            padding-top:10px;
-                            .scdMoveIcon{
-                                position:absolute;
-                                left:50px;
-                                //background-color: #F3F3F3;
-                                background-color: #F3F3F3;
-                                height: 22px;
-                                svg{
-                                    vertical-align: -1px;
-                                    color:#27678E
-                                }
-                            }
-                            p:nth-of-type(2){
-                                color:#6C6C6C;
-                                font-size:14px;
-                                font-weight: 400;
-                            }
+                     //스케줄 하나도 없는 날일때
+                     .planEditDayBoxEmpty{
+                             padding-top:10px;
+                             display: flex;
+                             flex-direction: column;
+                             align-items: center;
+                             justify-content: center;
+                             text-align: center;
+                             >div{
+                                 padding-top:170px;
+                                 p:nth-of-type(1){
+                                     font-size: 18px;
+                                     font-weight: 500;
+                                     padding-bottom:3px;
+                                 }
+                                 p:nth-of-type(2){
+                                     color:#6C6C6C;
+                                     font-weight: 400;
+         
+                                 }
+         
+                             }
+                     }
 
-                        }
-                    }
+                     //스케줄 하나이상 채워진날 (예시)
+                     .planEditDayBoxFilled{
+                         padding-top:10px;
+                         .oneSchedule{
+                             display: flex;
+                             position: relative;
+                             .scdTime{
+                                 line-height: 1.1;
+                                 font-weight: 400;
+                             }
+                             .timeLine{
+                                 .circle{
+                                     color:#27678E;
+                                     position:absolute;
+                                     top:-3px;
+                                     left:50px;
+                                 }
+                             }
+                             .scdContent{
+                                 border-left:1px solid #b3b3b3;
+                                 padding-left:20px;
+                                 margin-left:20px;
+                                 padding-bottom:20px;
+                                 .scdTitle{
+                                     font-weight: 600;
+                                     font-size: 18px;
+                                     line-height: 1.0;
+                                     padding-bottom:5px;
+             
+                                 }
+                                 .scdSpot{
+                                     font-weight: 400;
+             
+                                 }
+                                 .scdMove{
+                                     padding-top:10px;
+                                     .scdMoveIcon{
+                                         position:absolute;
+                                         left:50px;
+                                         //background-color: #F3F3F3;
+                                         background-color: #F3F3F3;
+                                         height: 22px;
+                                         
+                                         svg{
+                                             vertical-align: -1px;
+                                             color:#27678E;
+                                         }
+                                     }
+                                     p:nth-of-type(2){
+                                         color:#6C6C6C;
+                                         font-size:14px;
+                                         font-weight: 400;
+                                     }
+         
+                                 }
+                             }
+                         }
+                     }
+                  }
                 }
             }
-         }
+        }
+       }
+       .slideLeftBtn{
+        position:absolute;
+        top:65%;
+        left:14%;
+        transform:translate(-5%,-50%);
+        background-color: #ffffff;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        display: flex;
+        font-size: 30px;
+        svg{
+            stroke:#27678E;
+        }
+       }
+       .slideRightBtn{
+        position:absolute;
+        top:65%;
+        right:14%;
+        transform:translate(-5%,-50%);
+        background-color: #ffffff;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        display: flex;
+        font-size: 30px;
+        svg{           
+            stroke:#27678E;
+        }
        }
        
    }
@@ -507,9 +701,10 @@
                 }
                 >a{
                     padding-top:17px ;
-                    padding-left: 170px;
+                    padding-left: 150px;
                     font-weight: 400;
                     font-size: 15px;
+                    //text-align:right;
                     svg{
                         vertical-align: -5px;
                         font-size: 20px;
@@ -682,22 +877,121 @@
                         
                     }
                     .popupScdTime{
-                            >p{padding-bottom:0;} 
-                            .TimeSelector{display: flex;}
+                        padding-bottom: 10px;
+                        >p{
+                            padding-bottom:10px;
+                            font-weight: 500;
+                        } 
+                        .TimeSelector{
+                            display: flex;
+                            gap:20px;
+                            position:relative;
+                            input{
+                                width: 100%;
+                                height: 40px;
+                                //border:none;
+                                background-color: #ffffff;
+                                border-radius:10px;
+                                padding:8px 14px;
+                            }
+                            .MuiInputBase-formControl::before{
+                            border-bottom:none;
+                            }
+                            .MuiInputBase-formControl::after{
+                                border-bottom:none;
+                            }
+                            .MuiInputBase-root{
+                                //border:none;
+                                background-color: #f3f3f3;
+                                &.hover{border: none;}
+                            }
+                            div:nth-of-type(2){
+                                line-height: 3.2;
+                            }
+                            .Mui-selected{
+                                background-color: #fff;
+                                color:black;
+                            }
+                            .MuiDigitalClock-item:hover{
+                                background-color: #f7fafc;
+                                border-radius: 10px;
+                            }
+                        }
                     }
                     .popupScdPlace{
-                        //background-color: #fff;
-                        //margin:20px;
+                        background-color: #f8f8f8;
+                        border-radius: 10px;
+                        padding:10px;
+    
                         .popupScdPlaceInput{
-                            padding-bottom:20px;
-                            input{cursor: pointer;}
+                            padding-bottom:15px;
+                            p{
+                               font-weight: 500;
+                               padding-bottom:10px;
+                            }
+                            input{
+                                cursor: pointer;
+                                width: 100%;
+                                height: 40px;
+                                border:none;
+                                background-color: #ffffff;
+                                border-radius:10px;
+                                padding:8px 14px;
+                            }
+                            .MuiInputBase-formControl::before{
+                            border-bottom:none;
+                            }
+                            .MuiInputBase-formControl::after{
+                                border-bottom:none;
+                            }
+                            .MuiInputBase-root{
+                                //border:none;
+                                background-color: #f8f8f8;
+                                &.hover{border: none;}
+                            }
                         }
-                        .popupScdPlaceSelect{
+                        .popupScdPlaceTab{
+                            display: flex;
+                            background-color: #fff;
+                            padding:7px 10px;
+                            border-radius:30px;
+                            justify-content: space-between;
                             .popupScdPlaceWish{
+                                width: 150px;
+                                background-color: #27678E;
+                                color:white;
+                                padding:7px 15px;
+                                border-radius:30px;
+                                text-align: center;
                                 p{}
                             }
                             .popupScdPlaceList{
+                                width: 150px;
+                                text-align: center;
+                                border-radius:30px;
+                                color:#b3b3b3;
+                                padding:7px 15px;
                                 p{}
+
+                            }
+                        }
+                        .popupScdPlaceTabItem{
+                            background-color: #fff;
+                            border-radius: 10px;
+                            margin-top:10px;
+                            .popupScdPlaceWishItem{
+                                display: flex;
+                                flex-wrap:wrap;
+                                padding:15px 10px;
+                                gap:10px;
+                                p{
+                                    border:1px solid #ebebeb;
+                                    padding:2px 10px;
+                                    border-radius: 20px;
+                                    &.active{
+                                        
+                                    }
+                                }
                             }
 
                         }
@@ -705,10 +999,47 @@
         
                     }
                     .popupScdMove{
-                        p{}
-                        .popupScdMoveSelect{
-
+                        padding-bottom: 20px;
+                        padding-top:20px;
+                        >p{
+                            padding-bottom:10px;
+                            font-weight: 500;
                         }
+                        .popupScdMoveCont{
+                            display: flex;
+                            position: relative;
+
+                            .popupScdMoveSelect{
+                                display: flex;
+                                gap:5px;
+                                position:absolute;
+                                top:7px;
+                                z-index: 100;
+                            }
+                            .popupScdMoveMemo{
+                                padding-left: 60px;
+                                input{
+                                width: 250px;
+                                height: 40px;
+                                border:none;
+                                background-color: #ffffff;
+                                border-radius:10px;
+                                padding:8px 14px;
+                                }
+                                .MuiInputBase-formControl::before{
+                                border-bottom:none;
+                                }
+                                .MuiInputBase-formControl::after{
+                                    border-bottom:none;
+                                }
+                                .MuiInputBase-root{
+                                    //border:none;
+                                    background-color: #f8f8f8;
+                                    &.hover{border: none;}
+                                }
+                            }
+                        } 
+
                     }
                     .popupScdBtn{
                         display: flex;

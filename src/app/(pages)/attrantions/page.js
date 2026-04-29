@@ -46,7 +46,7 @@ function Page() {
     setSelectItem(data);
     setShowPopup(true);
   };
-
+  
 
   // 카테고리 분류
   const filterItem = listItems.filter((item) => {

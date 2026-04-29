@@ -8,7 +8,7 @@ const containerStyle = {
   width: "100%",
   height: "550px",
   borderRadius: "10px",
-  border: "1px solid #A1BCE4",
+  border: "1px solid #d4d4d4",
 };
 
 const defaultCenter = {
@@ -17,9 +17,10 @@ const defaultCenter = {
 };
 
 
-export default function GeocoderMap({ itemMarkers }) {
+export default function GeocoderMapPlanPopup({ itemMarkers , selectedAddress,setMapCenter,mapCenter}) {
 
-  const [center, setCenter] = useState(defaultCenter);
+  const [center, setCenter] = useState(mapCenter || defaultCenter);
+  
 
   // 마커를 여러개 찍히도록 배열로 만들기
   const markers = useMemo(() => {
@@ -29,7 +30,8 @@ export default function GeocoderMap({ itemMarkers }) {
     }));
   }, [itemMarkers]);
 
-  useEffect(() => {
+   //마커추가할때마다 지도가 계속 이동하므로 삭제
+  /* useEffect(() => {
   if (!mapRef.current || markers.length === 0) return;
 
   const bounds = new window.google.maps.LatLngBounds();
@@ -45,7 +47,8 @@ export default function GeocoderMap({ itemMarkers }) {
   }
 
   mapRef.current.fitBounds(bounds, 80); // 지도가 마커 따라감 + 패딩으로 과한 줌인 방지
-}, [markers]);
+}, [markers]); */
+  
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -67,6 +70,64 @@ export default function GeocoderMap({ itemMarkers }) {
     mapRef.current = map;
     geocoderRef.current = new window.google.maps.Geocoder();
   }, []);
+  
+  //검색하면 지도이동
+  useEffect(() => {
+  if (!geocoderRef.current || !selectedAddress) return;
+  
+  //마커 있으면 주소 이동 막기
+  /* if (itemMarkers.length > 0) return; */
+
+  geocoderRef.current
+    .geocode({ address: selectedAddress })
+    .then((result) => {
+      const location = result.results[0].geometry.location;
+      
+       const newCenter = {
+        lat: location.lat(),
+        lng: location.lng()
+      };
+
+      mapRef.current.panTo(newCenter);
+      mapRef.current.setZoom(10);
+      
+      setCenter(newCenter);
+      setMapCenter(newCenter); //부모에 저장
+    })
+    .catch((e) => console.error(e));
+
+  }, [selectedAddress]);
+
+  //지역,관광지 저장이후 다시 들어가서 지역바꾸고 취소누르고 나와서 다시들어갈때 지도 위치 기존 마커 기준
+  useEffect(() => {
+    if (!mapRef.current || itemMarkers.length === 0) return;
+
+    //마커 1개
+    if (itemMarkers.length === 1) {
+      const m = itemMarkers[0];
+
+      mapRef.current.panTo({
+        lat: Number(m.mapy),
+        lng: Number(m.mapx),
+      });
+
+      mapRef.current.setZoom(12); //적당한 줌
+      return;
+    }
+
+    //여러개면 bounds
+    const bounds = new window.google.maps.LatLngBounds();
+
+    itemMarkers.forEach((m) => {
+      bounds.extend({
+        lat: Number(m.mapy),
+        lng: Number(m.mapx),
+      });
+    });
+
+    mapRef.current.fitBounds(bounds, 80);
+  }, [itemMarkers]);
+
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -108,7 +169,7 @@ export default function GeocoderMap({ itemMarkers }) {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={15} // 줌 기본값 (처음 지도 등장시)
+        zoom={10} // 줌 기본값 (처음 지도 등장시)
         onLoad={onLoad}
 
         /* 스트립트 뷰 제거 */
@@ -116,16 +177,17 @@ export default function GeocoderMap({ itemMarkers }) {
           streetViewControl: false,
           fullscreenControl: false,
           mapTypeControl: false,
+          gestureHandling: "greedy", //ctrl없이 그냥 줌인가능
         }}
       >
-        <Polyline
+        {/* <Polyline
           path={markers.length >= 2 ? markers : []}
           options={{
             strokeColor: "#FF0000",
             strokeOpacity: 0.8,
             strokeWeight: 4,
           }}
-        />
+        /> */}
 
         {markers.map((m, idx) => (
           // 실제 마커가 찍히는 부분

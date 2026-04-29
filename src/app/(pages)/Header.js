@@ -20,10 +20,11 @@ export default function Header() {
   useEffect(function () {
     if (session) {
       setIsLog(true)
-      //localStorage.setItem("session",JSON.stringify(session))
+      sessionStorage.setItem("session",JSON.stringify(session))
     }
     else {
       setIsLog(false)
+      sessionStorage.removeItem("session")
     }
   }, [session])
 

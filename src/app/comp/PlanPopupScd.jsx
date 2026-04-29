@@ -8,7 +8,7 @@ import { FiX } from 'react-icons/fi'
 function PlanPopupScd({isOpen,onClose}) {
   const [value,setValue]=useState(null);
   const [start, setStart] = useState(null);
-  const [end, setEnd] = useState(null);
+    const [end, setEnd] = useState(null);
 
   return (
     <div className='ppsBoxContainer'>
@@ -54,7 +54,7 @@ function PlanPopupScd({isOpen,onClose}) {
                             <LocalizationProvider dateAdapter={AdapterDayjs} >
                                     <TextField
                                     label="Selected Time"
-                                    value={value ? end.format('HH:mm') : ''} // Format the Dayjs object to a string
+                                    value={value ? value.format('HH:mm') : ''} // Format the Dayjs object to a string
                                     /* InputProps={{
                                         readOnly: true, // Make the input read-only
                                     }} */
