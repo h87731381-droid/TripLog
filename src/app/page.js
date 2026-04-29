@@ -72,7 +72,7 @@ export default function Home() {
         } // gsap 모듈 
         
         moveTimer = setTimeout(() => {
-          router.push('/checkList');
+          router.push('/planner');
         }, 1300); 
       }, 500);
 
