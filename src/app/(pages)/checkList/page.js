@@ -13,7 +13,7 @@ function Check() {
   const [isSaving, setIsSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const {showLogin, setShowLogin} = authStore();
+  const {session, setShowLogin} = authStore();
   const nodeRefs = useRef({});
 
   // [GET] 페이지 로드 시 DB 데이터 호출
@@ -88,7 +88,7 @@ function Check() {
 
   // 버튼 클릭 시 새로운 항목 추가 함수
   const addItem = () => {
-    if(!sessionStorage.session){ setShowLogin(); return; }
+    if(!session){ setShowLogin(); return; }
     setIsSaving(true);
     console.log("add");
     const newId = Date.now();
