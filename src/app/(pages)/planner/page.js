@@ -5,8 +5,6 @@ import PlanTextField from '../../comp/planner/PlanTextField';
 import PlanPopupPlace from '../../comp/planner/PlanPopupPlace';
 import PlanFullDay from '../../comp/planner/PlanFullDay';
 import { FiSave } from "react-icons/fi";
-import PlanOneDayMap from '../../comp/planner/PlanOneDayMap';
-import PlanPopupScd from '../../comp/planner/PlanPopupScd';
 
 function page() {
   const [isOpen,setIsOpen]=useState(false)

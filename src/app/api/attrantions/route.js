@@ -6,7 +6,8 @@ export async function GET() {
     //const result = await db.collection('attrantions').find().toArray();
     
     const apiKey = process.env.KOREA_ATTRANTIONS_API_KEY;
-    const url = `https://apis.data.go.kr/B551011/KorService2/areaBasedList2?MobileOS=etc&MobileApp=test&serviceKey=${apiKey}&pageNo=1&numOfRows=1000&_type=json`;
+    // const url = `https://apis.data.go.kr/B551011/KorService2/areaBasedList2?MobileOS=etc&MobileApp=test&serviceKey=${apiKey}&pageNo=1&numOfRows=100&_type=json`;
+    const url = `https://apis.data.go.kr/B551011/KorService2/searchKeyword2?MobileOS=etc&MobileApp=test&keyword=경주&serviceKey=${apiKey}&pageNo=1&numOfRows=200&_type=json`;
     
 
     const res = await fetch(url);

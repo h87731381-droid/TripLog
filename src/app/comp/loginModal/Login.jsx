@@ -3,31 +3,45 @@
 import React, { useEffect, useState } from 'react'
 import { FiX } from "react-icons/fi";
 import style from './login.module.scss'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 
-function Login({setShowLogin,showLogin,setIsLog}) {
 
-  const { data:session } = useSession();
- 
-  /* if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
- */
+
+/* 이현주 - 로그인 팝업 */
+
+
+
+
+
+function Login({ setShowLogin, showLogin }) {
+
+  const { data: session } = useSession();
+
+  const [renderLogin, setRenderLogin] = useState(false);
+
+  const openLogin = () => {
+    setRenderLogin(true);
+    setShowLogin(true);
+  };
+
+  const closeLogin = () => {
+    setShowLogin(false);
+    setTimeout(() => {
+      setRenderLogin(false);
+    }, 300); // CSS transition 시간과 맞추기
+  };
+
+
   return (
     <div className={style.back}>
       <div className={style.backColor}>
-        <div className={style.loginAll}>
+        <div className={`${style.loginAll} ${closeLogin ? style.open : style.close}`}>
 
           {showLogin &&
             <button className={style.X} onClick={() => setShowLogin(false)}>
               <FiX />
             </button>
-          } 
+          }
 
           <div className={style.loginBox}>
             <b>TRIPLOG</b>
