@@ -2,28 +2,31 @@ import db from "@/app/lib/mongodb";
 import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
 
-/**
- * [GET] 전체 항목 조회
- * 이미 있는 db() 함수를 실행하여 'budget' 컬렉션에 접근합니다.
- */
-export async function GET() {
+export async function GET(req) {
     try {
         const client = await db();
-        const data = await client.collection('budget').find({}).sort({ date: +1 }).toArray();
+        const { searchParams } = new URL(req.url);
+        const email = searchParams.get('email');
+
+        // 이메일이 없으면 빈 데이터를 반환하여 오류 방지
+        if (!email) return NextResponse.json([]);
+        
+        const data = await client.collection('budget')
+            .find({ email: email }) // 로그인한 사용자의 이메일로만 검색
+            .sort({ date: 1 })
+            .toArray();
+            
         return NextResponse.json(data);
     } catch (e) {
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }
 
-/**
- * [POST] 항목 추가
- */
+// POST, DELETE, PUT 함수는 기존과 동일하게 유지됩니다.
 export async function POST(req) {
     try {
         const client = await db();
         const body = await req.json();
-        
         const newItem = {
             email: body.email,
             category: body.category,
@@ -32,7 +35,6 @@ export async function POST(req) {
             date: body.date,
             createdAt: new Date()
         };
-        
         const result = await client.collection('budget').insertOne(newItem);
         return NextResponse.json({ ...newItem, _id: result.insertedId });
     } catch (e) {
@@ -40,14 +42,10 @@ export async function POST(req) {
     }
 }
 
-/**
- * [DELETE] 항목 삭제
- */
 export async function DELETE(req) {
     try {
         const client = await db();
         const id = new URL(req.url).searchParams.get('id');
-        
         await client.collection('budget').deleteOne({ _id: new ObjectId(id) });
         return NextResponse.json({ ok: true });
     } catch (e) {
@@ -55,19 +53,13 @@ export async function DELETE(req) {
     }
 }
 
-/**
- * [PUT] 항목 수정
- */
 export async function PUT(req) {
     try {
         const client = await db();
         const id = new URL(req.url).searchParams.get('id');
         const body = await req.json();
-        
-        // _id는 수정 대상이 아니므로 나머지 데이터만 추출
         const { _id, ...updateData } = body;
         if (updateData.amount) updateData.amount = Number(updateData.amount);
-
         await client.collection('budget').updateOne(
             { _id: new ObjectId(id) },
             { $set: updateData }
