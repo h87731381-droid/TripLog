@@ -24,7 +24,6 @@ function Check() {
         if (session) {
           const response = await fetch("/api/checkList");
           const data = await response.json();
-          console.log(data);
           if(data.checklist && data.checklist.length > 0 ){
             // 불러온 데이터의 id마다 ref(번들정보) 생성
 
