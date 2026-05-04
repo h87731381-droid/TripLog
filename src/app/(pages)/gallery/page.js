@@ -13,7 +13,7 @@ import { authStore } from '@/app/store/authStore';
  */
 function S_gallery() {
     // 1. 상태 및 스토어 설정
-    const { setShowLogin } = authStore();
+    const {session, setShowLogin } = authStore();
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState('등록');
     const [galleries, setGalleries] = useState([]);
@@ -32,13 +32,12 @@ function S_gallery() {
     async function getGallery() {
         setTimeout(async ()=>{
             try {
-                const sessionData = sessionStorage.getItem('session');
-                if (!sessionData) {
+               
+                if (!session) {
                     setGalleries([]);
                     return;
                 }
     
-                const session = JSON.parse(sessionData);
                 const userEmail = session.user?.email;
     
                 if (!userEmail) {
@@ -68,7 +67,7 @@ function S_gallery() {
      * [등록 버튼] handleOpenUpload
      */
     const handleOpenUpload = () => {
-        const session = sessionStorage.getItem('session');
+        console.log(session)
         if (!session) {
             setShowLogin();
             return;
@@ -257,8 +256,8 @@ function GalleryItem({ item, getGallery, handleDelete, setMode, setOpen, setSele
  * [서브 컴포넌트] Popup
  */
 function Popup({ setMode, getGallery, selectedItem, mode, setOpen, uploadTitle, setUploadTitle, setUploadFiles, uploadFiles }) {
+    const {session, setShowLogin } = authStore();
     async function upload() {
-        const session = JSON.parse(sessionStorage.getItem('session'));
         if(!session) return alert("세션이 만료되었습니다.");
 
         const formdata = new FormData();

@@ -27,12 +27,10 @@ export default function Header() {
       }
     }, [showLogin]);
 
-
-    //sessionStorage에 로그인 데이터 저장하기
+  // sessionStorage에 로그인 데이터 저장하기
   useEffect(function () {
     if (session) {
       setIsLog(true)
-      //sessionStorage.setItem("session",JSON.stringify(session));
       saveSession(session);
     }
     else {

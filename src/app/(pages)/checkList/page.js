@@ -6,31 +6,35 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { LuCirclePlus } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbPencil } from "react-icons/tb";
+import { authStore } from '@/app/store/authStore';
 
 function Check() {
   const [items, setItems] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const {session, setShowLogin} = authStore();
   const nodeRefs = useRef({});
-  const last = useRef();
 
   // [GET] 페이지 로드 시 DB 데이터 호출
-  useLayoutEffect(() => {
+  useEffect(() => {
     const fetchChecklist = async () => {
       try {
-        const response = await fetch("/api/checkList");
-        const data = await response.json();
-
         // 저장 내용 O
-        if (data.checklist && data.checklist.length > 0) {
-          // 불러온 데이터의 id마다 ref(번들정보) 생성
-          data.checklist.forEach(item => {
-            if (!nodeRefs.current[item.id]) {
-              nodeRefs.current[item.id] = React.createRef();
-            }
-          });
-          setItems(data.checklist);
+        if (session) {
+          const response = await fetch("/api/checkList");
+          const data = await response.json();
+          console.log(data);
+          if(data.checklist && data.checklist.length > 0 ){
+            // 불러온 데이터의 id마다 ref(번들정보) 생성
+
+            data.checklist.forEach(item => {
+              if (!nodeRefs.current[item.id]) {
+                nodeRefs.current[item.id] = React.createRef();
+              }
+            });
+            setItems(data.checklist);
+          }
         }
         // 저장 내용 X : 추천리스트
         else {
@@ -55,7 +59,7 @@ function Check() {
     };
     fetchChecklist();
     resize();
-  }, []);
+  }, [session]);
 
   // [번들위치] 드래그가 멈추면 해당 번들의 좌표 저장
   const handleStop = (id, e, data) => {
@@ -67,6 +71,7 @@ function Check() {
 
   // [SAVE] DB로 현재 상태(위치 포함) 저장 / 저장 성공여부 팝업
   const saveItems = async () => {
+    if(!session){ setShowLogin(); return; }
     setIsSaving(true);
     try {
       const response = await fetch("/api/checkList", {
@@ -86,6 +91,8 @@ function Check() {
 
   // 버튼 클릭 시 새로운 항목 추가 함수
   const addItem = () => {
+    if(!session){ setShowLogin(); return; }
+    //setIsSaving(true);
     console.log("add");
     const newId = Date.now();
     const deactivatedItems = items.map(item => ({ ...item, isEditing: false }));
@@ -104,7 +111,9 @@ function Check() {
   };
 
   // 편집 모드 토글
-  const toggleEdit = (id, e) => {          
+  const toggleEdit = (id, e) => {     
+    if(!session){ setShowLogin(); return; } 
+    setIsSaving(true);
     e.stopPropagation(); // 부모 클릭시 이벤트 방지    
     const changeItems = items.map(
       item => item.id === id ? { ...item, isEditing: !item.isEditing } : { ...item, isEditing: false }
@@ -120,6 +129,8 @@ function Check() {
 
   // 번들 삭제
   const deleteBundle = (id) => {
+    if(!session){ setShowLogin(); return; }
+    setIsSaving(true);
     const changeItems = items.filter(bundle => bundle.id !== id);
     setItems(changeItems);
   };
@@ -176,6 +187,8 @@ function Check() {
 
   // 체크박스 핸들러 
   const toggleCheck = (bundleId, subId) => {
+    if(!session){ setShowLogin(); return; }
+    setIsSaving(true);
     console.log("toggleCheck");
     const changeItems = items.map(bundle => {
       if (bundle.id === bundleId && !bundle.isEditing) { // 비활성화일 때 가능
@@ -199,6 +212,8 @@ function Check() {
       else {setResize(false);}
     })
   }
+
+  
 
   return (
     <section className="checklist" onClick={disableAllEdit}>

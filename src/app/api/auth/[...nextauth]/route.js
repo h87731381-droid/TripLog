@@ -30,7 +30,7 @@ export const authOptions = {
       return true // 같은 email 있으면 아래쪽 실행
     },
     async redirect({ url, baseUrl }) {
-      return baseUrl
+      return url
     },
     async session({ session, user, token }) {
       return session

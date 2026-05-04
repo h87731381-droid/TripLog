@@ -4,13 +4,13 @@ export const authStore = create((set) => ({
   session:null,
   showLogin: false,
   setShowLogin: () =>{
-     set( (obj)=>({showLogin:!obj.showLogin})  )
+     set( (obj)=>({showLogin:!obj.showLogin, session:null})  )
   },
   saveSession:(session)=>{
     set({session:session});
   },
   deleteSession:()=>{
-    set({session:{}});
+    set({session:null});
   }
   
 }))

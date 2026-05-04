@@ -6,7 +6,7 @@ import { TbPencil } from "react-icons/tb";
 import { authStore } from '@/app/store/authStore'; 
 
 function Budget() {
-  const { setShowLogin } = authStore(); 
+  const { session, setShowLogin } = authStore(); 
   const [items, setItems] = useState([]);                   
   const [isManageMode, setIsManageMode] = useState(false);  
   const [editingId, setEditingId] = useState(null);         
@@ -23,8 +23,6 @@ function Budget() {
 
   useEffect(() => {
     setTimeout(function(){
-
-      const session = JSON.parse(sessionStorage.getItem('session'));
       if (session && session.user?.email) {
         fetchItems(session.user.email);
       }
@@ -43,7 +41,7 @@ function Budget() {
   }, [isReceiptOpen]);
 
   const fetchItems = async (email) => {
-    const targetEmail = email || JSON.parse(sessionStorage.getItem('session'))?.user?.email;
+    const targetEmail = session.user.email;
     if (!targetEmail) return;
     const res = await fetch(`/api/budget?email=${targetEmail}`);
     const data = await res.json();
@@ -52,7 +50,6 @@ function Budget() {
 
   const handleAdd = async (e) => {
     e.preventDefault(); 
-    const session = JSON.parse(sessionStorage.getItem('session'));
     if (!session || !session.user) {
       setShowLogin(); 
       return;

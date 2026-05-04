@@ -32,6 +32,11 @@ function Login({ setShowLogin, showLogin }) {
   };
 
 
+  useEffect(() => {
+      localStorage.setItem("pathname", window.location.pathname);
+  }, []);
+
+ 
   return (
     <div className={style.back}>
       <div className={style.backColor}>
@@ -51,11 +56,18 @@ function Login({ setShowLogin, showLogin }) {
                 <span>가입되어 있지 않아도 가입+로그인을 한번에!</span>
               </div>
               <div className={style.loginButtons}>
-                <button className={style.naver} onClick={() => signIn('naver')}>
+                <button className={style.naver} onClick={() => {
+                  const destination = localStorage.getItem("pathname") || "/";
+                  signIn('naver', { callbackUrl: destination });
+                }}>
                   <img src="/imgs/attrantions/simple-icons_naver.svg" alt="" />
                   <span>Naver</span>
                 </button>
-                <button className={style.google} onClick={() => signIn('google')}>
+
+                <button className={style.google} onClick={() => {
+                  const destination = localStorage.getItem("pathname") || "/";
+                  signIn('google', { callbackUrl: destination });
+                }}>
                   <img src="/imgs/attrantions/material-icon-theme_google.svg" alt="" />
                   <span>Google</span>
                 </button>
