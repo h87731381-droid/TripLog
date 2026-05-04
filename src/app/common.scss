@@ -53,14 +53,6 @@ input{ outline: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-x: hidden;
-
-  overflow-y: auto;
-  -ms-overflow-style: none; // IE, Edge
-  scrollbar-width: none; // Firefox
-  &::-webkit-scrollbar {
-    display: none; // Chrome, Safari, Opera
-  }
 
   .delivery-wrapper{
     display: flex;

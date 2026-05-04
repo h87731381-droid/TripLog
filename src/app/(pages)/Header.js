@@ -6,17 +6,18 @@ import { LuPin, LuPinOff } from "react-icons/lu";
 import { usePathname, useRouter } from "next/navigation";
 import Login from "../comp/loginModal/Login";
 import { signOut, useSession } from "next-auth/react";
+import { authStore } from "../store/authStore";
 
 export default function Header() {
+  const {showLogin,setShowLogin, saveSession, deleteSession} = authStore();
 
   const [pinned, setPinned] = useState(false); // 고정 여부 상태
   const [isOpen, setIsOpen] = useState(false); 
   const pathname = usePathname();
-  const [showLogin, setShowLogin] = useState(false);
+  
   const [isLog, setIsLog] = useState(false);
   const { data: session } = useSession();
-  console.log(session)
-
+  
   // 로그인 팝업 열릴 때 스크롤 방지
     useEffect(() => {
       if (showLogin) {
@@ -31,11 +32,12 @@ export default function Header() {
   useEffect(function () {
     if (session) {
       setIsLog(true)
-      sessionStorage.setItem("session",JSON.stringify(session))
+      //sessionStorage.setItem("session",JSON.stringify(session));
+      saveSession(session);
     }
     else {
       setIsLog(false)
-      sessionStorage.removeItem("session")
+      deleteSession()
     }
   }, [session]);
 
@@ -49,7 +51,7 @@ export default function Header() {
             <div className="menu">
               <div className="user">
                 <div className="user-bnt">
-                  <button className="userLink" onClick={() => setShowLogin(true)}>
+                  <button className="userLink" onClick={() => setShowLogin()}>
                     로그인
                   </button>
                 </div>
@@ -93,7 +95,7 @@ export default function Header() {
                   <Link href="/attrantions" className={pathname === '/attrantions' ? 'active' : ''}>추천관광지</Link>
                   <Link href="/budget" className={pathname === '/budget' ? 'active' : ''}>여행경비</Link>
                   <Link href="/checkList" className={pathname === '/checkList' ? 'active' : ''}>체크리스트</Link>
-                  <Link href="/gallery_main" className={pathname === '/gallery' ? 'active' : ''}>갤러리</Link>
+                  <Link href="/gallery" className={pathname === '/gallery' ? 'active' : ''}>갤러리</Link>
                 </div>
               </nav>
             </div>
