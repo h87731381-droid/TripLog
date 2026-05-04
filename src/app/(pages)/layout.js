@@ -13,6 +13,7 @@ export default function RootLayout({ children }) {
 
     if (hasVisited) {
       gsap.set(deliveryRef.current, { y: 0, opacity: 1 });
+      gsap.set(deliveryRef.current, { clearProps:'transform' });
       setShowPlane(false);
     } else {
       setShowPlane(true);
@@ -21,15 +22,16 @@ export default function RootLayout({ children }) {
       gsap.to(deliveryRef.current, {
         y: 0,
         opacity: 1,
-        duration: 2,
+        duration: 1.5,
         ease: "power3.inOut",
 
         onComplete: () => {
           gsap.to(".plane", {
             opacity: 0,
-            duration: 0.5,
+            duration: 2,
             ease: "power2.in",
             onComplete: () => {
+              gsap.set(deliveryRef.current, { clearProps:'transform' });
               setShowPlane(false);
               localStorage.setItem("hasVisited", "true");
             }

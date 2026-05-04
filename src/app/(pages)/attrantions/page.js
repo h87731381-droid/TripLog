@@ -5,11 +5,21 @@ import React, { useEffect, useState } from 'react'
 import style from './attrantions.module.scss'
 import './loadingLoof.css'
 import { FiX } from "react-icons/fi";
+//import { authStore } from '@/store/authStore'; //로그인 여부 스토어
+//import { tripStore } from '../../store/tripStore';//⭐
+
+
+
+/* 이현주 - 추천관광지 */
+
+
+
 
 function Page() {
   
-  /* const [selectedAddress, setSelectedAddress] = useState(""); */
-  const [isPlan, setIsPlan] = useState(true); // 플랜 여부
+  const [isPlan, setIsPlan] = useState(false); // 플랜 여부⭐
+  // const { tripData, setTripData } = tripStore(); // 플랜 스토어⭐
+  //const { showLogin, setShowLogin } = authStore(); // 로그인 여부
   const [activeMenu, setActiveMenu] = useState(1); // 카테고리 기본값:1(전체)
   const [samplePopup, setSamplePopup] = useState(true); // 샘플
   const [selectItem, setSelectItem] = useState(); // 선택된 아이템
@@ -17,6 +27,9 @@ function Page() {
   const [listItemsDetail, setListItemsDetail] = useState([]); // 아이템 정보
   const [itemMarkers, setItemMarkers] = useState([]); // 마커 온오프.
   const [showPopup, setShowPopup] = useState(false); // 팝업
+  const [region, setRegion] = useState("");//⭐
+  const [tripSchedule, setTripSchedule] = useState([]); //⭐
+  const session = "유저세션값"; //⭐ 나중에 교체
 
   // 마커 생성/삭제
   const handleToggleItem = (item) => {
@@ -33,6 +46,7 @@ function Page() {
     });
   };
 
+console.log(itemMarkers);
 
 
   // api 호출
@@ -58,6 +72,65 @@ function Page() {
     setListItemsDetail(item);
     setSelectItem(data);
   };
+
+
+
+
+  // (임시지역) 테스트 코드⭐
+  useEffect(() => {
+    setIsPlan(true);
+    setRegion("경주");
+  }, []);
+
+  // 앞전에 저장한 관광지 데이터 가져옴 ⭐
+  /* useEffect(() => {
+    const fetchDraft = async () => {
+
+      if (!session) {
+        setIsPlan(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `/api/planner?type=draft&session=${session}`
+        );
+
+        const data = await res.json();
+
+        if (!data?.scd || data.scd.length === 0) {
+          setIsPlan(false);
+          return;
+        }
+
+        setIsPlan(true);
+
+        // 지역
+        setRegion(
+          data.region ||
+          data.area ||
+          data.keyword ||
+          "지역 미선택"
+        );
+
+        // 저장된 일정
+        setTripSchedule(data.scd);
+
+        // 지도 마커
+        setItemMarkers(data.scd);
+
+      } catch (err) {
+        console.error("draft 불러오기 실패:", err);
+        setIsPlan(false);
+      }
+    };
+
+    fetchDraft();
+  }, [session]); */
+
+
+
+
   
 
   // 메뉴 카테고리 고유값 만들기 (json)
@@ -95,6 +168,20 @@ function Page() {
       document.body.style = "overflow:visible;";
     }
   }, [samplePopup]);
+
+
+  // 일정등록 여부
+ /* useEffect(()=>{
+  console.log(sessionStorage.session);
+  if(등록한 일정 있음) {
+    retrun (
+    setIsPlan(true)
+    등록한 추천관광지 기록
+    + 검색한 키워드..?
+    )
+  }
+ },[]); */
+
 
 
 
@@ -157,7 +244,7 @@ function Page() {
             <div>
               <h1 className={style.title}>추천관광지</h1>
               <div className={style.region}>
-                <h3 style={{ color: "black" }}>제주도</h3>
+                <h3 style={{ color: "black" }}>{region}</h3>
                 {/* <div className={style.regionCategory}>
                   <span>애월</span>
                   <span>제주시</span>
@@ -256,6 +343,8 @@ function Item({ i, isActive, handleToggleItem, handleClickItem }) {
 
 /* 팝업 - 자세히보기 */
 function Popup({ showPopup, setShowPopup, selectItem, listItemsDetail, setSelectItem }) {
+
+  if (!showPopup) return null; //⭐
 
   // 데이터 잘 갖고오는지 확인 console.log(listItemsDetail);
 

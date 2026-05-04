@@ -78,8 +78,9 @@ function PlanPopupScdTime() {
                 <TextField
                 placeholder="시작 시간"
                 variant="filled"
+                name='startTime'
                 value={startTime ? startTime.format('HH:mm') : ''}
-                InputProps={{
+                inputprops={{
                 readOnly: true,
                 }}
                 onClick={() => {setShowStartTimeClock(true)
@@ -111,8 +112,9 @@ function PlanPopupScdTime() {
                 <TextField
                 placeholder="종료 시간"
                 variant="filled"
+                name='endTime'
                 value={endTime ? endTime.format('HH:mm') : ''}
-                InputProps={{
+                inputprops={{
                 readOnly: true,
                 }}
                 onClick={() => {setShowEndTimeClock(true)

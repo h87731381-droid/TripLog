@@ -7,11 +7,15 @@ import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/ko'
 dayjs.locale('ko')
 import { MdCancel } from "react-icons/md";
+import { authStore } from '@/app/store/authStore';
+import { tripStore } from '@/app/store/tripStore';
 
 function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,setPickedPlace,onSubmit}) {
   const [start, setStart] = useState(dayjs());
   const [end, setEnd] = useState(dayjs().add(1,'day'));
   const [tripTitle, setTripTitle] = useState("");
+  const { session } = authStore();//zustand 스토어 관리
+  const { tripData, setTripData } = tripStore();//zustand 스토어 관리
 
   const handleStartChange = (newValue) => {
   setStart(newValue)
@@ -41,6 +45,37 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
     setSelectedAddress('')
     setPickedPlace([])
   }
+
+  //완료버튼 누르면 db에 저장(여행일정 전체 틀)
+  const createTrip = async ()=>{
+    //const session = JSON.parse(sessionStorage.getItem("session"));
+    const userId = session?.user?.email;//sessionStorage에서 userId로 쓸 이메일 가져오기
+
+    console.log(userId);
+    
+    const res = await fetch('/api/planner',{//아직 id값 없음
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'//json데이터 형식으로 보낸다
+      },
+      body:JSON.stringify({
+        tripTitle:tripTitle,
+        start,
+        end,
+        selectedAddress,
+        places:pickedPlace,
+        userId,
+        status:'draft',
+        createAt:new Date(),
+        scd:[]
+      })
+    });
+    
+    const data=await res.json();
+
+    setTripData(data);//화면 전환
+  }
+
   return (
     <div className='planMakeBox'>
         <p>여행 일정 만들기</p>
@@ -152,11 +187,7 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
             <button 
             type='button'
             onClick={()=>{
-              onSubmit({
-                tripTitle:tripTitle,
-                start:start,
-                end:end
-              })
+              createTrip()
             }}
             >완료</button>
           </div>

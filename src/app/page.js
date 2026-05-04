@@ -7,9 +7,9 @@ import { gsap } from "gsap"; // 배경모듈
 const summary_data = [
   { id: 0, text: "지도 위 최적 동선 설계", img: "/imgs/splash/pad_check.png" },
   { id: 1, text: "어디 갈지 고민될 땐 추천 리스트", img: "/imgs/splash/pad_att.png" },
-  { id: 2, text: "클릭 한 번으로 끝내는 정산", img: "/imgs/splash/pad_check.png" },
+  { id: 2, text: "클릭 한 번으로 끝내는 정산", img: "/imgs/splash/pad_budget.png" },
   { id: 3, text: "체크리스트로 꼼꼼하게", img: "/imgs/splash/pad_check.png" },
-  { id: 4, text: "나만의 포토로그", img: "/imgs/splash/pad_check.png" },
+  { id: 4, text: "나만의 포토로그", img: "/imgs/splash/pad_gallery.png" },
 ];
 
 export default function Home() {
