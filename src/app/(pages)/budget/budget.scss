@@ -36,6 +36,7 @@
 }
 
 .budget_button {
+  display: flex;  
   padding: 15px 150px;
   
   select { font-size: 16px; border-color: #AEAEAE; color: #AEAEAE;}
@@ -55,6 +56,14 @@
     height: 30px;
   }
 }
+/* 영수증 버튼 - 평소(PC)에는 숨김 */
+.receipt_btn {
+  display: none;
+}
+.Receipt {
+  transition: all 0.4s ease-in-out;
+}
+
 
 .wrap {
   display: flex;
@@ -184,6 +193,7 @@
     transform: rotate(4deg);
     position: sticky;
     top: 100px;
+    transition: all 0.4s ease-in-out;
 }
 .Receipt >h3{
     font-size: 30px;
@@ -225,12 +235,187 @@
 
 // Tablet Landscape (951px ~ 1024px)
 
-@media (max-width: 1024px){}
+@media (max-width: 1024px){
+    .budget_button {
+        padding: 10px 0px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .budget_button select {font-size: 14px;}
+    .budget_button input:first-of-type, .budget_button input:nth-of-type(2), .budget_button input:nth-of-type(3) {width: 105px; font-size: 14px;}
+    .budget_button input {font-size: 14px;}
+    .budget_button input[type="submit"], .budget_button .edit_button {height: 20px; padding: 0 10px;}
+    .list {gap: 50px 100px;}
+    .list_stay .list_title {font-size: 28px;}
+    .list_fare .list_title {font-size: 28px;}
+    .list_food .list_title {font-size: 28px;}
+    .list_other .list_title {font-size: 28px;}
+    .list_content {font-size: 28px;}
+    .list_edit_div > span:first-of-type {font-size: 18px;}
+    .manage_icons {font-size: 13px; display: flex;}
+    .list_stay .list_title:after {height: 15px; bottom: 13px;}
+    .list_fare .list_title:after {height: 15px; bottom: 13px;}
+    .list_food .list_title:after {height: 15px; bottom: 13px;}
+    .list_other .list_title:after {height: 15px; bottom: 13px;}
+    .receipt_btn {
+        z-index: 1001;
+        color: #fff;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        letter-spacing: 7px;
+        cursor: pointer;
+        background-color: #555;
+        border: none;
+        border-radius: 10px 0 0 10px;
+        width: 35px;
+        padding: 25px 0 15px;
+        font-family: GangwonEduHyeonokT, sans-serif;
+        font-size: 20px;
+        display: block;
+        position: fixed;
+        top: 200px;
+        right: 0;
+        box-shadow: -2px 2px 5px #0003;
+    
+        /* 마우스 호버 효과 (선택) */
+        &:hover {
+        background-color: #333;
+        }
+    }
+    .Receipt {
+        position: fixed;
+        justify-content: center;
+        top: 25%;
+        right: -100%; /* 화면 오른쪽 밖으로 숨김 */
+        width: 280px;
+        height: 480px;
+        gap: 40px;
+        z-index: 1000;
+        transform: rotate(0deg); /* 모바일에서는 회전 제거 */
+        background-color: white; 
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        
+        /* 클래스가 active일 때 화면 안으로 들어옴 */
+        &.active {
+        right: 0; 
+        }
+    }
+    .Receipt > span {font-size: 14px;}
+    .Receipt > h3 {font-size: 24px;}
+    .Receipt > div {font-size: 18px;}
+    .FiCheck {font-size: 13px;}
+    .wrap {padding: 50px 0;}
+    
+}
 
 // Tablet Portrait (950px 이하)
 
-@media (max-width: 950px){}
+@media (max-width: 950px){
+    .budget_button {
+        padding: 10px 0px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .budget_button select {font-size: 12px;}
+    .budget_button input:first-of-type, .budget_button input:nth-of-type(2){width: 50px; font-size: 12px;}
+    .budget_button input:nth-of-type(3) {width: 90px; font-size: 12px;}
+    .budget_button input {font-size: 12px;}
+    .budget_button input[type="submit"], .budget_button .edit_button {height: 20px; padding: 0 10px;}
+    .list {
+        gap: 30px;
+        display: flex;
+        flex-direction: column;
+    }
+    .list_stay, .list_fare, .list_food, .list_other {
+        flex-direction: column;
+        min-height: 0px;
+        display: flex;
+    }
+    .list_stay .list_title {font-size: 24px;}
+    .list_fare .list_title {font-size: 24px;}
+    .list_food .list_title {font-size: 24px;}
+    .list_other .list_title {font-size: 24px;}
+    .list_stay .list_title:after, .list_fare .list_title:after, .list_food .list_title:after, .list_other .list_title:after{height: 10px; bottom: 15px;}
+    .list_content {font-size: 24px;}
+    .list_edit_div > span:first-of-type {font-size: 12px;}
+    .manage_icons {font-size: 11px; display: flex;}
+    .receipt_btn {
+        font-size: 16px;
+        padding: 20px 0 10px;
+        width: 30px;
+    }
+    .Receipt {
+        gap: 25px;
+        width: 210px;
+        height: 320px;
+        padding: 35px 45px 50px;
+    }
+    
+    .Receipt > h3 {font-size: 18px;}
+    .Receipt > span {font-size: 10px; gap: 20px;}
+    .Receipt > div {font-size: 14px;}
+
+    .form_text {width: 50px; font-size: 12px;}
+    .FiCheck {font-size: 11px;}
+    .form_date {font-size: 11px;}
+}
 
 // Mobile (480px 이하)
 
-@media (max-width: 480px){}
+@media (max-width: 480px){
+    .budget_button {
+        padding: 10px 0px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .budget_button select {font-size: 10px; width: 50px;}
+    .budget_button .edit_button {
+        height: 17px;
+        padding: 0 5px;
+    }
+    .budget_button input:first-of-type, .budget_button input:nth-of-type(2) {width: 40px; font-size: 10px;}
+    .budget_button input:nth-of-type(3) {width: 76px; font-size: 10px;}
+    .budget_button input {font-size: 10px;}
+    .budget_button input[type="submit"], .budget_button .edit_button {height: 17px; padding: 0 5px;}
+    .budget_button .edit_button {margin-left: 242px;}
+    .list {
+        gap: 30px;
+        display: flex;
+        flex-direction: column;
+    }
+    .list_stay, .list_fare, .list_food, .list_other {
+        flex-direction: column;
+        min-height: 0px;
+        display: flex;
+    }
+    .list_stay .list_title {font-size: 22px;}
+    .list_fare .list_title {font-size: 22px;}
+    .list_food .list_title {font-size: 22px;}
+    .list_other .list_title {font-size: 22px;}
+    .list_stay .list_title:after, .list_fare .list_title:after, .list_food .list_title:after, .list_other .list_title:after{height: 10px; bottom: 15px;}
+    .list_edit_div {gap: 10px; margin-bottom: 0;}
+    .list_content {font-size: 22px;}
+    .list_edit_div > span:first-of-type {font-size: 10px;}
+    .manage_icons {font-size: 9px; display: flex;}
+    .receipt_btn {
+        font-size: 14px;
+        width: 25px;
+        padding: 15px 0 5px;
+    }
+    .Receipt {
+        gap: 20px;
+        width: 200px;
+        height: 270px;
+        padding: 30px 40px 45px;
+    }
+    
+    .Receipt > h3 {font-size: 16px;}
+    .Receipt > span {gap: 15px;}
+    .Receipt > div {font-size: 12px;}
+
+    .form_text {width: 50px; font-size: 10px;}
+    .FiCheck {font-size: 9px;}
+    .form_date {font-size: 9px;}
+    .wrap {padding: 5px 0 10px;}
+    
+}
