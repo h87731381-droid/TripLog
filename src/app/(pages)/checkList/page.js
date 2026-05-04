@@ -6,17 +6,18 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { LuCirclePlus } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbPencil } from "react-icons/tb";
+import { authStore } from '@/app/store/authStore';
 
 function Check() {
   const [items, setItems] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const {showLogin, setShowLogin} = authStore();
   const nodeRefs = useRef({});
-  const last = useRef();
 
   // [GET] 페이지 로드 시 DB 데이터 호출
-  useLayoutEffect(() => {
+  useEffect(() => {
     const fetchChecklist = async () => {
       try {
         const response = await fetch("/api/checkList");
@@ -67,6 +68,7 @@ function Check() {
 
   // [SAVE] DB로 현재 상태(위치 포함) 저장 / 저장 성공여부 팝업
   const saveItems = async () => {
+    if(!sessionStorage.session){ setShowLogin(); return; }
     setIsSaving(true);
     try {
       const response = await fetch("/api/checkList", {
@@ -86,6 +88,8 @@ function Check() {
 
   // 버튼 클릭 시 새로운 항목 추가 함수
   const addItem = () => {
+    if(!sessionStorage.session){ setShowLogin(); return; }
+    setIsSaving(true);
     console.log("add");
     const newId = Date.now();
     const deactivatedItems = items.map(item => ({ ...item, isEditing: false }));
@@ -104,7 +108,9 @@ function Check() {
   };
 
   // 편집 모드 토글
-  const toggleEdit = (id, e) => {          
+  const toggleEdit = (id, e) => {     
+    if(!sessionStorage.session){ setShowLogin(); return; } 
+    setIsSaving(true);
     e.stopPropagation(); // 부모 클릭시 이벤트 방지    
     const changeItems = items.map(
       item => item.id === id ? { ...item, isEditing: !item.isEditing } : { ...item, isEditing: false }
@@ -120,6 +126,8 @@ function Check() {
 
   // 번들 삭제
   const deleteBundle = (id) => {
+    if(!sessionStorage.session){ setShowLogin(); return; }
+    setIsSaving(true);
     const changeItems = items.filter(bundle => bundle.id !== id);
     setItems(changeItems);
   };
@@ -176,6 +184,8 @@ function Check() {
 
   // 체크박스 핸들러 
   const toggleCheck = (bundleId, subId) => {
+    if(!sessionStorage.session){ setShowLogin(); return; }
+    setIsSaving(true);
     console.log("toggleCheck");
     const changeItems = items.map(bundle => {
       if (bundle.id === bundleId && !bundle.isEditing) { // 비활성화일 때 가능
