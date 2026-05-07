@@ -1,47 +1,76 @@
 import React, { useState } from 'react'
 import { FiPlus } from "react-icons/fi";
-import { FaCar, FaCircle, FaWalking } from "react-icons/fa"
-import { FaBus } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa"
 import { FiSave } from "react-icons/fi";
 import { GrFormNext } from "react-icons/gr";
 import GeocoderMap from '../GeocoderMap';
 import PlanPopupScd from './PlanPopupScd';
 import GeocoderMapOneDay from '../GeocoderMapOneDay';
 import { tripStore } from '@/app/store/tripStore';
-import { FaTrainSubway } from 'react-icons/fa6';
-import { BiSolidPlaneAlt } from 'react-icons/bi';
-import { MdDirectionsBoat } from 'react-icons/md';
+import { TbPencil } from "react-icons/tb";
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
-
-function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,isOpen}) {
+function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,isOpen,isPopupOpen,setIsPopupOpen,moveIcons}) {
   const [dayPlan,setDayPlan]=useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
-  const {tripData}=tripStore();
+  const {tripData,setTripData}=tripStore();
   const [pickedPlace,setPickedPlace]=useState([]);
-  const [isPopupOpen,setIsPopupOpen]=useState(false);
+  
+  //스케줄 수정
+  const [editingId, setEditingId] = useState(null);  
+  const [editData, setEditData] = useState(null);
 
   const schedules=tripData?.scd?.filter(
-    scd => scd.day == selectedDay.idx + 1
+    scd => scd.day == (selectedDay?.idx + 1)
   ) || [];//tripdata에서 가져온 스케쥴 배열
-  
-  //교통수단 아이콘 매핑 추가
-  const moveIcons = {
-  bus: <FaBus />,
-  train: <FaTrainSubway />,
-  airplane: <BiSolidPlaneAlt />,
-  car: <FaCar />,
-  boat: <MdDirectionsBoat />,
-  walk: <FaWalking />
-  };
+  console.log(schedules)
 
-  //일정추가 팝업 내용 초기화
-  const resetForm = () => {
-  setScdTitle("");
-  setScdPlace("");
-  setScdMove("");
-  setScdMoveMemo("");
-  setStartTime("");
+  //마커 찍히게 스케줄 필터
+  const markers = schedules
+  .filter(scd => scd.mapx && scd.mapy)
+  .map(scd => ({
+    mapx: scd.mapx,
+    mapy: scd.mapy
+  }));
+  
+  //스케줄 추가 시 장소 누를때마다 마커 바로 찍히게 임시 마커 상태
+  const [tempMarkers, setTempMarkers] = useState([]);
+  
+  //두개를 하나의 배열로 합쳐서 보내야 map돌릴때 오류안남
+  const mergedMarkers = [
+  ...markers,
+  ...tempMarkers
+];
+
+  //스케줄 하나 수정
+  const scdEditStart = (item) => {
+    setEditingId(item._id); 
+    setEditData({ 
+      scdTitle: item.scdTitle, 
+      scdPlace: item.scdPlace, 
+      scdMove: item.scdMove,
+      scdMoveMemo: item.scdMoveMemo,
+      startTime: item.startTime,
+      endTime: item.endTime, 
+      contentid: item.contentid//수정할때 장소넘어올때 해당 장소 active되있게
+    });
+    setIsPopupOpen(true); // 팝업 열기
   };
+  
+  //스케줄 하나 삭제
+  const scdDelete = async (id) => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      await fetch(`/api/planner?id=${id}`, 
+        { method: 'DELETE' });
+        // 다시 데이터 불러오기
+        const res = await fetch(`/api/planner?type=draft&session=${tripData.userId}`);
+        const data = await res.json();
+        setTripData(data); 
+      }
+    };
+    
+    
+  
 
   return (
     <div className='planEditContOneDay'>
@@ -56,11 +85,30 @@ function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,i
             <div className='planEditOneDayBox'>
               {schedules.length===0 ?
                 (<div className='planEditOneDayBoxEmpty'>
-                    <a href=''>일정추가<FiPlus /></a>
+                  {tripData.status==='draft' ?
+                   <>
+                    <a 
+                      href=''
+                      onClick={(e)=>{
+                        e.preventDefault();
+                        if(isPopupOpen)return;
+                        setIsPopupOpen(true);
+                        //onOpen();
+                      }}
+                      style={{
+                        pointerEvents:isPopupOpen ? "none" : "auto",
+                        backgroundColor:isPopupOpen ? "#AED1E6" : "#27678E"
+                      }}
+                    >일정추가<FiPlus /></a>
                     <div>
                       <p>아직 추가된 일정이 없습니다!</p>
                       <p>일정을 추가해보세요!</p>
                     </div>
+                   </>
+                   :<div className='completed'>
+                      <p>추가된 일정이 없습니다!</p>
+                    </div>
+                  }
                 </div>
                 )
                 :
@@ -72,46 +120,75 @@ function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,i
                         <div className='timeLine'>
                           <div className='circle'><FaCircle /></div>
                         </div>
+                        
                         <div className='scdContent'>
-                          <p className='scdTitle'>{scd.scdTitle}</p>
+                          <div className='scdUpper'>
+                            <p className='scdTitle'>{scd.scdTitle}</p>
+                            {tripData.status==='draft' &&
+                              <div className='scdCRUD'>
+                                <TbPencil onClick={() => scdEditStart(scd)}/>
+                                <RiDeleteBin6Line onClick={()=>scdDelete(scd._id)} />
+                              </div>
+                            }
+                          </div>
                           <p className='scdSpot'>{scd.scdPlace}</p>
                           <div className='scdMove'>
                             <p className='scdMoveIcon'>{moveIcons[scd.scdMove]}</p>
                             <p className='scdMoveMemo'>{scd.scdMoveMemo}</p>
                           </div>
                         </div>
+                          
+                        
                       </div>
 
                     ))
                   }
-                    
+                    {tripData.status==='draft' &&
                     <a 
                       href=''
                       onClick={(e)=>{
                         e.preventDefault();
-                        if(isOpen)return;
-                        onOpen();
+                        if(isPopupOpen)return;
+                        setIsPopupOpen(true);
+                        //onOpen();
                       }}
                       style={{
-                        pointerEvents:isOpen ? "none" : "auto",
-                        backgroundColor:isOpen ? "#AED1E6" : "#27678E"
+                        pointerEvents:isPopupOpen ? "none" : "auto",
+                        backgroundColor:isPopupOpen ? "#AED1E6" : "#27678E"
                       }}
                     >일정추가<FiPlus /></a>
+                    }
                 </div>
                 )
               }
             </div>
         </div>
         <div className='planEditDayMap'>
-            <GeocoderMapOneDay selectedAddress={selectedAddress}/>
+            <GeocoderMapOneDay 
+            selectedAddress={tripData.selectedAddress}
+            itemMarkers={mergedMarkers}
+            
+            />
         </div>
-        <div className='planPopupScdBg'>
-            <div className='planPopupScdBg2'> </div>
-            <PlanPopupScd 
-            pickedPlace={pickedPlace}
-            isOpen={isPopupOpen} 
-            onClose={() => setIsPopupOpen(false)}/>
-        </div>
+        {isPopupOpen && (
+          
+              
+              <PlanPopupScd 
+              day={selectedDay.idx + 1} 
+              pickedPlace={pickedPlace}
+              isPopupOpen={isPopupOpen} 
+              onClose={() => {
+                setIsPopupOpen(false);
+                setEditingId(null); // 수정모드 초기화
+                setEditData(null);
+                }}
+              editData={editData}
+              editingId={editingId}
+              setTempMarkers={setTempMarkers}
+              />
+          
+
+        )}
     </div>
   )
 }

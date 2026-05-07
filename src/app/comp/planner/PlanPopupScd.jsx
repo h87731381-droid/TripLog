@@ -1,6 +1,6 @@
 'use client'
 import { TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FiX } from 'react-icons/fi'
 import PlanPopupScdTime from './PlanPopupScdTime'
 import { FaBus } from "react-icons/fa";
@@ -13,14 +13,76 @@ import { Button} from "@mui/material";
 import axios from 'axios'
 import { authStore } from '@/app/store/authStore'
 import { tripStore } from '@/app/store/tripStore'
+import dayjs from 'dayjs';
+import { GrFormNext } from 'react-icons/gr'
 
-function PlanPopupScd({isOpen,onClose,pickedPlace}) {
-    
+function PlanPopupScd({day,isPopupOpen,onClose,pickedPlace,editData,editingId,setTempMarkers}) {
+  if (!isPopupOpen) return null;
   const {tripData,setTripData}=tripStore();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
+
+  //스케줄 수정
+  const [scdTitle, setScdTitle] = useState('');
+  const [scdPlace, setScdPlace] = useState('');
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
   
+  //추천 관광지 리스트 가져오기
+  const [listItems, setListItems] = useState([]);
   
+  //교통수단 선택하면 커서 바로 깜빡이게
+  const memoRef = useRef(null);
+
+  //editData 들어오면 값 세팅
+  useEffect(() => {
+  if (editData) {
+    setScdTitle(editData.scdTitle || '');
+    setScdPlace(editData.scdPlace || '');
+    setSelected(editData.scdMove || null);
+    setScdMoveMemo(editData.scdMoveMemo || '');
+    
+    // 시간 추가
+    setStartTime(editData.startTime ? dayjs(editData.startTime, 'HH:mm') : null);
+    setEndTime(editData.endTime ? dayjs(editData.endTime, 'HH:mm') : null);
+
+    /* setActive({//listItems가 아직없는데 실행해버려서 체크가 안되는 문제..
+      title: editData.scdPlace,
+      contentid: editData.contentid
+    }); */
+  }
+  }, [editData]);
+  
+  //active 세팅
+  useEffect(() => {
+  if (!editData) return;
+
+  // 추천 관광지 먼저 찾기
+  if (listItems.length > 0) {
+    const found = listItems.find(
+      (item) => item.title === editData.scdPlace
+    );
+
+    if (found) {
+      setActive(found);
+      setTab('recommend'); // 탭도 맞춰줘야 체크 보임
+      return;
+    }
+  }
+
+  // 관심 관광지에서 찾기
+  if (tripData?.places?.length > 0) {
+    const found = tripData.places.find(
+      (item) => item.title === editData.scdPlace
+    );
+
+    if (found) {
+      setActive(found);
+      setTab('wish');
+    }
+  }
+  }, [editData, listItems, tripData]);
+
   const transports = [ 
     {type: 'bus', icon: <FaBus />},
     {type: 'train', icon: <FaTrainSubway />},
@@ -41,6 +103,16 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
 
   const handleClick=(place)=>{
     setActive((prev)=>(prev?.contentid===place.contentid? null :place))
+    console.log(place)//안에 스케줄에 장소를 추가하기위해 선택한 관광지 정보
+
+    if(place.mapx && place.mapy){
+        setTempMarkers([
+            {
+                mapx:place.mapx,
+                mapy:place.mapy
+            }
+        ]);
+    }
   }
 
   useEffect(() => {
@@ -53,26 +125,74 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
   }, [open])
   
   //교통관련 메모
-  const [memo, setMemo] = useState('')
+  const [scdMoveMemo, setScdMoveMemo] = useState('')
   
+  //일정추가 팝업 내용 초기화
+  const resetForm = () => {
+  setScdTitle("");
+  setScdPlace("");
+  //setScdMove("");
+  setSelected(null);
+  setScdMoveMemo("");
+  setStartTime(null);
+  setEndTime(null);
+  setActive(null);//장소 초기화
+  };
+  
+  //팝업닫고 내용 초기화
+  const popupClose = () => {
+  resetForm();
+  onClose();
+  setTempMarkers([]);
+  };
+  
+  //선택한 장소 초기화
+  const resetPlace=()=>{
+    setTempMarkers([]);
+    setActive(null);
+  }
+
+  //일정 (스케줄) 추가에서 필수 항목 작성시 완료버튼 활성화
+  const isValid =
+  scdTitle.trim() !== '' &&
+  //startTime !== null && 시간미정인 경우 비워뒀다가 추후 수정시 추가
+  active !== null;
+
   //일정 추가 저장 함수
   async function saveScd(e){
     e.preventDefault();
     const formdata = new FormData(e.target);
     formdata.append('userId',session.user.email)
-    formdata.append('day','1')
+    //formdata.append('day','1')
+    formdata.set('day', day)//이걸해야 day2껀 day2에 day3껀 day3에 저장
+
+    formdata.append('startTime', startTime?.format('HH:mm') || '');
+    formdata.append('endTime', endTime?.format('HH:mm') || '');
+    formdata.append('scdPlace', active?.title || '');
+    
+    // 저장할때 지도 관련값 보내주기
+    formdata.append('mapx', active?.mapx || '');
+    formdata.append('mapy', active?.mapy || '');
+    formdata.append('contentid', active?.contentid || '');
+
+    // 수정이면 id 추가
+    if(editingId){
+        formdata.set('editingId', editingId);/* append보다 set이 값 덮어쓰기 더 안전 */
+    }
+
     const objData = Object.fromEntries(formdata);
     await axios.put('/api/planner',objData);
     
     const res = await fetch(`/api/planner?type=draft&session=${session.user.email}`);
     const data = await res.json();
     setTripData(data);
+
+    resetForm();
+    onClose();
+    setTempMarkers([]);
   }
 
-  //추천 관광지 리스트 가져오기
-  const [listItems, setListItems] = useState([]);
-
-    useEffect(() => {
+  useEffect(() => {
     if (!tripData?.selectedAddress) return;
 
     const fetchData = async () => {
@@ -80,11 +200,19 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
         const data = await res.json();
         const items = data?.response?.body?.items?.item || [];
         setListItems(items);
-    };
+  };
 
     fetchData();
-    }, [tripData]);
+  }, [tripData]);
   
+  const places = tripData?.places || [];
+    
+    //교통수단 선택하면 바로 커서 깜빡이게
+    useEffect(() => {
+    if (selected) {
+        memoRef.current?.focus();
+    }
+  }, [selected]);
 
   return (
     <div className='ppsBoxContainer'>
@@ -92,7 +220,7 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
             <div className='ppsTitle'>
                 <p>일정 추가</p>
                 <div className='ppsBoxClose'>
-                    <FiX onClick={onClose}/>
+                    <FiX onClick={popupClose}/>
                 </div>
             </div>
             <form onSubmit={saveScd}>
@@ -103,18 +231,28 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                     variant="filled"
                     placeholder="표시될 제목을 입력해주세요"
                     name='scdTitle'
-                    //value={travelTitle}
-                    //onChange={(e) => setTravelTitle(e.target.value)}
+                    value={scdTitle}
+                    onChange={(e) => setScdTitle(e.target.value)}
+                    autoComplete="off"
                     //sx={{ mb: 2 }}
                     />
                 </div>
                 <div className='popupScdTime'>
                     <p>시간</p>
-                    <PlanPopupScdTime/>
+                    <PlanPopupScdTime
+                        startTime={startTime}
+                        endTime={endTime}
+                        setStartTime={setStartTime}
+                        setEndTime={setEndTime}
+                    />
                 </div>
                 <div className='popupScdPlace'>
                     <div className='popupScdPlaceInput'>
-                        <p>장소</p>
+                        <div>
+                            <p>장소</p>
+                            <button type='button' onClick={resetPlace}>초기화</button>  
+
+                        </div>
                         <TextField
                         fullWidth
                         variant="filled"
@@ -122,6 +260,7 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                         name='scdPlace'
                         inputprops={{readOnly:true}}
                         value={active?.title || ''}
+                        autoComplete="off"
                         />
                     </div>
                     <div className='popupScdPlaceTab'>
@@ -144,22 +283,36 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                     <div className='popupScdPlaceTabItem'>
 
                         {/* 관심있는 관광지 */}
-                        {tab==='wish' && (
+                        {tab==='wish' && (                            
                             <div className='popupScdPlaceWishItem'>
-                                {tripData?.places?.map((place)=>(
-                                    <p 
-                                    key={place.contentid}
-                                    onClick={()=>handleClick(place)}
-                                    className={active?.contentid===place.contentid? "active":""}
-                                    >
-                                        {place.title}
-                                    </p>
+                                {places.length===0 ? 
+                                  (<div className='popupScdPlaceWishItemEmpty'>
+                                      <div>
+                                        <p>관심있는 관광지가 없습니다.</p>
+                                        <p>관심있는 관광지를 미리 찜해보세요!</p>
+                                      </div>
+                                      <a href='http://localhost:3000/attrantions'>찜하러가기<GrFormNext/></a>
+                                   </div>
 
-                                ))}
+                                  )
+                                  :
+                                  (<div className='popupScdPlaceWishItemFilled'>
+                                    {tripData?.places?.map((place)=>(
+                                        <p 
+                                        key={place.contentid}
+                                        onClick={()=>handleClick(place)}
+                                        className={active?.contentid===place.contentid? "active":""}
+                                        >
+                                            {place.title}
+                                        </p>
+                                    ))}
+                                  </div>
+                                  )
+                                }
                                 {/* <p onClick={()=> handleClick('start')}
                                     className={active === 'start' ? 'active' : ''}>
-                                        한라산</p>
-                                 */}
+                                    한라산</p>
+                                    */}
                             </div>
                         )}
 
@@ -211,8 +364,9 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                                 width: 40,
                                 height: 40,
                                 borderRadius: '50%',
-                                background: '#27678E',
-                                color: '#ffffff',
+                                background: selected ? '#27678E' : '#ffffff',
+                                color: selected ? '#ffffff' : '#d3d3d3',
+                                border: selected ? 'none' : '1px solid #ebebeb',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -240,7 +394,7 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                                     onClick={() => {
                                     setSelected(prev => (prev === item.type ? null : item.type))
                                     setOpen(false)
-                                    setMemo('')
+                                    setScdMoveMemo('')
                                     }}
                                     style={{
                                     width: 36,
@@ -254,7 +408,7 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                                     justifyContent: 'center',
                                     cursor: 'pointer',
                                     marginTop:'3px',
-                                        boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 10px'
+                                    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 10px'
                                     }}
                                 >
                                     {item.icon}
@@ -268,17 +422,29 @@ function PlanPopupScd({isOpen,onClose,pickedPlace}) {
                             <TextField
                             fullWidth
                             variant="filled"
-                            placeholder="메모를 추가하세요"
+                            placeholder= {selected ? "메모를 입력하세요" : "교통수단을 먼저 선택하세요"}
                             name='scdMoveMemo'
-                            value={memo}
-                            onChange={(e) => setMemo(e.target.value)}
+                            value={scdMoveMemo}
+                            onChange={(e) => setScdMoveMemo(e.target.value)}
+                            disabled={!selected}
+                            autoComplete="off"
+                            inputRef={memoRef}
                             />
                         </div>
                     </div>
                 </div>
                 <div className='popupScdBtn'>
-                    <button>취소</button>
-                    <button type='submit'>완료</button>
+                    <button type='button' onClick={onClose}>취소</button>
+                    <button 
+                    type='submit'
+                    disabled={!isValid}
+                    style={{
+                        backgroundColor:!isValid ? "#AED1E6" : "#27678E",
+                        pointerEvents:!isValid ? "none" : "auto",
+                        
+                        //cursor: isValid ? 'pointer' : 'not-allowed',
+                    }}
+                    >완료</button>
                 </div>
             </form>
         </div>

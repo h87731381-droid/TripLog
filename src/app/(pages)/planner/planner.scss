@@ -195,6 +195,7 @@
             position:fixed;
             top:0;
             left:0;
+            z-index:999;
         }
         .pppBox{
             position: fixed;
@@ -206,6 +207,7 @@
             padding:30px;
             width: 50%;
             text-align: center;
+            z-index: 1000;
             .pppTitle{
                 display: flex;
                 justify-content: right;
@@ -428,6 +430,8 @@
 .planEdit{
    .planEditTitle{
       display: flex;
+      //width: 100%;
+      //justify-content: space-between;
         h1{
             font-family: 'GangwonEduHyeonokT';
             font-size: 4rem;
@@ -447,40 +451,45 @@
         }
         >div{
             display: flex;
-            p{
-                padding-top:35px;
+            width: 88.7%;
+            justify-content: space-between;
+            >div{
+                display: flex;
+                p{
+                    padding-top:35px;
+                }
+                p:nth-of-type(1){
+                     padding-left:40px;
+                     font-size: 20px;
+                     font-weight: 600;
+                     width: auto;
+                     text-align: left;
+                }
+                p:nth-of-type(2){
+                    padding-left:15px;
+                    padding-top:39px;
+                }
+                p:nth-of-type(3){
+                    padding-left:15px;
+                    padding-top:39px;
+                    color:#6C6C6C;
+                }
             }
-            p:nth-of-type(1){
-                 padding-left:40px;
-                 font-size: 20px;
-                 font-weight: 600;
-                 width: auto;
-                 text-align: left;
-            }
-            p:nth-of-type(2){
-                padding-left:15px;
-                padding-top:39px;
-            }
-            p:nth-of-type(3){
-                padding-left:15px;
-                padding-top:39px;
-                color:#6C6C6C;
-            }
-        }
-        >button{
-            color:#27678E;
-            font-weight: 600;
-            border:1px solid #27678E;
-            position:absolute;
-            right:15%;
-            margin-top:30px;
-            width: 80px;
-            height: 40px;
-            border-radius: 10px;
-            svg{
-                vertical-align: -5px;
-                padding-left:5px;
-                font-size: 20px;
+            >button{
+                color:#27678E;
+                font-weight: 600;
+                border:1px solid #27678E;
+                //position:absolute;
+                right:14.6%;
+                margin-top:30px;
+                width: 110px;
+                height: 40px;
+                border-radius: 10px;
+                svg{
+                    vertical-align: -5px;
+                    padding-left:5px;
+                    font-size: 20px;
+                }
             }
         }
    }
@@ -524,12 +533,13 @@
                          color:#6C6C6C;
                         }
                         a{
-                         padding-top:18px ;
+                         padding-top:17px ;
                          //padding-left: 170px;
                          font-weight: 400;
                          font-size: 15px;
                          //position:absolute;
                          //right:0;
+                         cursor: pointer;
                          svg{
                              vertical-align: -5px;
                              font-size: 20px;
@@ -556,6 +566,7 @@
                          margin:0 auto;
                          width: 130px;
                          text-align: center;
+                         cursor: pointer;
                          svg{
                              font-size: 20px;
                              vertical-align: -4px;
@@ -586,10 +597,19 @@
                                  }
          
                              }
+                             .completed{
+                                p{
+                                     font-size: 18px;
+                                     font-weight: 500;
+                                     padding-bottom:3px;
+                                     padding-top:40px;
+                                }
+                             }
                      }
 
                      //스케줄 하나이상 채워진날 (예시)
                      .planEditDayBoxFilled{
+                        width: 100%;
                          padding-top:10px;
                          .oneSchedule{
                              display: flex;
@@ -597,14 +617,15 @@
                              .scdTime{
                                  line-height: 1.1;
                                  font-weight: 400;
-                                 width: 43px;
+                                 //width: 43px;
+                                 width: 12%;
                              }
                              .timeLine{
                                  .circle{
                                      color:#27678E;
                                      position:absolute;
                                      top:-3px;
-                                     left:50px;
+                                     left:55px;
                                  }
                              }
                              .scdContent{
@@ -612,13 +633,15 @@
                                  padding-left:20px;
                                  margin-left:20px;
                                  padding-bottom:20px;
+                                 width: 96%;
+                                   
                                  .scdTitle{
-                                     font-weight: 600;
-                                     font-size: 18px;
-                                     line-height: 1.0;
-                                     padding-bottom:5px;
-             
-                                 }
+                                        font-weight: 600;
+                                        font-size: 18px;
+                                        line-height: 1.0;
+                                        padding-bottom:5px;                   
+                                }
+                                
                                  .scdSpot{
                                      font-weight: 400;
              
@@ -627,17 +650,16 @@
                                      padding-top:10px;
                                      .scdMoveIcon{
                                          position:absolute;
-                                         left:50px;
+                                         left:55px;
                                          //background-color: #F3F3F3;
                                          background-color: #F3F3F3;
                                          height: 22px;
-                                         
                                          svg{
                                              vertical-align: -1px;
                                              color:#27678E;
                                          }
                                      }
-                                     p:nth-of-type(2){
+                                     .scdMoveMemo{
                                          color:#6C6C6C;
                                          font-size:14px;
                                          font-weight: 400;
@@ -687,10 +709,14 @@
 
    //PlanOneDayMap(일별 일정 및 지도 보기(일정추가 페이지))==================
    .planEditContOneDay{
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
         width: 100%;
+        position: relative;
+        gap:40px;
+        justify-content: space-between;
         .planEditOneDay{
-            width:33.3333%;
+            
             .planEditOneDayTxt{
                 display: flex;
                 >p{
@@ -754,26 +780,42 @@
                             padding-top:170px;
                             p:nth-of-type(1){
                                 font-size: 18px;
-                                font-weight: 600;
+                                font-weight: 500;
                                 padding-bottom:3px;
                             }
                             p:nth-of-type(2){
                                 color:#6C6C6C;
                                 font-weight: 500;
-
                             }
 
                         }
+                        .completed{
+                                p{
+                                     font-size: 18px;
+                                     font-weight: 500;
+                                     padding-bottom:3px;
+                                     padding-top:40px;
+                                }
+                             }
                 }
                 .planEditOneDayBoxFilled{
+                    width: 100%;
                     padding-top:10px;
                     .oneSchedule{
                         display: flex;
                         position: relative;
+                        cursor: pointer;
+                        &:hover{
+                            .scdContent .scdUpper .scdCRUD{//자식관계이므로 한칸씩 띄어쓰기
+                                    opacity: 0.4;
+                                   
+                                }
+                        }
                         .scdTime{
                             line-height: 1.1;
                             font-weight: 400;
-                            width: 43px;
+                            //width: 43px;
+                            width: 12%;
                         }
                         .timeLine{
                             .circle{
@@ -783,21 +825,35 @@
                                 left:55px;
                             }
                         }
+                        
                         .scdContent{
                             border-left:1px solid #b3b3b3;
                             padding-left:20px;
                             margin-left:20px;
                             padding-bottom:20px;
-                            .scdTitle{
-                                font-weight: 600;
-                                font-size: 18px;
-                                line-height: 1.0;
-                                padding-bottom:5px;
-        
+                            //width: 290px;
+                            width: 96%;
+                            .scdUpper{
+                                display: flex;
+                                justify-content: space-between;
+                                
+                                .scdTitle{
+                                    font-weight: 600;
+                                    font-size: 18px;
+                                    line-height: 1.0;
+                                    padding-bottom:5px;
+                
+                                }
+                                .scdCRUD{
+                                    display: flex;
+                                    gap:5px;
+                                    opacity: 0;
+                                }
+
                             }
                             .scdSpot{
                                 font-weight: 400;
-        
+            
                             }
                             .scdMove{
                                 padding-top:10px;
@@ -817,56 +873,36 @@
                                     font-size:14px;
                                     font-weight: 400;
                                 }
-
+    
                             }
                         }
+                            
+
+                        
                     }
                 }
             }
         }
         //일별 일정 및 지도 보기(일정추가 페이지)==================
        .planEditDayMap{
-           width: 65%;
-           display: flex;
-           flex-direction: column;
-           justify-content: end;
+           //width:calc(100% + 20px);
+           margin-left:-20px;
            position: relative;
-           div{
-            padding-left: 20px;
+           >div{
             display: flex;
+            height:100%;
            }
        }
-       .planPopupScdBg{
-           height: 551px;
-           position:absolute;
-           width: 45%;
-           top:35.8%;
-           right:7.8%;
-           overflow: hidden;
-           //background-color: #f1baba;
-           border-radius: 10px;
-           
-           .planPopupScdBg2{
-            width: 100%;
-            height: 100%;
-           }
-
-           //일정추가 팝업(PlanPopupScd)
+         //일정추가 팝업(PlanPopupScd)
            .ppsBoxContainer{
                 position:absolute;
                 top:0;
-                right:-3px;
-                width: 100%;
+                right:0;
                 height: 100%;
                 z-index:1000;
                 overflow-y: auto;
-                scrollbar-width: none;
-                //background-color: #eeaaaa;
                 .ppsBox{
                     //position: absolute;
-                    top:45%;
-                    right:0%;
-                    transform:translate(77%,0%);
                     background-color: #f3f3f3;
                     border-radius: 10px;
                     padding:30px;
@@ -928,12 +964,13 @@
                                 gap:20px;
                                 position:relative;
                                 input{
-                                    width: 100%;
+                                    width: 58%;
                                     height: 40px;
                                     //border:none;
                                     background-color: #ffffff;
                                     border-radius:10px;
                                     padding:8px 14px;
+                                    caret-color: transparent;
                                 }
                                 .MuiInputBase-formControl::before{
                                 border-bottom:none;
@@ -966,9 +1003,21 @@
         
                             .popupScdPlaceInput{
                                 padding-bottom:15px;
-                                p{
-                                   font-weight: 500;
-                                   padding-bottom:10px;
+                                >div{
+                                    display: flex;
+                                    justify-content: space-between;
+                                    p{
+                                       font-weight: 500;
+                                       padding-bottom:10px;
+                                    }
+                                    button{                                   
+                                        padding-right: 10px;
+                                        color:#27678E;
+                                        font-size: 14px;
+                                        display: flex;
+                                        vertical-align: middle;                      
+                                    }
+
                                 }
                                 input{
                                     cursor: pointer;
@@ -978,6 +1027,7 @@
                                     background-color: #ffffff;
                                     border-radius:10px;
                                     padding:8px 14px;
+                                    caret-color: transparent;
                                 }
                                 .MuiInputBase-formControl::before{
                                 border-bottom:none;
@@ -1035,26 +1085,81 @@
 
                                 //관심있는 관광지
                                 .popupScdPlaceWishItem{
-                                    display: flex;
-                                    flex-wrap:wrap;
-                                    padding:15px 10px;
-                                    gap:10px;
-                                    p{
-                                        border:1px solid #ebebeb;
-                                        padding:2px 10px;
-                                        border-radius: 20px;
-                                        font-weight: 400;
-                                        font-size: 15px;
-                                        cursor: pointer;
-                                        &.active{
+                                     height: 300px;
+
+                                    //관심있는 관광지 없을때
+                                    .popupScdPlaceWishItemEmpty{
+                                        padding-top:90px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        justify-content: center;
+                                        text-align: center;
+                                        
+                                        >div{
+                                            //padding-top:170px;
+                                            p:nth-of-type(1){
+                                                font-size: 18px;
+                                                font-weight: 500;
+                                                padding-bottom:3px;
+                                            }
+                                            p:nth-of-type(2){
+                                                color:#6C6C6C;
+                                                font-weight: 400;
+                                                padding-bottom: 30px;
+                                            }
+                    
+                                        }
+                                        a{ 
+                                            background-color: #ffffff;
                                             border:1px solid #27678E;
-                                            background-color: #c6e0f0;
+                                            color:#27678E;
+                                            padding:7px 8px;
+                                            border-radius: 20px;
+                                            font-weight: 500;
+                                            display: block;
+                                            margin:0 auto;
+                                            width: 130px;
+                                            text-align: center;
+                                            cursor: pointer;
+                                            svg{
+                                                font-size: 20px;
+                                                vertical-align: -4px;
+                                                padding-left:3px;
+                                            }  
+                                        }
+
+                                    }
+                                    //관심있는 관광지 있을때
+                                    .popupScdPlaceWishItemFilled{
+                                        display: flex;
+                                        flex-wrap:wrap;
+                                        padding:15px 10px;
+                                        gap:10px;
+                                        p{
+                                            border:1px solid #ebebeb;
+                                            padding:2px 10px;
+                                            border-radius: 20px;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            cursor: pointer;
+                                            &.active{
+                                                border:1px solid #27678E;
+                                                background-color: #c6e0f0;
+                                            }
                                         }
                                     }
                                 }
 
                                 //추천 관광지
                                 .popupScdPlaceListItem{
+                                    height: 300px;
+                                    overflow: hidden;
+                                    overflow-y:auto;
+                                    scrollbar-width:thin;
+                                    &::-webkit-scrollbar {
+                                        display: block !important;
+                                    }
                                     ul{
                                         display: flex;
                                         flex-direction: column;
@@ -1094,7 +1199,7 @@
                                                 text-align: left;
                                                 padding-left:10px;
                                                 p:nth-of-type(1){
-                                                    font-weight: 600;
+                                                    font-weight: 500;
                                                     font-size: 15px;
                                                 }
                                                 p:nth-of-type(2){
@@ -1219,7 +1324,6 @@
                     }
                 }
             }
-       }
 
    }
 }

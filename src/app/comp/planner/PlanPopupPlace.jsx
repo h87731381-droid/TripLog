@@ -118,6 +118,7 @@ function PlanPopupPlace({
                         setSelectedAddress(inputValue);
                     }
                 }}
+                autoComplete="off"
                 //sx={{ mb: 2 }}
                 //value={inputValue}
             />

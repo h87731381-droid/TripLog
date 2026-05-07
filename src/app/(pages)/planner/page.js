@@ -4,12 +4,13 @@ import './planner.scss'
 import PlanTextField from '../../comp/planner/PlanTextField';
 import PlanPopupPlace from '../../comp/planner/PlanPopupPlace';
 import PlanFullDay from '../../comp/planner/PlanFullDay';
-import { FiSave } from "react-icons/fi";
+import { FiCheck, FiSave } from "react-icons/fi";
 import PlanOneDayMap from '../../comp/planner/PlanOneDayMap';
 import PlanPopupScd from '../../comp/planner/PlanPopupScd';
 import dayjs, { Dayjs } from 'dayjs'
 import { tripStore } from '../../store/tripStore';
 import { authStore } from '@/app/store/authStore';
+import { useRouter } from 'next/navigation';
 
 function page() {
   const [isOpen,setIsOpen]=useState(false)
@@ -22,24 +23,8 @@ function page() {
   //const [tripData, setTripData]=useState(null)//현재 작업중이라 수정가능한 여행(화면 분기용)
 
   const [tripList, setTripList]=useState([])//완료된 여행으로 보관함페이지에서 씀(수정 불가)
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchDraft = async () => {
-      const res = await fetch(`/api/planner?type=draft&session=${session.user?.email}`);
-      console.log("status:", res.status); 
-      const data = await res.json();
-
-      if (data) {
-        setTripData({// DB 기준으로 화면 분기
-          ...data,
-          start:dayjs(data.start),
-          end:dayjs(data.end),
-        }); 
-      }
-      console.log("tripData:", data);
-  };
-  if(session?.user?.email) fetchDraft();
-  }, [session]);
   
   //db에 저장(중간 저장이라 나의기록보관함에는 x (수정가능))
   const handleSaveDraft = async ()=>{
@@ -63,7 +48,30 @@ function page() {
       })
     })
   }
+
+  //여행 완료 버튼
+  const handleComplete = async () => {
+    if (window.confirm("완료된 여행은 '나의 기록'에 보관되며 더이상 수정이 불가합니다. 정말 완료하시겠습니까?")) {
+      await fetch(`/api/planner`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          editingId:tripData._id,
+          type: "complete",
+        }),
+      });
+
+      setTripData(null);
+
+    }
+};
   
+  //로그인 분기
+  //로그인 안되어있으면
+  
+  //로그인 되어있으면
   
   //db데이터 기준 여행일정 없었으면 첫 일정입력 화면으로
   if(!tripData)
@@ -106,14 +114,24 @@ function page() {
       <div className='planEditTitle'>
               <h1>여행일정</h1>
               <div>
-                <p>{tripData?.tripTitle}</p> 
-                <p>|</p> 
-                <p>
-                  {tripData?.start && dayjs(tripData.start).format('YYYY.MM.DD')} ~{" "}
-                  {tripData?.end && dayjs(tripData.end).format('YYYY.MM.DD')} 
-                </p>
+                <div>
+                  <p>{tripData?.tripTitle}</p> 
+                  <p>|</p> 
+                  <p>
+                    {tripData?.start && dayjs(tripData.start).format('YYYY.MM.DD')} ~{" "}
+                    {tripData?.end && dayjs(tripData.end).format('YYYY.MM.DD')} 
+                  </p>
+                </div>
+                {tripData.status==='draft' && 
+                  <button onClick={()=>{
+                    handleComplete();
+                    router.push('/before');
+                  }} >
+                  
+                  여행완료<FiCheck /></button> 
+                }
+
               </div>
-              <button onClick={handleSaveDraft}>저장<FiSave/></button>
       </div>
       <PlanFullDay tripData={tripData}/> 
       {/* <PlanOneDayMap 

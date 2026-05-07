@@ -6,8 +6,8 @@ import { useMemo } from "react";
 
 const containerStyle = {
   width: "100%",
-  height: "550px",
-  borderRadius: "10px",
+  height: "100%",
+  borderRadius: "20px",
   border: "1px solid #d4d4d4",
 };
 
@@ -24,7 +24,11 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
 
   // 마커를 여러개 찍히도록 배열로 만들기
   const markers = useMemo(() => {
-    return (itemMarkers || []).map((item) => ({
+    if (!Array.isArray(itemMarkers)) return [];
+
+    return itemMarkers
+    .filter(item => item?.mapx && item?.mapy)
+    .map(item => ({
       lat: Number(item.mapy),
       lng: Number(item.mapx),
     }));
@@ -65,11 +69,16 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
 
   const mapRef = useRef(null);
   const geocoderRef = useRef(null);
+  const [mapLoad,setMapLoad] = useState();
 
   const onLoad = useCallback((map) => {
     mapRef.current = map;
     geocoderRef.current = new window.google.maps.Geocoder();
+    setMapLoad(1)
   }, []);
+
+  
+  
   
   //검색하면 지도이동
   useEffect(() => {
@@ -77,7 +86,6 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
   
   //마커 있으면 주소 이동 막기
   /* if (itemMarkers.length > 0) return; */
-
   geocoderRef.current
     .geocode({ address: selectedAddress })
     .then((result) => {
@@ -87,16 +95,16 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
         lat: location.lat(),
         lng: location.lng()
       };
+      
 
       mapRef.current.panTo(newCenter);
       mapRef.current.setZoom(10);
-      
       setCenter(newCenter);
-      setMapCenter(newCenter); //부모에 저장
+      //setMapCenter(newCenter); //부모에 저장
     })
     .catch((e) => console.error(e));
 
-  }, [selectedAddress]);
+  }, [mapLoad]);
 
   //지역,관광지 저장이후 다시 들어가서 지역바꾸고 취소누르고 나와서 다시들어갈때 지도 위치 기존 마커 기준
   useEffect(() => {
@@ -129,26 +137,6 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
   }, [itemMarkers]);
 
 
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        /* console.log("현재 위치:", {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        }); */
-
-        setCenter({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
-      (error) => {
-        console.log("위치 실패", error);
-      }
-    );
-  }, []);
 
 
   if (!isLoaded) return <div>Loading...</div>;
@@ -179,15 +167,17 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
           mapTypeControl: false,
           gestureHandling: "greedy", //ctrl없이 그냥 줌인가능
         }}
-      >
-        {/* <Polyline
+      > 
+        {/* 마커 사이 선 */}
+        <Polyline
+          //key={markers.length} 
           path={markers.length >= 2 ? markers : []}
           options={{
-            strokeColor: "#FF0000",
+            strokeColor: "#27678E",
             strokeOpacity: 0.8,
             strokeWeight: 4,
           }}
-        /> */}
+        />
 
         {markers.map((m, idx) => (
           // 실제 마커가 찍히는 부분

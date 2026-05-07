@@ -4,9 +4,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { TextField } from '@mui/material'
 import React, { useState, useRef, useEffect } from 'react'
 
-function PlanPopupScdTime() {
-  const [startTime, setStartTime] = React.useState()
-  const [endTime, setEndTime] = React.useState(/* dayjs().hour(0).minute(0) */)
+function PlanPopupScdTime({ startTime, endTime, setStartTime, setEndTime }) {
+  /* const [startTime, setStartTime] = React.useState()
+  const [endTime, setEndTime] = React.useState(/* dayjs().hour(0).minute(0) */
 
   // State to control visibility of the clocks
   const [showStartTimeClock, setShowStartTimeClock] = React.useState(false)
@@ -14,6 +14,7 @@ function PlanPopupScdTime() {
 
   const handleStartTimeChange = (newStartTime) => {
     setStartTime(newStartTime)
+
     if (newStartTime && endTime && newStartTime.isAfter(endTime)) {
       setEndTime(newStartTime) // Adjust end time if start time moves past it
     } else if (!newStartTime) {
@@ -63,13 +64,29 @@ function PlanPopupScdTime() {
       setShowEndTimeClock(false)
     }
   }
-
   document.addEventListener('mousedown', handleClickOutside)
 
   return () => {
     document.removeEventListener('mousedown', handleClickOutside)
   }
   }, [])
+
+  useEffect(() => {
+
+  if (showStartTimeClock && startTime) {
+    setTimeout(() => {
+      const selectedItem = document.querySelector(
+        '[role="option"][aria-selected="true"]'
+      );
+      selectedItem?.scrollIntoView({
+        block: 'center',
+        behavior: 'instant'
+      });
+    }, 50);
+  }
+  }, [showStartTimeClock, startTime]);
+
+  
 
   return (
     <div className='TimeSelector'>
@@ -86,6 +103,7 @@ function PlanPopupScdTime() {
                 onClick={() => {setShowStartTimeClock(true)
                                 setShowEndTimeClock(false)}} // Toggle visibility on click
                 sx={{ mb: 2 }}
+                autoComplete="off"
                 />
                 {showStartTimeClock && (
                 <div 
@@ -107,7 +125,7 @@ function PlanPopupScdTime() {
                 </div>
                 )}
             </div>
-            <div>~</div>
+            {/* <div>~</div>
             <div>
                 <TextField
                 placeholder="종료 시간"
@@ -121,6 +139,7 @@ function PlanPopupScdTime() {
                                 setShowStartTimeClock(false)
                                 }} // Toggle visibility on click
                 sx={{ mb: 2 }}
+                autoComplete="off"
                 />
                 {showEndTimeClock && (
                 <div 
@@ -143,7 +162,7 @@ function PlanPopupScdTime() {
                 </div>
                 )}
 
-            </div>
+            </div> */}
         </LocalizationProvider>
     </div>
   )

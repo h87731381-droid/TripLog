@@ -14,7 +14,7 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
   const [start, setStart] = useState(dayjs());
   const [end, setEnd] = useState(dayjs().add(1,'day'));
   const [tripTitle, setTripTitle] = useState("");
-  const { session } = authStore();//zustand 스토어 관리
+  const { session,setShowLogin } = authStore();//zustand 스토어 관리
   const { tripData, setTripData } = tripStore();//zustand 스토어 관리
 
   const handleStartChange = (newValue) => {
@@ -71,10 +71,34 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
       })
     });
     
-    const data=await res.json();
+    const res2 = await fetch(`/api/planner?type=draft&session=${userId}`)
+    const data = await res2.json();
 
     setTripData(data);//화면 전환
   }
+  
+  //제목,여행지 입력되야 완료버튼 활성화
+  const isValid =
+      tripTitle.trim() !== '' &&
+      selectedAddress.trim() !== '';
+  
+  //로그인 전 각 항목 클릭시 로그인창 뜨게
+  const handleAdd = async (e) => {
+    e.preventDefault(); 
+    if (!session || !session.user) {
+      setShowLogin(); 
+      return;
+    }
+  };
+
+  //여행지 선택 input창 클릭시 로그인 전 후 분기
+  const handlePlaceClick = (e) => {
+    if (!session || !session.user) {
+      handleAdd(e);
+      return;
+    }
+    onOpen();
+  };
 
   return (
     <div className='planMakeBox'>
@@ -88,7 +112,9 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
             placeholder="표시될 제목을 입력해주세요"
             value={tripTitle}
             onChange={(e) => setTripTitle(e.target.value)}
+            autoComplete="off"
             //sx={{ mb: 2 }}
+            onClick={handleAdd}
             />
           </div>
           <div className='planDates'>
@@ -96,7 +122,8 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
               <p>여행 기간</p>
               <button type='button' onClick={resetDate}>초기화</button>  
             </div>
-            <div className='datePick'>
+            <div className='datePick' onClick={handleAdd}>
+              
               <LocalizationProvider 
                   dateAdapter={AdapterDayjs}
                   adapterLocale="ko">
@@ -141,9 +168,10 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
               fullWidth
               variant="filled"
               placeholder="여행지 선택하기"
-              onClick={onOpen}
+              onClick={handlePlaceClick}
               inputprops={{readOnly:true}}
               value={selectedAddress}
+              autoComplete="off"
               //onChange={(e) => setTravelTitle(e.target.value)}
               //sx={{ mb: 2 }}
               />
@@ -186,6 +214,13 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
             <button>취소</button>
             <button 
             type='button'
+            disabled={!isValid}
+            className={!isValid ? 'disabledBtn' : ''}
+            style={{
+                    backgroundColor:!isValid ? "#AED1E6" : "#27678E",
+                    pointerEvents:!isValid ? "none" : "auto",                    
+                    //cursor: isValid ? 'pointer' : 'not-allowed',
+                    }}
             onClick={()=>{
               createTrip()
             }}
