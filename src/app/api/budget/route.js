@@ -7,12 +7,13 @@ export async function GET(req) {
         const client = await db();
         const { searchParams } = new URL(req.url);
         const email = searchParams.get('email');
+        const tripId = searchParams.get('tripId');
 
         // 이메일이 없으면 빈 데이터를 반환하여 오류 방지
         if (!email) return NextResponse.json([]);
         
         const data = await client.collection('budget')
-            .find({ email: email }) // 로그인한 사용자의 이메일로만 검색
+            .find({ email, tripId }) // 로그인한 사용자의 이메일로만 검색
             .sort({ date: 1 })
             .toArray();
             
@@ -28,6 +29,7 @@ export async function POST(req) {
         const client = await db();
         const body = await req.json();
         const newItem = {
+            tripId:body.tripId,
             email: body.email,
             category: body.category,
             title: body.title,

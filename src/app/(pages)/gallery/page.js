@@ -7,12 +7,14 @@ import { FiX, FiPlusCircle, FiDownload, FiCheck } from "react-icons/fi";
 import './gallery.scss';
 import axios from 'axios';
 import { authStore } from '@/app/store/authStore'; 
+import { tripStore } from '@/app/store/tripStore';
 
 /**
  * [메인 컴포넌트] S_gallery
  */
 function S_gallery() {
     // 1. 상태 및 스토어 설정
+    const { tripData } = tripStore();
     const {session, setShowLogin } = authStore();
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState('등록');
@@ -30,10 +32,9 @@ function S_gallery() {
      * [조회] getGallery
      */
     async function getGallery() {
-        setTimeout(async ()=>{
-            try {
-               
-                if (!session) {
+      
+            try {               
+                if (!session && !tripData) {
                     setGalleries([]);
                     return;
                 }
@@ -45,7 +46,7 @@ function S_gallery() {
                     return;
                 }
     
-                const res = await axios.get(`/api/gallery?email=${userEmail}`);
+                const res = await axios.get(`/api/gallery?email=${userEmail}&tripId=${tripData?._id}`);
                 const rawData = res.data.result || [];
     
                 let titles = new Set();
@@ -59,15 +60,14 @@ function S_gallery() {
                 setGalleries(data);
             } catch (error) {
                 console.error("데이터 로딩 실패:", error);
-            }            
-        }, 300);
+            }       
     }
 
     /**
      * [등록 버튼] handleOpenUpload
      */
     const handleOpenUpload = () => {
-        console.log(session)
+        
         if (!session) {
             setShowLogin();
             return;
@@ -109,31 +109,21 @@ function S_gallery() {
         getGallery();
         // 메뉴 진입 시 프리뷰 자동 노출
         setShowPreview(true);
-    }, []);
+    }, [session, tripData]);
 
     return (
         <>
-            {/* --- 반응형 프리뷰 팝업 추가 --- */}
-            {showPreview && (
-                <div className="preview_overlay">
-                    <div className="preview_content">
-                        <button className="preview_close" onClick={() => setShowPreview(false)}>
-                            샘플 닫기<FiX />
-                        </button>
-                        <div className='preview_pic'>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* 상단 타이틀 구역 */}
             <div className='gallery_title'>
                 <h1>갤러리</h1>
-                <p className='gsub_button'>
-                    <span>
-                        <button onClick={handleOpenUpload}>등록하기</button>
-                    </span>
-                </p>
+                {
+                    tripData?.status==='draft' && 
+                    <p className='gsub_button'>
+                        <span>
+                            <button onClick={handleOpenUpload}>등록하기</button>
+                        </span>
+                    </p>
+                }
             </div>            
 
             <div className='gsub_list_wrap'>
@@ -184,6 +174,7 @@ function S_gallery() {
                                 setOpen={setOpen}
                                 setSelectedItem={setSelectedItem}
                                 setSelectedImage={setSelectedImage}
+                                tripData={tripData}
                             />
                         ))
                     )}
@@ -202,6 +193,7 @@ function S_gallery() {
                     setUploadTitle={setUploadTitle}
                     setUploadFiles={setUploadFiles}
                     uploadFiles={uploadFiles}
+                    tripData={tripData}
                 />
             )}
 
@@ -215,9 +207,13 @@ function S_gallery() {
 /**
  * [서브 컴포넌트] GalleryItem
  */
-function GalleryItem({ item, getGallery, handleDelete, setMode, setOpen, setSelectedItem, setSelectedImage }) {
-    const [title, setTitle] = useState(item.title);
+function GalleryItem({ item, tripData, getGallery, handleDelete, setMode, setOpen, setSelectedItem, setSelectedImage }) {
+    const [title, setTitle] = useState('');
     const [isEdit, setIsEdit] = useState(false);
+
+    useEffect(()=>{
+        setTitle(item.title);
+    },[item])
 
     async function editTitle() {
         await axios.put('/api/gallery', { lastTitle: item.title, updateTitle: title });
@@ -228,7 +224,7 @@ function GalleryItem({ item, getGallery, handleDelete, setMode, setOpen, setSele
         <>
             <div className='gsub_Tversion'>
                 <input value={title} onChange={(e) => setTitle(e.target.value)} readOnly={!isEdit} />
-                {!isEdit ? 
+                {!isEdit && tripData.status==='draft' ? 
                     <span className='pencil' onClick={() => setIsEdit(true)}><TbPencil /></span> : 
                     <span className='check' onClick={() => { setIsEdit(false); editTitle(); }}><FiCheck /></span>
                 }
@@ -242,11 +238,14 @@ function GalleryItem({ item, getGallery, handleDelete, setMode, setOpen, setSele
                         </figure>
                     </div>
                 ))}
-                <div className='gsub_img'>
-                    <button className='gsub_add' onClick={() => { setMode('추가'); setSelectedItem(item); setOpen(true); }}>
-                        <FiPlusCircle />
-                    </button>
-                </div>
+                {
+                    tripData.status==='draft' && 
+                    <div className='gsub_img'>
+                        <button className='gsub_add' onClick={() => { setMode('추가'); setSelectedItem(item); setOpen(true); }}>
+                            <FiPlusCircle />
+                        </button>
+                    </div>
+                }
             </div>
         </>
     );
@@ -255,7 +254,7 @@ function GalleryItem({ item, getGallery, handleDelete, setMode, setOpen, setSele
 /**
  * [서브 컴포넌트] Popup
  */
-function Popup({ setMode, getGallery, selectedItem, mode, setOpen, uploadTitle, setUploadTitle, setUploadFiles, uploadFiles }) {
+function Popup({ setMode, tripData,getGallery, selectedItem, mode, setOpen, uploadTitle, setUploadTitle, setUploadFiles, uploadFiles }) {
     const {session, setShowLogin } = authStore();
     async function upload() {
         if(!session) return alert("세션이 만료되었습니다.");
@@ -264,6 +263,7 @@ function Popup({ setMode, getGallery, selectedItem, mode, setOpen, uploadTitle, 
         formdata.append('title', mode === '추가' ? selectedItem.title : uploadTitle);
         formdata.append('email', session.user.email);
         formdata.append('note', '');
+        formdata.append('tripId', tripData._id);
         Array.from(uploadFiles).forEach(file => formdata.append('files', file));
 
         await axios.post('/api/gallery', formdata);
