@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ✨ 트립로그 (TRIPLOG)
 
-## Getting Started
+<p>
+<b>트립로그</b>는 여행 계획의 번거로움을 해결하고, 나만의 여행을 기록하기 위한 <b>올인원 여행 플래너 플랫폼</b>입니다.<br>
+지도 기반의 <b>직관적인 일정 설계</b>부터 <b>경비 정산, 체크리스트, 여행 갤러리</b>까지 여행의 시작과 끝을 하나의 서비스에서 관리할 수 있습니다.
+</p>
 
-First, run the development server:
+---------
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 1. 주제💡
+여행 전 과정(계획 - 준비 - 관리 - 기록)을 유기적으로 연결하여, 사용자가 여러 플랫폼을 오가는 피로도를 줄이고 **최적화된 여행 경험**을 누릴 수 있도록 돕는 통합 서비스입니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 2. 목표🎯
+- **통합 관리**: 지도, 체크리스트, 가계부 기능 등을 하나로 합쳐 관리 효율성 극대화
+- **동선 최적화**: 시각화된 지도를 통해 비효율적인 이동 동선 방지
+- **협업 강화**: 동행자와의 일정 공유 및 경비 정산 기능 제공
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 3. 핵심 기능📱
+- **여행 일정 관리**: 지도 API 기반 실시간 동선 확인 및 일정 작성
+- **추천 관광지**: 지역별 주요 명소 정보 제공 및 '찜' 기능을 통한 개인 리스트 관리
+- **체크리스트**: 여행 필수 준비물 관리 (추가/삭제 및 완료 체크 기능)
+- **여행 경비 관리**: 지출 내역 자동 합계 산출 및 동행자 간 N분의 1 정산 시스템
+- **여행 갤러리**: ImgBB API를 활용한 여행사진 업로드 및 추억 저장소
+- **반응형 지원**: 모바일, 태블릿, 데스크탑 등 다양한 기기 환경 최적화
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 4. 주요 기술💻
+- **Front-End**: ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=sass&logoColor=white)
+- **데이터관리**: ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white) ImgBB, 외부 API 연동
 
-## Learn More
+------------------
 
-To learn more about Next.js, take a look at the following resources:
+## 🔗 배포 URL
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+---------------
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 👩‍💻 팀원 및 역할
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| 이름 | 역할 | 담당 업무 |
+|------|--------|--------------|
+| **영재** | 팀장 | 여행일정 화면 구현, 지난일정조회 화면 구현 |
+| **채빈** | 디자인 | 공통 UI/UX 템플릿 디자인, 인트로 화면 구현, 체크리스트 화면 구현 |
+| **현주** | 개발 | 서버관리, 로그인 화면 구현, 추천관광지 화면 구현 |
+| **혜원** | 기획 | 여행경비 화면 구현, 갤러리 화면 구현 |
+
+-------------
+
+## ⚡ 주요 기능
+
+- 🗺️ **여행 일정 관리**  
+  지도와 연동된 인터페이스를 통해 관광지 간 이동 거리를 시각적으로 파악하고 효율적인 루트를 구성할 수 있습니다.
+
+- 💰 **경비 관리 & 정산**  
+  여행 중 발생한 지출을 기록하고, 동행자 간 비용 정산 기능을 제공합니다.
+
+- 🎒 **준비물 체크리스트**  
+  여행 전 필요한 준비물을 꼼꼼하게 챙길 수 있도록 추가, 삭제 및 체크 기능을 지원합니다.
+
+- 🖼️ **추억 갤러리**  
+  여행 사진을 업로드하고 기록을 보관할 수 있습니다.
+
+- 📍 **지난 일정 조회**  
+  완료된 여행 계획을 보관함에서 언제든지 다시 확인하고 추억할 수 있습니다.
+
+----------
+
+## 🛠 개발 도구
+
+| 사용 기술 | 설명 |
+|-----------|------|
+| **Visual Studio Code** | 코드 편집 및 개발 환경 |
+| **GitHub** | 버전 관리 및 협업 |
+| **Figma** | UI/UX 디자인 및 프로토타이핑 |
+| **MongoDB** | 데이터베이스 관리 |
+
+---------
+
+## 💥 트러블슈팅 (Trouble Shooting)
+
+### 📌 1. 반응형 환경에서의 드래그 앤 드롭 제어 및 UI 최적화
+> **문제**: PC에서 설정한 자유 배치 좌표가 모바일/태블릿 등 좁은 화면에서 레이아웃 붕괴를 야기함.
+
+- **이슈 (Issue)**
+  - `react-draggable` 사용 시 절대 좌표(px)가 유지되어, 화면 너비가 좁아지면 요소가 화면 밖으로 이탈하거나 조작을 방해하는 현상 발생.
+- **해결 방안 (Solution)**
+  - **상태 분기**: `resize` 리스너로 브라우저 너비를 감지하여 `isResize` (1280px 미만) 상태값 생성.
+  - **기능 및 좌표 제어**: 모바일 환경에서는 `disabled={isResize}`로 드래그를 차단하고, `position={{x:0, y:0}}`으로 강제 초기화하여 가독성 높은 **리스트형 레이아웃**으로 유도.
+  - **데이터 동기화**: PC 환경에서 드래그가 끝나는 시점(`onStop`)에만 좌표를 DB에 동기화하여 데이터 무결성 확보.
+- **결과 (Result)**
+  - PC의 '자유 배치'와 모바일의 '안정적인 리스트' 뷰를 동시에 만족하며 멀티 디바이스 UX 극대화.
+
+---
+
+### 📌 2. 소셜 로그인 뒤로가기 시 UI 먹통 및 리다이렉트 유실 해결
+> **문제**: 소셜 로그인 후 뒤로가기 시 페이지가 멈추는 BFCache 이슈 및 기존 작업 페이지 경로 유실.
+
+- **이슈 (Issue)**
+  - **BFCache**: 뒤로가기 시 브라우저가 자바스크립트 실행을 정지시킨 스냅샷을 복원하여 페이지가 먹통이 됨.
+  - **경로 유실**: 로그인 완료 후 사용자가 직전에 머물던 페이지(예: 체크리스트)가 아닌 메인으로 강제 이동되는 불편함.
+- **해결 방안 (Solution)**
+  - **조기 스크립트 실행**: `layout.js`에 `beforeInteractive` 전략으로 `pageshow` 이벤트를 감지, 캐시 복원 진입 시 `location.replace`로 강제 새로고침 처리.
+  - **경로 보존 시스템**: 로그인 직전 `localStorage`에 현재 `pathname`을 기록하고, `Next-Auth`의 `callbackUrl` 옵션을 활용해 인증 후 해당 경로로 동적 리다이렉트 구현.
+- **결과 (Result)**
+  - 인증 과정에서의 데이터 유실을 차단하고, 로그인 후 즉시 기존 작업 환경으로 복귀시켜 유저 이탈 방지.
+ 
+---
+
+### 📌 3. 새로고침 시 인증 데이터 로드 지연으로 인한 데이터 페칭 실패 해결
+> **문제**: 페이지 새로고침 시 MongoDB 데이터를 불러오지 못하고, 다른 페이지 이동 후 복귀 시에만 데이터가 표시됨.
+
+- **이슈 (Issue)**
+  - useEffect의 의존성 배열이 비어있어([]), 컴포넌트 마운트 시점에 스토어의 session 정보가 null이거나 아직 로드되지 않은 경우 데이터를 요청하지 못함.
+  - 초기에는 setTimeout을 사용하여 임시로 해결했으나, 이는 근본적인 해결책이 아니며 스토어 상태 변경 시 여전히 데이터 로드에 실패하는 불안정성 발생.
+- **해결 방안 (Solution)**
+  - **의존성 배열 최적화**: useEffect의 의존성 배열에 session 객체를 추가하여, 인증 상태가 업데이트될 때마다 자동으로 데이터를 다시 확인하도록 수정.
+  - **조건부 페칭**: session과 session.user.email이 유효할 때만 fetchItems가 실행되도록 가드 절(Guard Clause)을 적용하여 불필요한 API 호출 방지.
+  - **불필요한 로직 제거**: 비동기 데이터를 기다리기 위해 임시로 사용했던 setTimeout 등의 불필요한 코드를 삭제하여 코드 정결성 확보.
+- **결과 (Result)**
+  - 새로고침 시에도 session 정보가 확인되는 즉시 데이터를 자동으로 로드하여 사용자 경험 개선.
+  - 
+---
+
+### 📌 4. 팝업 크기 변동(Scale) 애니메이션의 퇴장 효과(Exit) 구현
+> **문제**: 팝업이 열릴 때는 크기가 커지며 나타나는 애니메이션이 정상 작동하나, 닫을 때는 애니메이션 없이 즉시 사라져 사용자 경험이 부자연스러움.
+
+- **이슈 (Issue)**
+  - **애니메이션 중단 현상**: CSS로 `scale`이나 `size`가 변하는 퇴장 애니메이션을 설정했더라도, React에서 조건부 렌더링`({show && <Component/>})`을 사용하면 상태 변경 즉시 DOM에서 컴포넌트가 제거됨.
+  - 이로 인해 사용자가 설정한 "크기가 줄어들며 사라지는 시각적 효과"가 채 보여지기도 전에 팝업이 증발해버리는 문제 발생.
+- **해결 방안 (Solution)**
+  - **애니메이션 시간 확보 (Delayed Unmounting)**: 팝업을 즉시 끄지 않고, 애니메이션이 진행될 시간을 벌어주는 `setTimeout` 로직을 도입.
+  - **상태 세분화**: <br> 1. 닫기 버튼 클릭 시, 먼저 애니메이션 실행을 담당하는 상태(`renderLogin`)를 변경하여 크기 변화를 유도. <br> 2. CSS 애니메이션 시간(300ms)과 동일한 지연 시간을 주어 애니메이션이 끝까지 노출되도록 함. <br> 3. 이후 `setRenderLogin(false)`를 통해 컴포넌트를 안전하게 제거.
+- **결과 (Result)**
+  - 팝업이 생성될 때뿐만 아니라 닫힐 때도 의도했던 크기 변동 애니메이션이 끝까지 구현되어, 서비스의 시각적 완성도와 사용자 인터랙션 피드백을 강화함.
+ 
+---
+
+### 📌 5. 상세 정보 팝업 UX 개선 및 이벤트 버블링 제어
+> **문제**: API 로드 지연으로 인한 빈 화면 노출 및 팝업 활성화 시 뒷배경 상호작용 문제.
+
+- **이슈 (Issue)**
+  - **데이터 로딩 지연**: 관광지 상세 데이터를 불러오는 동안 빈 팝업만 표시되어 사용자가 동작 오류로 오인할 가능성 있음.
+  - **배경 조작 간섭**: 팝업이 열려 있는 상태에서도 배경의 버튼들이 클릭되거나 스크롤되는 등 불필요한 이벤트가 발생함.
+- **해결 방안 (Solution)**
+  - **로딩 상태(Loading UI) 도입**: 데이터를 가져오는 비동기 처리 과정에 로딩 메시지 또는 스피너를 배치하여 사용자에게 진행 상황을 명확히 전달.
+  - **오버레이(Overlay) 구현 및 이벤트 전파 방지**: <br> 1. 팝업 하단에 투명 오버레이를 배치하여 배경 버튼 클릭을 물리적으로 차단. <br> 2. `e.stopPropagation()`을 사용하여 팝업 내부 클릭 시 팝업이 닫히지 않도록 이벤트 버블링 제어. <br> 3. 오버레이 클릭 시 팝업이 닫히도록 설정하여 직관적인 닫기 기능 제공.
+- **결과 (Result)**
+  - 데이터 로딩 중 사용자 이탈 방지 및 팝업 집중도 향상. 의도치 않은 배경 클릭을 방지하여 안정적인 인터랙션 환경 구축.
