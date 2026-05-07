@@ -1,0 +1,126 @@
+.back .backColor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
+.back .backColor .loginAll {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+  border-radius: 30px;
+  width: clamp(320px, 30vw, 350px);
+  height: clamp(500px, 55vh, 700px);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.back .backColor .loginAll.open {
+  animation: popOpen 0.2s forwards;
+}
+.back .backColor .loginAll.close {
+  animation: popClose 0.2s forwards;
+}
+.back .backColor .loginAll .X {
+  font-size: 1.2em;
+  color: #767676;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 20;
+}
+.back .backColor .loginAll .loginBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.back .backColor .loginAll .loginBox > b {
+  color: #27678E;
+  font-weight: 900;
+  font-size: 1.3em;
+  /* box-shadow: 1px 1px 4px rgba(0,0,0,0.2); */
+}
+.back .backColor .loginAll .loginBox .loginContent {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginText {
+  display: flex;
+  flex-direction: column;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginText > p {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginText > span {
+  font-size: 14px;
+  color: #767676;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginButtons .naver {
+  display: flex;
+  gap: 13px;
+  background-color: #27D34A;
+  color: white;
+  font-weight: 500;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 10% 32.7%;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginButtons .naver > img {
+  width: 20px;
+  height: 20px;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginButtons .google {
+  display: flex;
+  gap: 10px;
+  /* background-color: white; */
+  font-weight: 500;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 10% 30%;
+  border-radius: 12px;
+}
+.back .backColor .loginAll .loginBox .loginContent .loginButtons .google > img {
+  width: 25px;
+  height: 25px;
+}
+
+@keyframes popOpen {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes popClose {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0;
+  }
+}/*# sourceMappingURL=login.module.css.map */

@@ -5,8 +5,10 @@ import React, { useEffect, useState } from 'react'
 import style from './attrantions.module.scss'
 import './loadingLoof.css'
 import { FiX } from "react-icons/fi";
-//import { authStore } from '@/store/authStore'; //로그인 여부 스토어
-//import { tripStore } from '../../store/tripStore';//⭐
+import { authStore } from '@/app/store/authStore';
+import axios from 'axios';
+
+//import { tripStore } from '../../store/tripStore';
 
 
 
@@ -19,48 +21,69 @@ function Page() {
   
   const [isPlan, setIsPlan] = useState(false); // 플랜 여부⭐
   // const { tripData, setTripData } = tripStore(); // 플랜 스토어⭐
-  //const { showLogin, setShowLogin } = authStore(); // 로그인 여부
+  const { session, setShowLogin } = authStore(); // 로그인 여부
+  //const [samplePopup, setSamplePopup] = useState(true); // 샘플
   const [activeMenu, setActiveMenu] = useState(1); // 카테고리 기본값:1(전체)
-  const [samplePopup, setSamplePopup] = useState(true); // 샘플
   const [selectItem, setSelectItem] = useState(); // 선택된 아이템
   const [listItems, setListItem] = useState([]); // 리스트
   const [listItemsDetail, setListItemsDetail] = useState([]); // 아이템 정보
   const [itemMarkers, setItemMarkers] = useState([]); // 마커 온오프.
   const [showPopup, setShowPopup] = useState(false); // 팝업
   const [region, setRegion] = useState("");//⭐
-  const [tripSchedule, setTripSchedule] = useState([]); //⭐
-  const session = "유저세션값"; //⭐ 나중에 교체
+  //const [tripSchedule, setTripSchedule] = useState([]);
+  
 
   // 마커 생성/삭제
-  const handleToggleItem = (item) => {
-    setItemMarkers((prev) => {
-      const exists = prev.find((p) => p.contentid === item.contentid);
+  const handleToggleItem = async (item) => {
+    
+    const exists = itemMarkers.find((p) => p.contentid === item.contentid);
+    let changeItem = [];
 
       if (exists) {
         // 제거 (비활성화)
-        return prev.filter((p) => p.contentid !== item.contentid);
+        changeItem =  itemMarkers.filter((p) => p.contentid !== item.contentid);
       } else {
         // 추가 (활성화)
-        return [...prev, item];
+        changeItem =  [...itemMarkers, item];
       }
-    });
+
+    await axios.post('/api/attrantions',{userId:session?.user?.email, itemMarkers:changeItem});
+    setItemMarkers(changeItem);
   };
 
-console.log(itemMarkers);
 
 
   // api 호출
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/attrantions");
-      const data = await res.json();
+      const res = await fetch(`/api/attrantions?userId=${session.user.email}`);
+      const result = await res.json();
 
-      setListItem(data.response.body.items.item);
+      setListItem(result.data.response.body.items.item);
+      setIsPlan(true);
+      setRegion(result.selectedAddress);
+      //console.log(result.userAttrantions);
+      
+      setItemMarkers(result.userAttrantions)
+      
     };
 
-    fetchData();
-  }, []);
-  /* console.log(listItems); */
+    if(session) fetchData();
+
+
+
+    //페이지 언마운팅
+    async function saveItem(){
+      await axios.post('/api/attrantions',{userId:session?.user?.email, itemMarkers});
+      
+    }    
+    // if(navigator) window.addEventListener('focus',saveItem);
+
+    // return function(){      
+    //   window.removeEventListener('focus',saveItem)
+    // }
+  }, [session]);
+  
 
 
 
@@ -72,62 +95,6 @@ console.log(itemMarkers);
     setListItemsDetail(item);
     setSelectItem(data);
   };
-
-
-
-
-  // (임시지역) 테스트 코드⭐
-  useEffect(() => {
-    setIsPlan(true);
-    setRegion("경주");
-  }, []);
-
-  // 앞전에 저장한 관광지 데이터 가져옴 ⭐
-  /* useEffect(() => {
-    const fetchDraft = async () => {
-
-      if (!session) {
-        setIsPlan(false);
-        return;
-      }
-
-      try {
-        const res = await fetch(
-          `/api/planner?type=draft&session=${session}`
-        );
-
-        const data = await res.json();
-
-        if (!data?.scd || data.scd.length === 0) {
-          setIsPlan(false);
-          return;
-        }
-
-        setIsPlan(true);
-
-        // 지역
-        setRegion(
-          data.region ||
-          data.area ||
-          data.keyword ||
-          "지역 미선택"
-        );
-
-        // 저장된 일정
-        setTripSchedule(data.scd);
-
-        // 지도 마커
-        setItemMarkers(data.scd);
-
-      } catch (err) {
-        console.error("draft 불러오기 실패:", err);
-        setIsPlan(false);
-      }
-    };
-
-    fetchDraft();
-  }, [session]); */
-
 
 
 
@@ -159,29 +126,20 @@ console.log(itemMarkers);
   });
 
 
+  
+
 
   // 샘플 팝업 열릴 때 스크롤 방지
-  useEffect(() => {
+  /* useEffect(() => {
     if (samplePopup) {
       document.body.style = "overflow:hidden;";
     } else {
       document.body.style = "overflow:visible;";
     }
-  }, [samplePopup]);
+  }, [samplePopup]); */
 
 
-  // 일정등록 여부
- /* useEffect(()=>{
-  console.log(sessionStorage.session);
-  if(등록한 일정 있음) {
-    retrun (
-    setIsPlan(true)
-    등록한 추천관광지 기록
-    + 검색한 키워드..?
-    )
-  }
- },[]); */
-
+ 
 
 
 
@@ -191,7 +149,7 @@ console.log(itemMarkers);
   return (
     <div className={style.all}>
 
-      {samplePopup &&
+      {/* {samplePopup &&
         <div className={style.SamplePopup}>
           <button className={style.sampleClose} onClick={() => setSamplePopup(false)}>
             <span>샘플 닫기</span>
@@ -207,7 +165,7 @@ console.log(itemMarkers);
             <img src="attSample-360.jpg" alt="이미지" />
           </picture>
 
-          {/* <div className={style.SampleGuide}>
+          <div className={style.SampleGuide}>
 
             <div className={style.guideRegion}>
               <div></div>
@@ -231,10 +189,10 @@ console.log(itemMarkers);
               <p>여행일정에 등록한 관광명소를 추가하거나 삭제할 수 있어요.</p>
             </div> 
 
-          </div> */}
+          </div>
 
         </div>
-      }
+      } */}
 
       {isPlan ? (
 
