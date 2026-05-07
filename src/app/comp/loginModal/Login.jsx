@@ -19,16 +19,15 @@ function Login({ setShowLogin, showLogin }) {
 
   const [renderLogin, setRenderLogin] = useState(false);
 
-  const openLogin = () => {
-    setRenderLogin(true);
-    setShowLogin(true);
-  };
 
   const closeLogin = () => {
-    setShowLogin(false);
+    
+    setRenderLogin(true);
+
     setTimeout(() => {
+      setShowLogin();
       setRenderLogin(false);
-    }, 300); // CSS transition 시간과 맞추기
+    }, 300); // CSS transition 시간과 맞추기 (DOM이 꺼지는 시간 늦추기)
   };
 
 
@@ -40,10 +39,10 @@ function Login({ setShowLogin, showLogin }) {
   return (
     <div className={style.back}>
       <div className={style.backColor}>
-        <div className={`${style.loginAll} ${closeLogin ? style.open : style.close}`}>
+        <div className={`${style.loginAll} ${showLogin && style.open} ${renderLogin && style.close}`}>
 
           {showLogin &&
-            <button className={style.X} onClick={() => setShowLogin(false)}>
+            <button className={style.X} onClick={() => closeLogin()}>
               <FiX />
             </button>
           }
