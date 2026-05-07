@@ -26,7 +26,6 @@ function Check() {
           const data = await response.json();
           if(data.checklist && data.checklist.length > 0 ){
             // 불러온 데이터의 id마다 ref(번들정보) 생성
-
             data.checklist.forEach(item => {
               if (!nodeRefs.current[item.id]) {
                 nodeRefs.current[item.id] = React.createRef();
@@ -91,7 +90,6 @@ function Check() {
   // 버튼 클릭 시 새로운 항목 추가 함수
   const addItem = () => {
     if(!session){ setShowLogin(); return; }
-    //setIsSaving(true);
     console.log("add");
     const newId = Date.now();
     const deactivatedItems = items.map(item => ({ ...item, isEditing: false }));
@@ -112,7 +110,6 @@ function Check() {
   // 편집 모드 토글
   const toggleEdit = (id, e) => {     
     if(!session){ setShowLogin(); return; } 
-    setIsSaving(true);
     e.stopPropagation(); // 부모 클릭시 이벤트 방지    
     const changeItems = items.map(
       item => item.id === id ? { ...item, isEditing: !item.isEditing } : { ...item, isEditing: false }
@@ -129,7 +126,6 @@ function Check() {
   // 번들 삭제
   const deleteBundle = (id) => {
     if(!session){ setShowLogin(); return; }
-    setIsSaving(true);
     const changeItems = items.filter(bundle => bundle.id !== id);
     setItems(changeItems);
   };
@@ -187,7 +183,6 @@ function Check() {
   // 체크박스 핸들러 
   const toggleCheck = (bundleId, subId) => {
     if(!session){ setShowLogin(); return; }
-    setIsSaving(true);
     console.log("toggleCheck");
     const changeItems = items.map(bundle => {
       if (bundle.id === bundleId && !bundle.isEditing) { // 비활성화일 때 가능
