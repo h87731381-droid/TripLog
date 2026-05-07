@@ -3,10 +3,15 @@
 import Header from "./Header";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { authStore } from "../store/authStore";
+import { tripStore } from "../store/tripStore";
+import dayjs, { Dayjs } from 'dayjs'
 
 export default function RootLayout({ children }) {
   const deliveryRef = useRef(null); 
   const [showPlane, setShowPlane] = useState(false);
+  const { session } = authStore();
+  const { setTripData } = tripStore();//zustand 스토어 관리
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisited");
@@ -40,6 +45,24 @@ export default function RootLayout({ children }) {
       });
     }
   }, []);
+
+
+  useEffect(() => {
+    const fetchDraft = async () => {
+      const res = await fetch(`/api/planner?type=draft&session=${session.user?.email}`);
+      console.log("status:", res.status); 
+      const data = await res.json();
+
+      if (data) {
+        setTripData({// DB 기준으로 화면 분기
+          ...data,
+          start:dayjs(data.start),
+          end:dayjs(data.end),
+        }); 
+      }
+    };
+    if(session?.user?.email) fetchDraft();
+  }, [session]);
 
   return (  
     <div className="main">

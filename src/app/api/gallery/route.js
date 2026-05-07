@@ -10,6 +10,7 @@ export async function GET(request) {
     // 1. URL 쿼리 스트링에서 이메일 추출 (예: /api/gallery?email=test@test.com)
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email'); 
+    const tripId = searchParams.get('tripId'); 
 
     const client = await db();
     
@@ -19,7 +20,7 @@ export async function GET(request) {
     }
 
     // 3. DB 조회: 'gallery' 컬렉션에서 email 필드가 일치하는 데이터만 배열로 가져옴
-    const result = await client.collection('gallery').find({ email: email }).toArray();
+    const result = await client.collection('gallery').find({ email, tripId }).toArray();
 
     return Response.json({ result });
 }
@@ -37,6 +38,7 @@ export async function POST(request) {
     const files = formdata.getAll('files');    // 선택된 다중 파일들
     const title = formdata.get('title');       // 갤러리 제목(폴더명)
     const email = formdata.get('email');       // 업로드한 유저 이메일
+    const tripId = formdata.get('tripId');       // 업로드한 유저 이메일
 
     // 1. 여러 파일을 동시에 처리하기 위해 Promise.all 사용
     await Promise.all(
@@ -53,6 +55,7 @@ export async function POST(request) {
 
             // 4. DB에 저장할 객체 생성
             const addData = {
+                tripId,
                 title,                  // 폴더 제목
                 email,                  // 소유자 식별용 이메일
                 note: '',               // 초기 메모는 빈 값
