@@ -30,8 +30,7 @@
 ------------------
 
 ## 🔗 배포 URL
-
-
+**TRIPLOG** https://trip-log-chi.vercel.app/planner
 
 ---------------
 
