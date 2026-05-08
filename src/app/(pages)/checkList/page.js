@@ -7,6 +7,8 @@ import { LuCirclePlus } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbPencil } from "react-icons/tb";
 import { authStore } from '@/app/store/authStore';
+import { tripStore } from "@/app/store/tripStore";
+import { useRouter } from "next/navigation";
 
 function Check() {
   const [items, setItems] = useState([]);
@@ -14,15 +16,35 @@ function Check() {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const {session, setShowLogin} = authStore();
+  const {tripData, setTripData} = tripStore();
   const nodeRefs = useRef({});
-
+  const router = useRouter();
   // [GET] 페이지 로드 시 DB 데이터 호출
   useEffect(() => {
     const fetchChecklist = async () => {
       try {
         // 저장 내용 O
-        if (session) {
-          const response = await fetch("/api/checkList");
+
+        const defaultId = Date.now();
+        const defaultBundle = {
+          id: defaultId,
+          category: "세면용품",
+          subItems: [
+            { id: Date.now() + 1, text: "치약/칫솔", checked: false },
+            { id: Date.now() + 2, text: "폼클렌저", checked: false },
+            { id: Date.now() + 3, text: "샴푸", checked: false },
+            { id: Date.now() + 4, text: "수건", checked: false },
+            { id: Date.now() + 5, text: "스킨케어", checked: false }
+          ],
+          isEditing: false
+        };
+
+        nodeRefs.current[defaultId] = React.createRef();
+        setItems([defaultBundle]);
+
+
+        if (session && tripData) {
+          const response = await fetch(`/api/checkList?tripId=${tripData._id}`);
           const data = await response.json();
           if(data.checklist && data.checklist.length > 0 ){
             // 불러온 데이터의 id마다 ref(번들정보) 생성
@@ -35,24 +57,7 @@ function Check() {
           }
         }
         // 저장 내용 X : 추천리스트
-        else {
-          const defaultId = Date.now();
-          const defaultBundle = {
-            id: defaultId,
-            category: "세면용품",
-            subItems: [
-              { id: Date.now() + 1, text: "치약/칫솔", checked: false },
-              { id: Date.now() + 2, text: "폼클렌저", checked: false },
-              { id: Date.now() + 3, text: "샴푸", checked: false },
-              { id: Date.now() + 4, text: "수건", checked: false },
-              { id: Date.now() + 5, text: "스킨케어", checked: false }
-            ],
-            isEditing: false
-          };
-
-          nodeRefs.current[defaultId] = React.createRef();
-          setItems([defaultBundle]);
-        }
+       
       } catch (error) { console.error("데이터 로드 실패:", error); }
     };
     fetchChecklist();
@@ -69,13 +74,22 @@ function Check() {
 
   // [SAVE] DB로 현재 상태(위치 포함) 저장 / 저장 성공여부 팝업
   const saveItems = async () => {
+    
+    
     if(!session){ setShowLogin(); return; }
+    if(!tripData){
+      alert('여행지를 작성하세요.'); 
+      router.push('/planner')
+      return;
+    } 
+
+
     setIsSaving(true);
     try {
       const response = await fetch("/api/checkList", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ checklist: items}),
+        body: JSON.stringify({ checklist: items, tripId:tripData._id, userId:session.user.email}),
       });
 
       if (response.ok) {
@@ -90,7 +104,13 @@ function Check() {
   // 버튼 클릭 시 새로운 항목 추가 함수
   const addItem = () => {
     if(!session){ setShowLogin(); return; }
-    console.log("add");
+
+    if(!tripData){
+      alert('여행지를 작성하세요.'); 
+      router.push('/planner')
+      return;
+    } 
+
     const newId = Date.now();
     const deactivatedItems = items.map(item => ({ ...item, isEditing: false }));
     const x = (window.innerWidth * 0.75 / 2) - 110;
@@ -214,13 +234,20 @@ function Check() {
       <div className="title">
         <div className="title2">
           <h1>체크리스트</h1>
-          <span onClick={(e) => { e.stopPropagation(); addItem(); }} style={{ cursor: 'pointer' }}>
-            <LuCirclePlus />
-          </span>
+          {
+            tripData?.status==='draft' &&
+            <span onClick={(e) => { e.stopPropagation(); addItem(); }} style={{ cursor: 'pointer' }}>
+              <LuCirclePlus />
+            </span>
+          }
         </div>
-        <h3 onClick={saveItems} style={{ cursor: 'pointer' }}>
-          {isSaving ? "저장중" : "저장하기"} <span>✔</span>
-        </h3>
+
+        {
+          tripData?.status==='draft' &&
+          <h3 onClick={saveItems} style={{ cursor: 'pointer' }}>
+            {isSaving ? "저장중" : "저장하기"} <span>✔</span>
+          </h3>
+        }
       </div>
 
       <div className={`list ${isResize ? 'active' : ''}`}>
@@ -250,18 +277,24 @@ function Check() {
                     onChange={(e) => handleInputChange(bundle.id, 'category', e.target.value)}
                   />
                 </div>
-                <span className="edit-btn" onClick={(e) => 
-                  bundle.isEditing ? deleteBundle(bundle.id) : toggleEdit(bundle.id, e)
-                }>
-                  {bundle.isEditing ? <RiDeleteBin6Line /> : <TbPencil />}
-                </span>
+                {
+                  tripData?.status==='draft' &&
+                  <span className="edit-btn" onClick={(e) => 
+                    bundle.isEditing ? deleteBundle(bundle.id) : toggleEdit(bundle.id, e)
+                  }>
+                    {bundle.isEditing ? <RiDeleteBin6Line /> : <TbPencil />}
+                  </span>
+                }
               </div>
 
               <div className="item-list">
                 {bundle.subItems.map((sub) => (
                   <div key={sub.id} className="item">
-                    <input className="check-box" type="checkbox" checked={sub.checked}
-                      onChange={() => toggleCheck(bundle.id, sub.id)} disabled={bundle.isEditing} />
+                    {
+                      tripData?.status==='draft' &&
+                      <input className="check-box" type="checkbox" checked={sub.checked}
+                        onChange={() => toggleCheck(bundle.id, sub.id)} disabled={bundle.isEditing} />
+                    }
                     <input
                       className={`check-text ${sub.checked ? "done" : ""}`}
                       type="text"

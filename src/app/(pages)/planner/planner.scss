@@ -438,6 +438,8 @@
             position: relative;
             z-index: 5;
             height: 90px;
+            width: 160px;
+            white-space: nowrap;
             &::after{
                 content:"";
                 position:absolute;
@@ -453,6 +455,7 @@
             display: flex;
             width: 88.7%;
             justify-content: space-between;
+            flex-wrap: wrap;
             >div{
                 display: flex;
                 p{
@@ -531,6 +534,7 @@
                          padding-top:17px;
                          padding-left: 20px;
                          color:#6C6C6C;
+                         white-space: nowrap;
                         }
                         a{
                          padding-top:17px ;
@@ -539,6 +543,7 @@
                          font-size: 15px;
                          //position:absolute;
                          //right:0;
+                         white-space: nowrap;
                          cursor: pointer;
                          svg{
                              vertical-align: -5px;
@@ -617,8 +622,9 @@
                              .scdTime{
                                  line-height: 1.1;
                                  font-weight: 400;
-                                 //width: 43px;
-                                 width: 12%;
+                                 width: 43px;
+                                 //width: 12%;
+                                 flex-shrink: 0;
                              }
                              .timeLine{
                                  .circle{
@@ -731,6 +737,7 @@
                         padding-top:17px;
                         padding-left: 20px;
                         color:#6C6C6C;
+                        white-space: nowrap;
                     }
                     a{
                         padding-top:17px ;
@@ -738,6 +745,7 @@
                         font-weight: 400;
                         font-size: 15px;
                         text-align:right;
+                        white-space: nowrap;
                         cursor: pointer;
                         svg{
                             vertical-align: -5px;
@@ -814,8 +822,9 @@
                         .scdTime{
                             line-height: 1.1;
                             font-weight: 400;
-                            //width: 43px;
-                            width: 12%;
+                            width: 43px;
+                            //width: 12%;
+                            flex-shrink: 0;
                         }
                         .timeLine{
                             .circle{

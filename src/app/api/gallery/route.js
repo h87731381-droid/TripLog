@@ -38,7 +38,10 @@ export async function POST(request) {
     const files = formdata.getAll('files');    // 선택된 다중 파일들
     const title = formdata.get('title');       // 갤러리 제목(폴더명)
     const email = formdata.get('email');       // 업로드한 유저 이메일
-    const tripId = formdata.get('tripId');       // 업로드한 유저 이메일
+    const tripId = formdata.get('tripId');      
+    
+    console.log(key);
+    
 
     // 1. 여러 파일을 동시에 처리하기 위해 Promise.all 사용
     await Promise.all(
@@ -62,6 +65,8 @@ export async function POST(request) {
                 files: res.data.data.url, // ImgBB에서 받은 이미지 URL
                 date: new Date()        // 등록 날짜
             };
+
+            
             
             // 5. 'gallery' 컬렉션에 최종 저장
             return await client.collection('gallery').insertOne(addData);

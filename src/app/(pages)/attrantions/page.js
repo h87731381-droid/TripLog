@@ -7,8 +7,8 @@ import './loadingLoof.css'
 import { FiX } from "react-icons/fi";
 import { authStore } from '@/app/store/authStore';
 import axios from 'axios';
+import { tripStore } from '@/app/store/tripStore';
 
-//import { tripStore } from '../../store/tripStore';
 
 
 
@@ -20,7 +20,7 @@ import axios from 'axios';
 function Page() {
   
   const [isPlan, setIsPlan] = useState(false); // 플랜 여부⭐
-  // const { tripData, setTripData } = tripStore(); // 플랜 스토어⭐
+  const { tripData, setTripData } = tripStore(); // 플랜 스토어⭐
   const { session, setShowLogin } = authStore(); // 로그인 여부
   //const [samplePopup, setSamplePopup] = useState(true); // 샘플
   const [activeMenu, setActiveMenu] = useState(1); // 카테고리 기본값:1(전체)
@@ -49,14 +49,16 @@ function Page() {
 
     await axios.post('/api/attrantions',{userId:session?.user?.email, itemMarkers:changeItem});
     setItemMarkers(changeItem);
+    
+    setTripData({...tripData,places:changeItem})
   };
 
-
+console.log(tripData,'=====changeItem')
 
   // api 호출
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`/api/attrantions?userId=${session.user.email}`);
+      const res = await fetch(`/api/attrantions?id=${tripData._id}`);
       const result = await res.json();
 
       setListItem(result.data.response.body.items.item);
@@ -68,7 +70,7 @@ function Page() {
       
     };
 
-    if(session) fetchData();
+    if(session && tripData) fetchData();
 
 
 
@@ -239,6 +241,7 @@ function Page() {
                   isActive={itemMarkers.some((m) => m.contentid === i.contentid)}
                   handleToggleItem={handleToggleItem}
                   handleClickItem={handleClickItem}
+                  tripData={tripData}
                 />
               })}
 
@@ -269,12 +272,14 @@ function Page() {
 export default Page;
 
 // 관광지 리스트
-function Item({ i, isActive, handleToggleItem, handleClickItem }) {
+function Item({ i, tripData,isActive, handleToggleItem, handleClickItem }) {
   return (
     <div className={style.item}>
       <p
         className={`${style.thumbnail} ${isActive ? style.active : ''}`}
-        onClick={() => handleToggleItem(i)}   // 토글
+        onClick={() => {
+          tripData.status === 'draft' && handleToggleItem(i)
+        }}   // 토글
       >
         <img src={i.firstimage} />
         <span>

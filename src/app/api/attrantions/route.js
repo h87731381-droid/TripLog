@@ -1,12 +1,13 @@
 import getDB from '@/app/lib/mongodb'
+import { ObjectId } from 'mongodb';
 
 export async function GET(req) {
 
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('userId');
+    const id = searchParams.get('id');
 
     const db = await getDB();
-    const result = await db.collection('planner').find({userId}).toArray();
+    const result = await db.collection('planner').find({_id:new ObjectId(id)}).toArray();
 
     const selectedAddress = result[0].selectedAddress;
     const userAttrantions = result[0].places;
@@ -28,7 +29,7 @@ export async function POST(req) {
     const {userId,itemMarkers} = await req.json();
 
     const db = await getDB();
-    await db.collection('planner').updateOne({userId},{$set:{places:itemMarkers}});
+    await db.collection('planner').updateOne({userId,status:'draft'},{$set:{places:itemMarkers}});
 
 
     return Response.json({ name: "John Doe" });
