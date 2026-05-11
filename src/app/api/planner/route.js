@@ -104,7 +104,8 @@ export async function PUT(req) {
 
     // 수정
     if (body.editingId) {
-
+      
+      //여행완료
       if (body.type === "complete") {
         const completeList = await db
           .collection("planner")
@@ -113,6 +114,22 @@ export async function PUT(req) {
             {$set:{status: "complete"}}
           );
       }
+      // 여행 날짜 수정 추가
+      else if (body.type === "dateEdit") {
+
+        await db.collection("planner").updateOne(
+          { _id: new ObjectId(body.editingId) },
+          {
+            $set: {
+              start: body.start,
+              end: body.end,
+            }
+          }
+        );
+
+      }
+
+      //스케줄 수정
       else{
         await db.collection('planner').updateOne(
           {
@@ -176,17 +193,27 @@ export async function DELETE(req) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
-
+    const target=searchParams.get('target')
     const db = await getDB();
-
-    await db.collection('planner').updateOne(
-      { "scd._id": new ObjectId(id) },
-      {
-        $pull: {
-          scd: { _id: new ObjectId(id) }//배열 안에서 해당 요소 제거
+    
+    //일정 스케줄 하나 삭제
+    if(target==='scd'){
+      await db.collection('planner').updateOne(
+        { "scd._id": new ObjectId(id) },
+        {
+          $pull: {
+            scd: { _id: new ObjectId(id) }//배열 안에서 해당 요소 제거
+          }
         }
-      }
-    );
+      );
+    }
+
+    //완료된 여행 전체 삭제(나의 기록에서 삭제)
+    if(target==='trip'){
+      await db.collection('planner').deleteOne({
+        _id:new ObjectId(id)
+      })
+    }
 
     return Response.json({ success: true });
 

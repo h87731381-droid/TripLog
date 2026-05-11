@@ -81,7 +81,7 @@ export default function Header() {
                 <span className="comment">님, 나만의 여행 지도를 그려볼까요?✨</span>
 
                 <div className="user-bnt">
-                  <Link href="/before">나의 기록</Link>ㅣ
+                  <Link href="/before" >나의 기록</Link>ㅣ
                   <button className="logout" onClick={() => { signOut() }}>로그아웃</button>
                 </div>
               </div>

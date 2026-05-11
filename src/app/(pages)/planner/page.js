@@ -4,13 +4,16 @@ import './planner.scss'
 import PlanTextField from '../../comp/planner/PlanTextField';
 import PlanPopupPlace from '../../comp/planner/PlanPopupPlace';
 import PlanFullDay from '../../comp/planner/PlanFullDay';
-import { FiCheck, FiSave } from "react-icons/fi";
+import { FiCheck, FiSave, FiX } from "react-icons/fi";
 import PlanOneDayMap from '../../comp/planner/PlanOneDayMap';
 import PlanPopupScd from '../../comp/planner/PlanPopupScd';
 import dayjs, { Dayjs } from 'dayjs'
 import { tripStore } from '../../store/tripStore';
 import { authStore } from '@/app/store/authStore';
 import { useRouter } from 'next/navigation';
+import { FiCalendar } from "react-icons/fi";
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 function page() {
   const [isOpen,setIsOpen]=useState(false)
@@ -25,6 +28,31 @@ function page() {
   const [tripList, setTripList]=useState([])//완료된 여행으로 보관함페이지에서 씀(수정 불가)
   const router = useRouter();
 
+  //여행 기간 수정
+  const [isDateEdit, setIsDateEdit] = useState(false);
+  const [start, setStart] = useState(
+  tripData?.start ? dayjs(tripData.start) : null
+  );
+
+  const [end, setEnd] = useState(
+    tripData?.end ? dayjs(tripData.end) : null
+  );
+
+  const handleStartChange = (newValue) => {
+    setStart(newValue);
+  };
+  
+  useEffect(() => {
+  if (tripData) {
+    setStart(
+      tripData?.start ? dayjs(tripData.start) : null
+    );
+
+    setEnd(
+      tripData?.end ? dayjs(tripData.end) : null
+    );
+  }
+  }, [tripData]);
   
   //db에 저장(중간 저장이라 나의기록보관함에는 x (수정가능))
   const handleSaveDraft = async ()=>{
@@ -49,24 +77,28 @@ function page() {
     })
   }
 
-  //여행 완료 버튼
+  // 여행 완료 버튼
   const handleComplete = async () => {
-    if (window.confirm("완료된 여행은 '나의 기록'에 보관되며 더이상 수정이 불가합니다. 정말 완료하시겠습니까?")) {
-      await fetch(`/api/planner`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          editingId:tripData._id,
-          type: "complete",
-        }),
-      });
 
-      setTripData(null);
-
-    }
-};
+    const ok = window.confirm(
+      "완료된 여행은 '나의 기록'에 보관되며 더이상 수정이 불가합니다. 정말 완료하시겠습니까?"
+    );
+    
+    // 취소 눌렀으면 종료
+    if (!ok) return false;
+    await fetch(`/api/planner`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        editingId: tripData._id,
+        type: "complete",
+      }),
+    });
+    setTripData(null);
+    return true;
+  };
   
   //db데이터 기준 여행일정 없었으면 첫 일정입력 화면으로
   if(!tripData)
@@ -112,23 +144,156 @@ function page() {
                 <div>
                   <p>{tripData?.tripTitle}</p> 
                   <p>|</p> 
-                  <p>
-                    {tripData?.start && dayjs(tripData.start).format('YYYY.MM.DD')} ~{" "}
-                    {tripData?.end && dayjs(tripData.end).format('YYYY.MM.DD')} 
-                  </p>
+                  <div className='tripDate'>
+                    {!isDateEdit ? (
+                      <>
+                        {tripData?.start && dayjs(tripData.start).format('YYYY.MM.DD')} ~{" "}
+                        {tripData?.end && dayjs(tripData.end).format('YYYY.MM.DD')} 
+                        <div>
+                          <FiCalendar 
+                          className='calendarEditBtn'
+                          onClick={() => setIsDateEdit(true)} />
+                        </div>
+                      </>
+                    ):(
+                      <div className='dateEditBox'>
+                        <LocalizationProvider 
+                          dateAdapter={AdapterDayjs}
+                          adapterLocale="ko">
+                          <DatePicker
+                            value={start}
+                            onChange={handleStartChange}
+                            format="YYYY.MM.DD (ddd)"
+                            slotProps={{
+                              textField: {
+                                sx: {
+                                  width: '175px',
+                                  fontSize:'10px',
+                                  '@media(max-width:870px)':{
+                                    width:'60px',
+                                  },
+
+                                  '& .MuiInputBase-root': {
+                                    height: '40px',
+                                    borderRadius: '10px',
+                                    backgroundColor: '#fff',
+                                  },
+
+                                  '& .MuiPickersSectionList-root': {
+                                    width: '120px !important',
+                                  },
+
+                                  '& input': {
+                                    padding: '8px 14px',
+                                    fontSize: '14px',
+                                    fontFamily: 'Pretendard, sans-serif',
+                                  },
+
+                                  '& fieldset': {
+                                   
+                                  },
+                                },
+                              },
+                            }}
+                          />
+
+                          <span>~</span>
+
+                          <DatePicker
+                            value={end}
+                            onChange={(newValue) => setEnd(newValue)}
+                            minDate={start}
+                            format="YYYY.MM.DD (ddd)"
+                            slotProps={{
+                              textField:{
+                                sx:{
+                                  width:'175px',
+                                  '@media(max-width:870px)':{
+                                    width:'60px',
+                                  },
+                                }
+                              }
+                            }}
+                          />
+
+                          <FiCheck
+                            className='dateCheckBtn'
+                            onClick={async () => {
+                            const updatedStart = start
+                              ? start.format("YYYY-MM-DD")
+                              : null;
+
+                            const updatedEnd = end
+                              ? end.format("YYYY-MM-DD")
+                              : null;
+
+                             // 새 객체 생성
+                            const updatedTripData = {
+                              ...tripData,
+                              start: updatedStart,
+                              end: updatedEnd
+                            };
+                            
+                            //화면 즉시 반영
+                            setTripData(updatedTripData);
+
+                            // DB 저장
+                            await fetch('/api/planner', {
+                              method:'PUT',
+                              headers:{
+                                'Content-Type':'application/json'
+                              },
+                              body:JSON.stringify({
+                                editingId: tripData._id,
+                                type:'dateEdit',
+                                start: updatedStart,
+                                end: updatedEnd
+                              })
+                            });
+                              setIsDateEdit(false);
+                            }}
+                          />
+
+                          <FiX
+                            className='dateCancelBtn'
+                            onClick={() => {
+
+                              // 원래값 복구
+                              setStart(
+                                tripData?.start ? dayjs(tripData.start) : null
+                              );
+
+                              setEnd(
+                                tripData?.end ? dayjs(tripData.end) : null
+                              );
+
+                              setIsDateEdit(false);
+                            }}
+                          />
+                        </LocalizationProvider>
+                      </div>
+
+                    )}
+                  </div>
                 </div>
                 {tripData.status==='draft' && 
-                  <button onClick={()=>{
-                    handleComplete();
-                    router.push('/before');
-                  }} >
-                  
+                  <button 
+                    onClick={async () => {
+                    const success = await handleComplete();
+                    if (success) {
+                      router.push('/before');
+                    }
+                  }}
+                  >
                   여행완료<FiCheck /></button> 
                 }
 
               </div>
       </div>
-      <PlanFullDay tripData={tripData}/> 
+      <PlanFullDay 
+        tripData={tripData}
+        setTripData={setTripData}
+      /> 
       {/* <PlanOneDayMap 
       onOpen={()=>setIsOpen(true)} 
       isOpen={isOpen} 

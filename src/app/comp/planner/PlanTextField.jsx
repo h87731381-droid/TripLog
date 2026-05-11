@@ -93,6 +93,7 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
 
   //여행지 선택 input창 클릭시 로그인 전 후 분기
   const handlePlaceClick = (e) => {
+    e.preventDefault();
     if (!session || !session.user) {
       handleAdd(e);
       return;
@@ -109,12 +110,17 @@ function PlanTextField({onOpen,selectedAddress,setSelectedAddress,pickedPlace,se
             <TextField
             fullWidth
             variant="filled"
-            placeholder="표시될 제목을 입력해주세요"
+            placeholder="표시될 제목을 입력해주세요(최대 13자)"
             value={tripTitle}
-            onChange={(e) => setTripTitle(e.target.value)}
+            onChange={(e) => setTripTitle(e.target.value.slice(0, 13))}
             autoComplete="off"
             //sx={{ mb: 2 }}
             onClick={handleAdd}
+            slotProps={{
+              htmlInput: {
+                maxLength: 13,
+              },
+            }}
             />
           </div>
           <div className='planDates'>

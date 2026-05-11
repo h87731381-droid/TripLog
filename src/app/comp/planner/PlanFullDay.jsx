@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { FiPlus } from "react-icons/fi";
 import { FaCar, FaCircle, FaWalking } from "react-icons/fa"
@@ -19,11 +19,19 @@ import { MdDirectionsBoat } from 'react-icons/md';
 
 function PlanFullDay({tripData,setTripData}) {
   const [dayPlan,setDayPlan]=useState(false)
-  const start=dayjs(tripData.start);
-  const end=dayjs(tripData.end);
-  
-  const totalDays=end.diff(start,'day')+1;//날짜 차이 계산
-  //const totalDays=tripData.end.diff(tripData.start, 'day') +1;
+
+  const start = tripData?.start
+  ? dayjs(tripData.start)
+  : null;
+
+const end = tripData?.end
+  ? dayjs(tripData.end)
+  : null;
+
+const totalDays =
+  start && end
+    ? end.diff(start, 'day') + 1
+    : 0;
 
   const days=Array.from({length:totalDays}).map((_,idx)=>{//한번 배열로 빼야 슬라이드 가능 
     const date=start.add(idx,'day');
@@ -35,11 +43,13 @@ function PlanFullDay({tripData,setTripData}) {
   const [isPopupOpen,setIsPopupOpen]=useState(false);
 
   //좌우 페이지 슬라이드
+  const [itemsPerPage, setItemsPerPage] = useState(3);
   const pages=[];
-  for(let i = 0; i < days.length; i +=3){
-    pages.push(days.slice(i,i+3));
-  }
+ for (let i = 0; i < days.length; i += itemsPerPage) {
+  pages.push(days.slice(i, i + itemsPerPage));
+}
   const [page,setPage]=useState(0);
+  
   const sliderRef=useRef(null);
   const next=()=>{
     sliderRef.current.scrollBy({left:window.innerWidth, behavior:'smooth'})
@@ -51,6 +61,30 @@ function PlanFullDay({tripData,setTripData}) {
   const getSchedulesByDay = (day) => {
   return tripData?.scd?.filter(scd => scd.day == day) || [];
   };
+
+  
+  //반응형으로 페이지당 보여주는 day 수 조절
+  useEffect(() => {
+
+    const handleResize = () => {
+      if (window.innerWidth <= 700) {
+      setItemsPerPage(1);
+      } else if (window.innerWidth <= 1300) {
+        setItemsPerPage(2);
+      } else {
+        setItemsPerPage(3);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+
+  }, []);
   
   //교통수단 아이콘 매핑 추가
   const moveIcons = {
@@ -114,7 +148,7 @@ function PlanFullDay({tripData,setTripData}) {
               <div className='page' key={pageIdx}>
 
                 {pageDays.map(({idx,date})=>{
-                  const schedules = getSchedulesByDay(idx + 1);
+                  const schedulesList = getSchedulesByDay(idx + 1);
                   
                   return(
                     <div className='planEditDay' key={idx}>
@@ -132,7 +166,7 @@ function PlanFullDay({tripData,setTripData}) {
                         </div>
                       </div>
                       <div className='planEditDayBox'>
-                        {schedules.length===0 ?
+                        {schedulesList.length===0 ?
                         
                             (<div className='planEditDayBoxEmpty'>
                               {tripData.status==='draft' ?
@@ -158,7 +192,9 @@ function PlanFullDay({tripData,setTripData}) {
                             :
                             (<div className='planEditDayBoxFilled'>
                               {
-                                schedules.map((scd,idx)=>(
+                                [...schedulesList]
+                                .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                                .map((scd,idx)=>(
                                   <div className='oneSchedule' key={idx}>
                                     <p className='scdTime'>{scd.startTime}</p>
                                     <div className='timeLine'>

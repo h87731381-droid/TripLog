@@ -24,23 +24,48 @@ function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,i
     scd => scd.day == (selectedDay?.idx + 1)
   ) || [];//tripdata에서 가져온 스케쥴 배열
   console.log(schedules)
+  
+  //시간순으로 출력가능하게
+  const sortedSchedules = [...schedules].sort((a, b) =>
+    a.startTime.localeCompare(b.startTime)
+  );
 
   //마커 찍히게 스케줄 필터
-  const markers = schedules
+  const markers = sortedSchedules
   .filter(scd => scd.mapx && scd.mapy)
-  .map(scd => ({
+  .map((scd,idx) => ({
     mapx: scd.mapx,
-    mapy: scd.mapy
+    mapy: scd.mapy,
+    order: idx + 1,
   }));
+  
   
   //스케줄 추가 시 장소 누를때마다 마커 바로 찍히게 임시 마커 상태
   const [tempMarkers, setTempMarkers] = useState([]);
   
   //두개를 하나의 배열로 합쳐서 보내야 map돌릴때 오류안남
-  const mergedMarkers = [
-  ...markers,
-  ...tempMarkers
-];
+  const mergedMarkers = editingId
+  ? markers.map((marker, idx) => {
+
+      // 수정중인 schedule 찾기
+      const editingScheduleIndex = sortedSchedules.findIndex(
+        scd => scd._id === editingId
+      );
+
+      // 수정중인 위치면 tempMarker로 교체(중간에 껴있던 스케줄일때 고려)
+      if (
+        idx === editingScheduleIndex &&
+        tempMarkers.length > 0
+      ) {
+        return {
+          ...tempMarkers[0],
+          order: marker.order,
+        };
+      }
+
+      return marker;
+    })
+  : [...markers, ...tempMarkers];
 
   //스케줄 하나 수정
   const scdEditStart = (item) => {
@@ -60,7 +85,7 @@ function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,i
   //스케줄 하나 삭제
   const scdDelete = async (id) => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
-      await fetch(`/api/planner?id=${id}`, 
+      await fetch(`/api/planner?id=${id}&target=scd`, 
         { method: 'DELETE' });
         // 다시 데이터 불러오기
         const res = await fetch(`/api/planner?type=draft&session=${tripData.userId}`);
@@ -114,7 +139,7 @@ function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,i
                 :
                 (<div className='planEditOneDayBoxFilled'>
                   {
-                    schedules.map((scd,idx)=>(
+                    sortedSchedules.map((scd,idx)=>(
                       <div className='oneSchedule' key={idx}>
                         <p className='scdTime'>{scd.startTime}</p>
                         <div className='timeLine'>
@@ -185,6 +210,7 @@ function PlanOneDayMap({onOpen,onClose,day,date,setOneDayMapAddScd,selectedDay,i
               editData={editData}
               editingId={editingId}
               setTempMarkers={setTempMarkers}
+              markerLength={markers.length}//기존 출력되있던 마커의 개수
               />
           
 

@@ -16,7 +16,7 @@ import { tripStore } from '@/app/store/tripStore'
 import dayjs from 'dayjs';
 import { GrFormNext } from 'react-icons/gr'
 
-function PlanPopupScd({day,isPopupOpen,onClose,pickedPlace,editData,editingId,setTempMarkers}) {
+function PlanPopupScd({day,isPopupOpen,onClose,pickedPlace,editData,editingId,setTempMarkers,markerLength}) {
   if (!isPopupOpen) return null;
   const {tripData,setTripData}=tripStore();
   const [open, setOpen] = useState(false);
@@ -109,7 +109,8 @@ function PlanPopupScd({day,isPopupOpen,onClose,pickedPlace,editData,editingId,se
         setTempMarkers([
             {
                 mapx:place.mapx,
-                mapy:place.mapy
+                mapy:place.mapy,
+                order: markerLength + 1,
             }
         ]);
     }
@@ -215,8 +216,8 @@ function PlanPopupScd({day,isPopupOpen,onClose,pickedPlace,editData,editingId,se
   }, [selected]);
 
   return (
-    <div className='ppsBoxContainer'>
-        <div className='ppsBox'>
+    <div className='ppsBoxContainer' onClick={onClose}>
+        <div className='ppsBox' onClick={(e)=>e.stopPropagation()}>
             <div className='ppsTitle'>
                 <p>일정 추가</p>
                 <div className='ppsBoxClose'>
@@ -256,7 +257,7 @@ function PlanPopupScd({day,isPopupOpen,onClose,pickedPlace,editData,editingId,se
                         <TextField
                         fullWidth
                         variant="filled"
-                        placeholder="방문할 장소를 선택하세요"
+                        placeholder="방문할 장소를 아래에서 선택해주세요 "
                         name='scdPlace'
                         inputprops={{readOnly:true}}
                         value={active?.title || ''}

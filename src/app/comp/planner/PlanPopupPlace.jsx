@@ -102,6 +102,7 @@ function PlanPopupPlace({
                 variant="filled"
                 placeholder="여행지 지역 한 곳을 입력해주세요(예: 제주도 / 경주시)"
                 value={inputValue}
+                autoFocus
                 onChange={(e) => {
                     setInputValue(e.target.value)
                     

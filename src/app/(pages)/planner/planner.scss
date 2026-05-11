@@ -3,31 +3,77 @@
     .container{position: relative;}
 } */
 .body {margin: 0;}
+@media (max-width: 1100px) {
+  body{ font-size: 15px;}
+
+  .main{
+
+    .delivery-wrapper .plane{ bottom: -140px; }   
+    .menu-bar .menu{ width: 90vw; }
+    .logo{ font-size: 4.5rem; }
+
+    .container{ 
+      width: 90vw; 
+      margin-top: 0px;
+      padding: 10px 20px; 
+      @media(max-width:490px){
+              width:441px;     
+      }
+
+      .title h1{ font-size: 2.7rem; }
+    }
+  }
+}
 .planMake{
     display: flex;
+    @media (max-width: 1300px) {
+        flex-direction: column;
+        >h1{
+            width: 100%;
+            &::after{
+                  width: 155px;
+            }
+        }
+    }
     >h1{
         font-family: 'GangwonEduHyeonokT';
         font-size: 4rem;
         position: relative;
         z-index: 5;
+        height: 90px;
         &::after{
             content:"";
             position:absolute;
             z-index:-1;
             left:0;
-            top:7%;
-            width: 100%;
+            bottom:30%;
+            width: 155px;
             height: 15px;
             background-color:#58D3ff;
         }
      }
     .planMakeBox{
-        width: 40%;
+        width: 550px;
         background-color: #f8f8f8;
         border-radius: 20px;
         padding:30px;
-        margin:40px 0;
-        margin-left:19%;
+        margin:40px auto;
+        left:50%;
+        transform:translate(-13%,0);
+        //margin-left:19%;
+        //position:absolute;
+        @media (max-width: 1300px){
+            width: 550px;
+            left:50%;
+            transform:translate(0%,0);
+        }
+        @media (max-width: 660px){
+            width: 350px;
+        }
+        @media (max-width: 440px){
+            width: 250px;
+        }
+
         >p{
            text-align: center;
            font-size:20px;
@@ -208,17 +254,26 @@
             width: 50%;
             text-align: center;
             z-index: 1000;
+            @media (max-width: 1300px){
+                width: 80%;
+            }
+            @media (max-width: 660px){
+                width: 528px;
+            }
             .pppTitle{
                 display: flex;
-                justify-content: right;
-                gap:290px;
+                //text-align:center;
+                justify-content: center;
+                //gap:290px;
                 >p{
                     padding-bottom:30px;
                     font-size:20px;
                     font-weight: 500;
                 }
                 .pppBoxClose{
+                    position:absolute;
                     font-size:25px;
+                    right:5%;
                     cursor:pointer;
                 }
             }
@@ -241,6 +296,7 @@
             .MuiInputBase-root{
                 border:none;
                 background-color: #ffffff;
+                //width:100px;
                 }
             .MuiFilledInput-root:hover{
                 border:none;
@@ -253,9 +309,16 @@
                 background-color: #F3F3F3;
                 border-radius: 10px;
                 height: 590px;
+                width: 100%;
+                @media (max-width: 660px){
+                    height: auto;
+                    width: 468px;
+                    height: 590px;
+                }
                 .pppMap{
                     width: 50%;
                     flex:1;
+                    min-width: 0;
 
                 }
                 .pppListEmpty{
@@ -313,6 +376,12 @@
                         gap:10px;
                         flex:1;
                         overflow-y:auto;
+                        li{
+                            @media(max-width:660px){
+                                display: flex;
+                                flex-direction: column;
+                            }
+                        }
                         .pppListCont{ 
                             cursor: pointer;
                             position: relative;
@@ -321,11 +390,15 @@
                             border-radius: 10px;
                             border:1px solid #ebebeb;
                             padding:8px;
+                            
                             >img{
                                 width: 127px;
                                 height: 85px;
                                 object-fit: cover;
                                 border-radius: 10px;
+                                @media(max-width:660px){
+                                width: 196px;
+                                }
                             }
                             span{
                                 position: absolute;
@@ -458,6 +531,18 @@
             flex-wrap: wrap;
             >div{
                 display: flex;
+                @media (max-width: 1500px) { 
+                    flex-direction: column;
+                    p:nth-of-type(1){
+                    padding-top:15px;
+                    }
+                    p:nth-of-type(2){
+                    display:none;
+                    }
+                    .tripDate{
+                        padding:0 0 0 40px !important;
+                    }
+                }
                 p{
                     padding-top:35px;
                 }
@@ -472,10 +557,32 @@
                     padding-left:15px;
                     padding-top:39px;
                 }
-                p:nth-of-type(3){
+                .tripDate{
                     padding-left:15px;
                     padding-top:39px;
                     color:#6C6C6C;
+                    display: flex;
+                    .calendarEditBtn{
+                        padding-left:7px;
+                        padding-top:2px;
+                        cursor: pointer;
+                        font-size: 22px;
+                    }
+                    .dateEditBox{
+                        display:flex;
+                        align-items:center;
+                        gap:10px;
+                        height: 25px;
+                        .MuiPickersInputBase-root{
+                           height: 30px;
+                        }
+                        
+
+                        svg{
+                            cursor:pointer;
+                            font-size:20px;
+                        }
+}
                 }
             }
             >button{
@@ -488,6 +595,31 @@
                 width: 110px;
                 height: 40px;
                 border-radius: 10px;
+                @media (max-width: 700px) {
+                        z-index: 1001;
+                        color: #27678E;
+                        writing-mode: vertical-rl;
+                        text-orientation: upright;
+                        letter-spacing: 7px;
+                        cursor: pointer;
+                        background-color: #ffffff;
+                        border:1px solid #27678E;
+                        border-radius: 10px 0 0 10px;
+                        width: 35px;
+                        padding: 25px 0 15px;
+                        font-size: 18px;
+                        display: block;
+                        position: fixed;
+                        height: auto;
+                        top: 200px;
+                        right: 0;
+                        box-shadow: -2px 2px 5px #0003;
+                        svg{
+                           padding-left:10px !important;
+                           width: 22px;
+                        }
+                    
+                }
                 svg{
                     vertical-align: -5px;
                     padding-left:5px;
@@ -514,6 +646,12 @@
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap:20px;
+                @media (max-width: 1300px){
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                @media (max-width: 700px){
+                    grid-template-columns: repeat(1, 1fr);
+                }
 
                 //하루 묶음(한 칸 내용)
                 .planEditDay{
@@ -709,9 +847,12 @@
         svg{           
             stroke:#27678E;
         }
+        @media (max-width: 1100px){
+                right: 5.5%;
+        }
        }
-       
    }
+   
 
    //PlanOneDayMap(일별 일정 및 지도 보기(일정추가 페이지))==================
    .planEditContOneDay{
@@ -721,8 +862,11 @@
         position: relative;
         gap:40px;
         justify-content: space-between;
+        @media (max-width: 600px){
+            grid-template-columns: 1fr;
+            gap:0;
+        }
         .planEditOneDay{
-            
             .planEditOneDayTxt{
                 display: flex;
                 >p{
@@ -901,6 +1045,9 @@
             display: flex;
             height:100%;
            }
+           @media (max-width: 600px){
+            display:none;
+           }
        }
          //일정추가 팝업(PlanPopupScd)
            .ppsBoxContainer{
@@ -910,6 +1057,22 @@
                 height: 100%;
                 z-index:1000;
                 overflow-y: auto;
+                @media (max-width:1400px){
+                    position: fixed;
+                    inset: 0;
+                    width: 100%;
+                    height: 100vh;
+
+                    background: rgba(0,0,0,0.45);
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    z-index: 9999;
+                    padding: 20px;
+                    box-sizing: border-box;
+                }
                 .ppsBox{
                     //position: absolute;
                     background-color: #f3f3f3;
@@ -919,10 +1082,38 @@
                     //height: 100%;
                     
                     //text-align: center;
+                    @media (max-width:1400px){
+                        width: 100%;
+                        max-width: 600px;
+                        min-width:340px;
+                        max-height: 90vh;
+
+                        overflow-y: auto;
+
+                        background: #f3f3f3;
+                        border-radius: 20px;
+
+                        padding: 25px;
+                        box-sizing: border-box;
+
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                    }
+                    @media (max-width:380px){
+                        width: 340px;
+
+                    }
                     .ppsTitle{
                         display: flex;
                         justify-content: right;
                         gap:120px;
+                        @media (max-width:1400px){
+                            margin:0 auto;
+                            gap:0;
+                            //justify-content: space-between;
+                            >p{
+                                margin:0 auto;
+                            }
+                        }
                         >p{
                             padding-bottom:30px;
                             font-size:20px;
@@ -973,6 +1164,7 @@
                                 gap:20px;
                                 position:relative;
                                 input{
+                                    cursor:pointer;
                                     width: 58%;
                                     height: 40px;
                                     //border:none;
@@ -1029,7 +1221,7 @@
 
                                 }
                                 input{
-                                    cursor: pointer;
+                                    cursor:default;
                                     width: 100%;
                                     height: 40px;
                                     border:none;
@@ -1067,7 +1259,8 @@
                                     p{}
                                 }*/
                                 div{
-                                    width: 150px;
+                                    //width: 150px;
+                                    flex:1;
                                     text-align: center;
                                     border-radius:30px;
                                     color:#b3b3b3;
@@ -1271,8 +1464,9 @@
                                 font-weight: 500;
                             }
                             .popupScdMoveCont{
-                                display: flex;
+                                //display: flex;
                                 position: relative;
+                                width:100%;
     
                                 .popupScdMoveSelect{
                                     display: flex;
@@ -1284,7 +1478,7 @@
                                 .popupScdMoveMemo{
                                     padding-left: 60px;
                                     input{
-                                    width: 250px;
+                                    width: 100%;
                                     height: 40px;
                                     border:none;
                                     background-color: #ffffff;

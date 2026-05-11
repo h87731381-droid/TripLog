@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { tripStore } from '@/app/store/tripStore';
 import { FiArrowLeftCircle, FiArrowRightCircle, FiPlus } from 'react-icons/fi';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 function page() {
   const {tripData, setTripData} = tripStore();
@@ -43,11 +44,52 @@ function page() {
   })
   : [];
   
-  //2줄 6개가 최대이고 그이상 넘어가면 페이지 이동
+  //2줄 6개가 / 4개 / 2개 반응형에 따른 아이템 수 조절 및 페이지 수 조절
+  const [itemsPerPage, setItemsPerPage] = useState(6);
   const pages = [];
-  for (let i = 0; i < filterData.length; i += 6) {
-    pages.push(filterData.slice(i, i + 6));
+
+  for (let i = 0; i < filterData.length; i += itemsPerPage) {
+    pages.push(filterData.slice(i, i + itemsPerPage));
   }
+  
+  //반응형 페이지당 보여지는 아이템 수 조절
+
+  useEffect(() => {
+    const handleResize = () => {
+
+      if (window.innerWidth <= 660) {
+        setItemsPerPage(2);
+      } else if (window.innerWidth <= 1300) {
+        setItemsPerPage(4);
+      } else {
+        setItemsPerPage(6);
+      }
+    };
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
+  //완료된 여행 전체 삭제
+  const completeTripDelete = async (id) => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      await fetch(`/api/planner?id=${id}&target=trip`, 
+        { method: 'DELETE' });
+        //다시 데이터 불러오기
+        /* const res = await fetch(`/api/planner?type=complete&session=${tripData.userId}`);
+        const data = await res.json();
+        setTripData(data); */
+        
+        //화면 즉시 갱신
+        setTripList(prev => 
+          prev.filter(item => item._id !== id)
+        );
+      }
+    };
 
   return (
     <div>
@@ -124,6 +166,12 @@ function page() {
                 <p>{complete?.start && dayjs(complete.start).format('YYYY.MM.DD')} ~{" "}
                    {complete?.end && dayjs(complete.end).format('YYYY.MM.DD')} 
                 </p>
+                {complete.status === 'complete' && (
+                  <button
+                    onClick={()=>completeTripDelete(complete._id)}>
+                      <RiDeleteBin6Line />
+                  </button>
+                )}
               </div>
               <button className={style.detail}  onClick={()=>{setTripData(complete); router.push('/planner');}}>
                 <span>
