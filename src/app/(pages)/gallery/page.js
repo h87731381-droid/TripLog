@@ -9,7 +9,6 @@ import axios from 'axios';
 import { authStore } from '@/app/store/authStore'; 
 import { tripStore } from '@/app/store/tripStore';
 import Loading from '@/app/comp/Loading';
-import Guide from '@/app/comp/Guide';
 
 /**
  * [메인 컴포넌트] S_gallery
@@ -202,7 +201,7 @@ function S_gallery() {
                         </div>
                     </div>
                 :
-                <Guide />
+                <div>가이드</div>
             }
 
             {/* 3. 등록/추가 팝업 모달 */}

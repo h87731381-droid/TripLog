@@ -6,7 +6,6 @@ import { TbPencil } from "react-icons/tb";
 import { authStore } from '@/app/store/authStore'; 
 import { tripStore } from '@/app/store/tripStore';
 import Loading from '@/app/comp/Loading';
-import Guide from '@/app/comp/Guide';
 
 function Budget() {
   /** 1. 상태 관리 (State) 및 초기화 **/
@@ -228,7 +227,7 @@ function Budget() {
             </div>
           </>
         :
-          <Guide />
+          <div>가이드</div>
       }
     </>
   );

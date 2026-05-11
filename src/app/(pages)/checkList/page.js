@@ -10,7 +10,6 @@ import { authStore } from '@/app/store/authStore';
 import { tripStore } from "@/app/store/tripStore";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/comp/Loading";
-import Guide from "@/app/comp/Guide";
 
 function Check() {
   const [items, setItems] = useState([]);
@@ -330,7 +329,7 @@ function Check() {
             ))}
           </div>
         :
-        <Guide />
+        <div>가이드</div>
       }
 
       {showModal && (
