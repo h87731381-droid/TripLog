@@ -24,14 +24,13 @@
 - **반응형 지원**: 모바일, 태블릿, 데스크탑 등 다양한 기기 환경 최적화
 
 ## 4. 주요 기술💻
-- **Front-End**: ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=sass&logoColor=white)
+- **Front-End**: ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=sass&logoColor=white) ![Zustand](https://img.shields.io/badge/Zustand-443E38?style=flat-square&logo=react&logoColor=white) ![NextAuth.js](https://img.shields.io/badge/NextAuth.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)
 - **데이터관리**: ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white) ImgBB, 외부 API 연동
 
 ------------------
 
 ## 🔗 배포 URL
-
-
+**TRIPLOG** https://trip-log-chi.vercel.app/planner
 
 ---------------
 
@@ -48,19 +47,19 @@
 
 ## ⚡ 주요 기능
 
-- 🗺️ **여행 일정 관리**  
-  지도와 연동된 인터페이스를 통해 관광지 간 이동 거리를 시각적으로 파악하고 효율적인 루트를 구성할 수 있습니다.
+- 🗺️ **여행일정&관광추천지**  
+  지도와 연동된 인터페이스를 통해 관광지 간 이동 거리를 시각적으로 파악하고 효율적인 루트를 구성할 수 있으며, 해당 지역의 유명 관광지를 추천받을 수 있습니다.
 
-- 💰 **경비 관리 & 정산**  
+- 💰 **여행경비**  
   여행 중 발생한 지출을 기록하고, 동행자 간 비용 정산 기능을 제공합니다.
 
-- 🎒 **준비물 체크리스트**  
+- 🎒 **체크리스트**  
   여행 전 필요한 준비물을 꼼꼼하게 챙길 수 있도록 추가, 삭제 및 체크 기능을 지원합니다.
 
-- 🖼️ **추억 갤러리**  
+- 🖼️ **갤러리**  
   여행 사진을 업로드하고 기록을 보관할 수 있습니다.
 
-- 📍 **지난 일정 조회**  
+- 📍 **나의 기록**  
   완료된 여행 계획을 보관함에서 언제든지 다시 확인하고 추억할 수 있습니다.
 
 ----------
@@ -118,7 +117,7 @@
   - **불필요한 로직 제거**: 비동기 데이터를 기다리기 위해 임시로 사용했던 setTimeout 등의 불필요한 코드를 삭제하여 코드 정결성 확보.
 - **결과 (Result)**
   - 새로고침 시에도 session 정보가 확인되는 즉시 데이터를 자동으로 로드하여 사용자 경험 개선.
-  - 
+    
 ---
 
 ### 📌 4. 팝업 크기 변동(Scale) 애니메이션의 퇴장 효과(Exit) 구현
@@ -146,3 +145,34 @@
   - **오버레이(Overlay) 구현 및 이벤트 전파 방지**: <br> 1. 팝업 하단에 투명 오버레이를 배치하여 배경 버튼 클릭을 물리적으로 차단. <br> 2. `e.stopPropagation()`을 사용하여 팝업 내부 클릭 시 팝업이 닫히지 않도록 이벤트 버블링 제어. <br> 3. 오버레이 클릭 시 팝업이 닫히도록 설정하여 직관적인 닫기 기능 제공.
 - **결과 (Result)**
   - 데이터 로딩 중 사용자 이탈 방지 및 팝업 집중도 향상. 의도치 않은 배경 클릭을 방지하여 안정적인 인터랙션 환경 구축.
+ 
+  ---
+
+  ### 📌 6. 일정추가 input들의 입력 문제
+> **문제**: PC에서 설정한 자유 배치 좌표가 모바일/태블릿 등 좁은 화면에서 레이아웃 붕괴를 야기함.
+
+- **이슈 (Issue)**
+  - 최근검색어가 계속 떠서 화면을 방해하는 문제.
+  - 교통수단만 선택하거나 메모만 입력하여 둘중 하나만 출력되는 문제.
+- **해결 방안 (Solution)**
+  - `autoComplete="off"`를 통해 자동완성 및 최근 검색어의 저장된 값들을 뜨지 못하게 막음.
+  - 우선 selected로 교통수단 선택의 value값을 나타내어 `disabled={!selected}`로 선택되지 않았을때는 input창을 비활성화, 선택되었을때는 활성화를 시키고 placeholder또한 selected 와 삼항연산자를 이용해 구분함.
+  - 추가적으로 교통수단 선택후 input창에 커서가 바로 깜빡이도록 selected되었을때에 useEffect로 `memoRef.current?.focus()`를 실행하게하여 inputRef에 memoRef를 넣음.
+- **결과 (Result)**
+  - 더욱 깔끔한 화면 ui 구현
+  - 교통수단을 선택하고 안내문구가 바뀌며 커서가 깜빡여 메모의 입력을 직접 유도하여 직관성과 사용성을 높혀 사용함에 있어 편리함을 제공.
+ 
+  ---
+
+  ### 📌 7. 반응형 환경에서의 드래그 앤 드롭 제어 및 UI 최적화
+> **문제**: 추천관광지 api 리스트 출력 문제.
+
+- **이슈 (Issue)**
+  - 추천관광지탭에 api를 가져와서 출력하다보니 관광지가 많은 지역일수록 매우 많은 리스트가 출력되어 스크롤이 과도하게 발생하지만 스크롤바가 전체적으로 숨겨져있어 일일이 스크롤해야하는 문제 발생.
+- **해결 방안 (Solution)**
+  - 우선 전체적으로 숨겨져있는 스크롤바를 해당 영역에서만 보이게 하기위하여 `&::-webkit-scrollbar` 에 `display:block`을 줌으로서 보이게 하고 `!important`로 전체영역의 스크롤바를 숨기는 scss보다 더 우선으로 실행되게 함.
+  - 부모영역에 높이값을 고정값으로 잡아주고 `overflow:hidden`, `overflow-y:auto;`를 통해 스크롤이 생기도록 하고 `scrollbar-width`값을 `thin`상태로 주어서 화면에 보여지게함.
+- **결과 (Result)**
+  - 매우 많은 리스트업으로 인해 하단의 완료버튼등을 끝까지 내려야만 보이는 불편함 제거.
+  - 전체일정 추가 팝업 외에 관광지 탭 내부에 스크롤을 따로 두어 특화된 기능임을 더욱 보여주는 동시에 외부 영역의 영향을 받지 않음.
+  - 전체적인 스크롤바는 숨겨져있고 관광지 탭 내부에만 따로 스크롤바를 두어 여러개의 스크롤이 동시에 보여지는 불편함 방지 및 각각의 영역에서 구현되는 스크롤의 겹침문제등의 오류 방지.
