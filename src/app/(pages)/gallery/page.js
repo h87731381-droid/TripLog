@@ -8,6 +8,8 @@ import './gallery.scss';
 import axios from 'axios';
 import { authStore } from '@/app/store/authStore'; 
 import { tripStore } from '@/app/store/tripStore';
+import Loading from '@/app/comp/Loading';
+import Guide from '@/app/comp/Guide';
 
 /**
  * [메인 컴포넌트] S_gallery
@@ -74,6 +76,7 @@ function S_gallery() {
         }
         setOpen(true);
         setUploadTitle('');
+        setUploadFiles([]); // 파일 초기화 추가
         setMode('등록');
     };
 
@@ -117,7 +120,7 @@ function S_gallery() {
             <div className='gallery_title'>
                 <h1>갤러리</h1>
                 {
-                    tripData?.status==='draft' && 
+                    (tripData?.status==='draft') && 
                     <p className='gsub_button'>
                         <span>
                             <button onClick={handleOpenUpload}>등록하기</button>
@@ -126,60 +129,81 @@ function S_gallery() {
                 }
             </div>            
 
-            <div className='gsub_list_wrap'>
-                {/* 1. 이미지 상세보기 모달 */}
-                {selectedImage && (
-                    <div className='gsub_clickimg'>
-                        <span>
-                            <FiDownload onClick={() => downloadImage(selectedImage)} style={{cursor:'pointer'}} />
-                            <FiX onClick={() => { setSelectedImage(null); setIsNoteEdit(false); }} style={{cursor:'pointer'}} />
-                        </span>
-                        <div className='img_box'><img src={selectedImage.files} alt="" /></div>
-                        <span>
-                            {!isNoteEdit ? (
-                                <button onClick={() => setIsNoteEdit(true)}>수정</button>
-                            ) : (
-                                <button onClick={async () => {
-                                    setIsNoteEdit(false);
-                                    await axios.put('/api/gallery', { id: selectedImage._id, note: selectedImage.note })
-                                    getGallery();
-                                }}>완료</button>
-                            )}
-                        </span>
-                        <input
-                            type="text"
-                            placeholder='수정버튼을 눌러 내용을 남기세요!'
-                            value={selectedImage?.note || ''}
-                            disabled={!isNoteEdit}
-                            onChange={(e) => setSelectedImage(prev => ({ ...prev, note: e.target.value }))}
-                            style={{ backgroundColor: !isNoteEdit ? '#ffffff' : '#f0f0f0', transition: 'background-color 0.3s ease'}}
-                        />
-                    </div>
-                )}
+            {
+                tripData?.status==='draft' || tripData?.status==='complete' ?
+                    <div className='gsub_list_wrap'>
+                        {/* 1. 이미지 상세보기 모달 */}
+                        {selectedImage && (
+                            <div className='gsub_clickimg'>
+                                <span>
+                                    <FiDownload onClick={() => downloadImage(selectedImage)} style={{cursor:'pointer'}} />
+                                    <FiX onClick={() => { setSelectedImage(null); setIsNoteEdit(false); }} style={{cursor:'pointer'}} />
+                                </span>
+                                <div className='img_box'><img src={selectedImage.files} alt="" /></div>
+                                {
+                                    tripData?.status==='draft' &&
+                                    <>
+                                        <span>
+                                            {!isNoteEdit ? (
+                                                <button onClick={() => setIsNoteEdit(true)}>수정</button>
+                                            ) : (
+                                                <button onClick={async () => {
+                                                    setIsNoteEdit(false);
+                                                    await axios.put('/api/gallery', { id: selectedImage._id, note: selectedImage.note })
+                                                    getGallery();
+                                                }}>완료</button>
+                                            )}
+                                        </span>
 
-                {/* 2. 갤러리 리스트 구역 */}
-                <div className={`gsub_list_area ${selectedImage && 'active'}`}>
-                    {galleries.length === 0 ? (
-                        <div className="gsub_empty">
-                            <p>등록하기를 눌러 사진을 등록하세요!</p>
+                                        <input
+                                            type="text"
+                                            placeholder='수정버튼을 눌러 내용을 남기세요!'
+                                            value={selectedImage?.note || ''}
+                                            disabled={!isNoteEdit}
+                                            onChange={(e) => setSelectedImage(prev => ({ ...prev, note: e.target.value }))}
+                                            style={{ backgroundColor: !isNoteEdit ? '#ffffff' : '#f0f0f0', transition: 'background-color 0.3s ease'}}
+                                        />
+                                    </>
+                                }
+                                {(selectedImage?.note && tripData?.status==='complete') && 
+                                    <input
+                                        type="text"
+                                        placeholder='수정버튼을 눌러 내용을 남기세요!'
+                                        value={selectedImage?.note || ''}
+                                        disabled={!isNoteEdit}
+                                        onChange={(e) => setSelectedImage(prev => ({ ...prev, note: e.target.value }))}
+                                        style={{ backgroundColor: !isNoteEdit ? '#ffffff' : '#f0f0f0', transition: 'background-color 0.3s ease'}}
+                                    />
+                                }
+                            </div>
+                        )}
+
+                        {/* 2. 갤러리 리스트 구역 */}
+                        <div className={`gsub_list_area ${selectedImage && 'active'}`}>
+                            {galleries.length === 0 ? (
+                                <div className="gsub_empty">
+                                    <p>등록하기를 눌러 사진을 등록하세요!</p>
+                                </div>
+                            ) : (
+                                galleries.map((item, idx) => (
+                                    <GalleryItem
+                                        key={idx}
+                                        item={item}
+                                        getGallery={getGallery}
+                                        handleDelete={handleDelete}
+                                        setMode={setMode}
+                                        setOpen={setOpen}
+                                        setSelectedItem={setSelectedItem}
+                                        setSelectedImage={setSelectedImage}
+                                        tripData={tripData}
+                                    />
+                                ))
+                            )}
                         </div>
-                    ) : (
-                        galleries.map((item, idx) => (
-                            <GalleryItem
-                                key={idx}
-                                item={item}
-                                getGallery={getGallery}
-                                handleDelete={handleDelete}
-                                setMode={setMode}
-                                setOpen={setOpen}
-                                setSelectedItem={setSelectedItem}
-                                setSelectedImage={setSelectedImage}
-                                tripData={tripData}
-                            />
-                        ))
-                    )}
-                </div>
-            </div>
+                    </div>
+                :
+                <Guide />
+            }
 
             {/* 3. 등록/추가 팝업 모달 */}
             {open && (
@@ -256,20 +280,47 @@ function GalleryItem({ item, tripData, getGallery, handleDelete, setMode, setOpe
  */
 function Popup({ setMode, tripData,getGallery, selectedItem, mode, setOpen, uploadTitle, setUploadTitle, setUploadFiles, uploadFiles }) {
     const {session, setShowLogin } = authStore();
+    const [ready,setReady] = useState(false);
+
     async function upload() {
         if(!session) return alert("세션이 만료되었습니다.");
 
-        const formdata = new FormData();
-        formdata.append('title', mode === '추가' ? selectedItem.title : uploadTitle);
-        formdata.append('email', session.user.email);
-        formdata.append('note', '');
-        formdata.append('tripId', tripData._id);
-        Array.from(uploadFiles).forEach(file => formdata.append('files', file));
+        // --- 필수 입력 검증 추가 ---
+        const currentTitle = mode === '추가' ? selectedItem?.title : uploadTitle;
+        
+        if (!currentTitle || currentTitle.trim() === "") {
+            alert("타이틀을 입력해주세요.");
+            return; // 함수 종료 (팝업이 닫히지 않음)
+        }
 
-        await axios.post('/api/gallery', formdata);
-        setOpen(false);
-        setUploadFiles([]);
-        getGallery();
+        if (!uploadFiles || uploadFiles.length === 0) {
+            alert("업로드할 파일을 선택해주세요.");
+            return; // 함수 종료 (팝업이 닫히지 않음)
+        }
+        // ------------------------
+
+        setReady(true); // 검증 통과 후 로딩 시작
+
+        try {
+            const formdata = new FormData();
+            formdata.append('title', currentTitle);
+            formdata.append('email', session.user.email);
+            formdata.append('note', '');
+            formdata.append('tripId', tripData._id);
+            Array.from(uploadFiles).forEach(file => formdata.append('files', file));
+
+            await axios.post('/api/gallery', formdata);
+            
+            setOpen(false);
+            setUploadFiles([]);
+            setUploadTitle('');
+            getGallery();
+        } catch (error) {
+            console.error("업로드 실패:", error);
+            alert("업로드 중 오류가 발생했습니다.");
+        } finally {
+            setReady(false);
+        }
     }
 
     return (
@@ -285,6 +336,10 @@ function Popup({ setMode, tripData,getGallery, selectedItem, mode, setOpen, uplo
                 <input type="file" multiple onChange={(e) => setUploadFiles(e.target.files)} />
                 <button type="button" onClick={upload}>등록하기</button>
             </form>
+
+            {
+             ready && <Loading />
+            }
         </div>
     )
 }

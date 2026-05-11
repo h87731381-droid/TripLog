@@ -5,12 +5,14 @@ import { FiCheck, FiX } from "react-icons/fi";
 import { TbPencil } from "react-icons/tb";
 import { authStore } from '@/app/store/authStore'; 
 import { tripStore } from '@/app/store/tripStore';
+import Loading from '@/app/comp/Loading';
+import Guide from '@/app/comp/Guide';
 
 function Budget() {
   /** 1. 상태 관리 (State) 및 초기화 **/
   const { tripData } = tripStore();
   const { session, setShowLogin } = authStore(); // 로그인 세션 및 로그인 모달 제어 함수
-  const [items, setItems] = useState([]);       // DB에서 가져온 전체 경비 내역 목록
+  const [items, setItems] = useState(null);       // DB에서 가져온 전체 경비 내역 목록
   const [isManageMode, setIsManageMode] = useState(false);  // '수정' 버튼 클릭 시 아이콘 노출 여부
   const [editingId, setEditingId] = useState(null);         // 현재 행 수정 중인 항목의 고유 ID
   const [nValue, setNValue] = useState('');                 // 더치페이 계산을 위한 인원수 입력값
@@ -58,6 +60,7 @@ function Budget() {
     if (!targetEmail) return;
     const res = await fetch(`/api/budget?email=${targetEmail}&tripId=${tripData?._id}`);
     const data = await res.json();
+    
     if (Array.isArray(data)) setItems(data);
   };
 
@@ -123,7 +126,7 @@ function Budget() {
   };
 
   // 전체 총합 및 1인당 금액(더치페이) 계산
-  const totalAmount = items.reduce((sum, item) => sum + item.amount, 0);
+  const totalAmount = items?.reduce((sum, item) => sum + item.amount, 0);
   const dutchPay = nValue && parseInt(nValue) > 0 ? Math.floor(totalAmount / parseInt(nValue)) : totalAmount;
 
   /** 5. 렌더링 도우미 (JSX 리스트) **/
@@ -165,59 +168,68 @@ function Budget() {
 
       {/* 상단 입력 영역 */}
       {
-        tripData?.status === 'draft' && 
-          <div className="budget_button">
-            <form onSubmit={handleAdd}>
-              <select value={inputData.category} onChange={(e) => setInputData({...inputData, category: e.target.value})}>
-                <option>숙박비</option><option>교통비</option><option>식비</option><option>기타비용</option>
-              </select>
-              <input type="text" placeholder="타이틀" value={inputData.title} onChange={(e) => setInputData({...inputData, title: e.target.value})} />
-              {/* 금액 표시는 콤마(,) 포함, 값 변경 시에는 숫자만 추출 */}
-              <input type="text" placeholder="금액" value={inputData.amount ? Number(inputData.amount).toLocaleString() : ''} onChange={(e) => handleAmountChange(e, false)} />
-              <input type="date" value={inputData.date} onChange={(e) => setInputData({...inputData, date: e.target.value})} style={{color: "#AEAEAE", fontFamily: "Pretendard, sans-serif"}}/>
-              <input type="submit" value="추가" />
-              
-              {items.length > 0 && (
-                <input type="button" value={isManageMode ? "완료" : "수정"} className='edit_button' 
-                  onClick={() => { setIsManageMode(!isManageMode); setEditingId(null); }} />
-              )}          
-            </form>  
-          </div>
-      }
-
-      {/* 영수증 보기 버튼 */}
-      <button className='receipt_btn' onClick={() => setIsReceiptOpen(!isReceiptOpen)}>영수증보기</button> 
-      
-      {/* 하단 리스트 및 영수증 레이아웃 */}
-      <div className='wrap'>
-        <div className='list'>
-          {/* 각 카테고리별 섹션 순회 렌더링 */}
-          {['숙박비', '교통비', '식비', '기타비용'].map(cat => (
-            <div className={`list_${cat === '숙박비' ? 'stay' : cat === '교통비' ? 'fare' : cat === '식비' ? 'food' : 'other'}`} key={cat}>
-              <div className='list_title'>{cat}</div>
-              <div className='list_content'>{renderList(cat)}</div>
+        tripData?.status === 'draft' || tripData?.status==='complete' ? 
+          !items ? <Loading/> :
+          <>
+          {
+            tripData?.status === 'draft' &&
+            <div className="budget_button">
+              <form onSubmit={handleAdd}>
+                <select value={inputData.category} onChange={(e) => setInputData({...inputData, category: e.target.value})}>
+                  <option>숙박비</option><option>교통비</option><option>식비</option><option>기타비용</option>
+                </select>
+                <input type="text" placeholder="타이틀" value={inputData.title} onChange={(e) => setInputData({...inputData, title: e.target.value})} />
+                {/* 금액 표시는 콤마(,) 포함, 값 변경 시에는 숫자만 추출 */}
+                <input type="text" placeholder="금액" value={inputData.amount ? Number(inputData.amount).toLocaleString() : ''} onChange={(e) => handleAmountChange(e, false)} />
+                <input type="date" value={inputData.date} onChange={(e) => setInputData({...inputData, date: e.target.value})} style={{color: "#AEAEAE", fontFamily: "Pretendard, sans-serif"}}/>
+                <input type="submit" value="추가" />
+                
+                {items.length > 0 && (
+                  <input type="button" value={isManageMode ? "완료" : "수정"} className='edit_button' 
+                    onClick={() => { setIsManageMode(!isManageMode); setEditingId(null); }} />
+                )}          
+              </form>  
             </div>
-          ))}
-        </div>
-        
-        {/* 우측 영수증 결과 영역 (isReceiptOpen 상태에 따라 active 클래스 부여) */}
-        <div className={`Receipt ${isReceiptOpen ? 'active' : ''}`} ref={receiptRef}>
-          <h3>Receipt</h3>
-          <span>
-            <p>숙박비<span>{getCategoryTotal('숙박비').toLocaleString()}</span>원</p>
-            <p>교통비<span>{getCategoryTotal('교통비').toLocaleString()}</span>원</p>
-            <p>식비<span>{getCategoryTotal('식비').toLocaleString()}</span>원</p>
-            <p>기타비용<span>{getCategoryTotal('기타비용').toLocaleString()}</span>원</p>
-          </span>
-          <div className='total_section'>
-            <span>Total </span>
-            <span>
-              {dutchPay.toLocaleString()} / 
-              <input type="text" placeholder='N' value={nValue} onChange={(e) => setNValue(e.target.value.replace(/[^0-9]/g, ''))} />
-            </span>
-          </div>
-        </div>
-      </div>
+          }
+      
+
+            {/* 영수증 보기 버튼 */}
+            <button className='receipt_btn' onClick={() => setIsReceiptOpen(!isReceiptOpen)}>영수증보기</button> 
+            
+            {/* 하단 리스트 및 영수증 레이아웃 */}
+            <div className='wrap'>
+              <div className='list'>
+                {/* 각 카테고리별 섹션 순회 렌더링 */}
+                {['숙박비', '교통비', '식비', '기타비용'].map(cat => (
+                  <div className={`list_${cat === '숙박비' ? 'stay' : cat === '교통비' ? 'fare' : cat === '식비' ? 'food' : 'other'}`} key={cat}>
+                    <div className='list_title'>{cat}</div>
+                    <div className='list_content'>{renderList(cat)}</div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* 우측 영수증 결과 영역 (isReceiptOpen 상태에 따라 active 클래스 부여) */}
+              <div className={`Receipt ${isReceiptOpen ? 'active' : ''}`} ref={receiptRef}>
+                <h3>Receipt</h3>
+                <span>
+                  <p>숙박비<span>{getCategoryTotal('숙박비').toLocaleString()}</span>원</p>
+                  <p>교통비<span>{getCategoryTotal('교통비').toLocaleString()}</span>원</p>
+                  <p>식비<span>{getCategoryTotal('식비').toLocaleString()}</span>원</p>
+                  <p>기타비용<span>{getCategoryTotal('기타비용').toLocaleString()}</span>원</p>
+                </span>
+                <div className='total_section'>
+                  <span>Total </span>
+                  <span>
+                    {dutchPay.toLocaleString()} / 
+                    <input type="text" placeholder='N' value={nValue} onChange={(e) => setNValue(e.target.value.replace(/[^0-9]/g, ''))} />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </>
+        :
+          <Guide />
+      }
     </>
   );
 }

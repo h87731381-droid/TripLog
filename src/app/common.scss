@@ -332,3 +332,163 @@ input{ outline: none; }
     }
   }
 }
+
+
+/* 가이드 페이지 */
+.samplePopup {
+    width: 100%;
+
+    .sampleClose {
+        position: absolute;
+        top: 24%;
+        right: 15%;
+        font-size: 25px;
+        cursor: pointer;
+        z-index: 99;
+        color: #27678E;
+    }
+
+    .sampleGuide {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5%;
+
+        @media (max-width: 1499px) {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        >p {
+            border-radius: 20px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 60%;
+
+            @media (max-width: 1024px) {
+                width: 80%;
+            }
+
+            >img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        .sampleTitle {
+            width: 33%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            @media (max-width: 1499px) {
+                gap: 0;
+                width: 60%;
+            }
+
+            @media (max-width: 1024px) {
+                width: 80%;
+            }
+
+            @media (max-width: 470px) {
+                gap: 15px;
+            }
+
+            >b {
+                font-size: 1.6em;
+                font-weight: 700;
+                color: #27678E;
+            }
+
+            .sampleCaption {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+
+                .sampleNote {
+
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    >p {
+                        font-size: 1.1em;
+                        color: black;
+                    }
+                }
+            }
+        }
+
+        .sampleButton {
+            >a {
+                display: inline-flex;
+                padding: 10px 20px;
+                gap: 10px;
+                background-color: #27678E;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: clamp(1rem, 1vw + 0.8rem, 1.4rem);
+
+                >img {
+                    @media (max-width: 1499px) {
+                        width: 25px;
+                        height: auto;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+/* 가이드 버튼 */
+.guideOpen {
+    position: absolute;
+    top: 8%;
+    right: 1.5%;
+    display: flex;
+    gap: 10px;
+    padding: 5px 17px;
+    font-size: 16px;
+    border-radius: 100px;
+
+    color: white;
+    background-color: #27678E;
+
+    // &:after {
+    //     content: "가이드닫기";
+    //     background-color: white;
+    //     color: #27678E;
+    //     font-weight: 500;
+    // }
+}
+
+
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  background: rgba(39, 103, 142, 0.9);
+  backdrop-filter: blur(6px);
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  display: flex; /* 이거 없으면 유령로딩 생긴다 */
+}
+
+.loadingText {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 10px 0 0; 
+}

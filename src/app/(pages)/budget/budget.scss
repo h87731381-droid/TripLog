@@ -47,13 +47,14 @@
   }
   
   input[type="submit"], .edit_button {
-    color: white;
-    background-color: #B8ECFF;
-    border: none;
-    border-radius: 20px;
-    padding: 0 15px;
+    color: #27678e;
     cursor: pointer;
+    background-color: white;
+    border: 1px solid #27678e;
+    border-radius: 10px;
     height: 30px;
+    padding: 0 15px;
+    font-weight: 500;
   }
 }
 /* 영수증 버튼 - 평소(PC)에는 숨김 */
@@ -244,7 +245,7 @@
     .budget_button select {font-size: 14px;}
     .budget_button input:first-of-type, .budget_button input:nth-of-type(2), .budget_button input:nth-of-type(3) {width: 105px; font-size: 14px;}
     .budget_button input {font-size: 14px;}
-    .budget_button input[type="submit"], .budget_button .edit_button {height: 20px; padding: 0 10px;}
+    .budget_button input[type="submit"], .budget_button .edit_button {height: 20px; padding: 0 10px; border-radius: 8px;}
     .list {gap: 50px 100px;}
     .list_stay .list_title {font-size: 28px;}
     .list_fare .list_title {font-size: 28px;}
@@ -376,7 +377,7 @@
     .budget_button input:first-of-type, .budget_button input:nth-of-type(2) {width: 40px; font-size: 10px;}
     .budget_button input:nth-of-type(3) {width: 76px; font-size: 10px;}
     .budget_button input {font-size: 10px;}
-    .budget_button input[type="submit"], .budget_button .edit_button {height: 17px; padding: 0 5px;}
+    .budget_button input[type="submit"], .budget_button .edit_button {height: 17px; padding: 0 5px; border-radius: 5px;}
     .budget_button .edit_button {margin-left: 242px;}
     .list {
         gap: 30px;

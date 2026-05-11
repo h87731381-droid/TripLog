@@ -9,6 +9,8 @@ import { TbPencil } from "react-icons/tb";
 import { authStore } from '@/app/store/authStore';
 import { tripStore } from "@/app/store/tripStore";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/comp/Loading";
+import Guide from "@/app/comp/Guide";
 
 function Check() {
   const [items, setItems] = useState([]);
@@ -232,95 +234,104 @@ function Check() {
   return (
     <section className="checklist" onClick={disableAllEdit}>
       <div className="title">
-        <div className="title2">
-          <h1>체크리스트</h1>
-          {
-            tripData?.status==='draft' &&
+
+        {
+        tripData?.status==='draft' ?
+        <>
+          <div className="title2">
+            <h1>체크리스트</h1>
+            
             <span onClick={(e) => { e.stopPropagation(); addItem(); }} style={{ cursor: 'pointer' }}>
               <LuCirclePlus />
             </span>
-          }
-        </div>
-
-        {
-          tripData?.status==='draft' &&
+            
+          </div>
           <h3 onClick={saveItems} style={{ cursor: 'pointer' }}>
             {isSaving ? "저장중" : "저장하기"} <span>✔</span>
           </h3>
+        </>
+        :
+          <div className="title2">
+            <h1>체크리스트</h1>
+          </div>
         }
       </div>
 
-      <div className={`list ${isResize ? 'active' : ''}`}>
-        {items.map((bundle) => (
-          <Draggable key={bundle.id}
-            disabled={isResize} // pc외에 Draggable 막기
-            //cancel=".edit-btn, .del-sub-btn, .add-btn"
-            nodeRef={nodeRefs.current[bundle.id]}
-            bounds="parent"
-            defaultPosition={bundle.position}  // DB에서 가져온 위치값 로드
-            position={isResize ? {x:0,y:0} :bundle.position}
-            onStop={(e, data) => handleStop(bundle.id, e, data)} // 새로운 위치값 업로드
-          >
-            <div ref={nodeRefs.current[bundle.id]}
-              className={`bundle ${bundle.isEditing ? 'editing' : ''}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="border">
-                <div className="category">
-                  <span className="hidden-text">{bundle.category || "카테고리"}</span>
-                  <input
-                    type="text"
-                    readOnly={!bundle.isEditing}
-                    placeholder="카테고리"
-                    value={bundle.category}
-                    maxLength={7}
-                    onChange={(e) => handleInputChange(bundle.id, 'category', e.target.value)}
-                  />
-                </div>
-                {
-                  tripData?.status==='draft' &&
-                  <span className="edit-btn" onClick={(e) => 
-                    bundle.isEditing ? deleteBundle(bundle.id) : toggleEdit(bundle.id, e)
-                  }>
-                    {bundle.isEditing ? <RiDeleteBin6Line /> : <TbPencil />}
-                  </span>
-                }
-              </div>
-
-              <div className="item-list">
-                {bundle.subItems.map((sub) => (
-                  <div key={sub.id} className="item">
+      {
+        tripData?.status==='draft' || tripData?.status==='complete' ?
+          <div className={`list ${isResize ? 'active' : ''}`}>
+            {items.map((bundle) => (
+              <Draggable key={bundle.id}
+                disabled={isResize} // pc외에 Draggable 막기
+                //cancel=".edit-btn, .del-sub-btn, .add-btn"
+                nodeRef={nodeRefs.current[bundle.id]}
+                bounds="parent"
+                defaultPosition={bundle.position}  // DB에서 가져온 위치값 로드
+                position={isResize ? {x:0,y:0} :bundle.position}
+                onStop={(e, data) => handleStop(bundle.id, e, data)} // 새로운 위치값 업로드
+              >
+                <div ref={nodeRefs.current[bundle.id]}
+                  className={`bundle ${bundle.isEditing ? 'editing' : ''}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="border">
+                    <div className="category">
+                      <span className="hidden-text">{bundle.category || "카테고리"}</span>
+                      <input
+                        type="text"
+                        readOnly={!bundle.isEditing}
+                        placeholder="카테고리"
+                        value={bundle.category}
+                        maxLength={7}
+                        onChange={(e) => handleInputChange(bundle.id, 'category', e.target.value)}
+                      />
+                    </div>
                     {
                       tripData?.status==='draft' &&
-                      <input className="check-box" type="checkbox" checked={sub.checked}
-                        onChange={() => toggleCheck(bundle.id, sub.id)} disabled={bundle.isEditing} />
+                      <span className="edit-btn" onClick={(e) => 
+                        bundle.isEditing ? deleteBundle(bundle.id) : toggleEdit(bundle.id, e)
+                      }>
+                        {bundle.isEditing ? <RiDeleteBin6Line /> : <TbPencil />}
+                      </span>
                     }
-                    <input
-                      className={`check-text ${sub.checked ? "done" : ""}`}
-                      type="text"
-                      readOnly={!bundle.isEditing}
-                      placeholder="아이템"
-                      value={sub.text}
-                      maxLength={8}
-                      onChange={(e) => handleSubInputChange(bundle.id, sub.id, e.target.value)}
-                    />
-                    <span className="del-sub-btn" onClick={() => 
-                      deleteSubItem(bundle.id, sub.id)} style={{ cursor: 'pointer' }
-                    }>
-                      <RiDeleteBin6Line />
-                    </span>
                   </div>
-                ))}
-              </div>
-              {bundle.isEditing &&
-                <span className="add-btn" onClick={() => addSubItem(bundle.id)}>
-                  <LuCirclePlus />
-                </span>
-              }
-            </div>
-          </Draggable>
-        ))}
-      </div>
+
+                  <div className="item-list">
+                    {bundle.subItems.map((sub) => (
+                      <div key={sub.id} className="item">
+                        
+                          <input className="check-box" type="checkbox" checked={sub.checked}
+                            onChange={() => toggleCheck(bundle.id, sub.id)} disabled={bundle.isEditing} />
+                        
+                        <input
+                          className={`check-text ${sub.checked ? "done" : ""}`}
+                          type="text"
+                          readOnly={!bundle.isEditing}
+                          placeholder="아이템"
+                          value={sub.text}
+                          maxLength={8}
+                          onChange={(e) => handleSubInputChange(bundle.id, sub.id, e.target.value)}
+                        />
+                        <span className="del-sub-btn" onClick={() => 
+                          deleteSubItem(bundle.id, sub.id)} style={{ cursor: 'pointer' }
+                        }>
+                          <RiDeleteBin6Line />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {bundle.isEditing &&
+                    <span className="add-btn" onClick={() => addSubItem(bundle.id)}>
+                      <LuCirclePlus />
+                    </span>
+                  }
+                </div>
+              </Draggable>
+            ))}
+          </div>
+        :
+        <Guide />
+      }
 
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
