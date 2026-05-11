@@ -1,23 +1,19 @@
 "use client";
 
-import GeocoderMap from '@/app/comp/GeocoderMap';
-import React, { useEffect, useState } from 'react';
-import style from './attrantions.module.scss';
-import './loadingLoof.css';
+import GeocoderMap from '@/app/comp/GeocoderMap'
+import React, { useEffect, useState } from 'react'
+import style from './attrantions.module.scss'
 import { FiX } from "react-icons/fi";
 import { authStore } from '@/app/store/authStore';
 import axios from 'axios';
 import { tripStore } from '@/app/store/tripStore';
 import Guide from '@/app/comp/Guide';
-
+import Loading from '@/app/comp/Loading';
 
 
 
 
 /* 이현주 - 추천관광지 */
-
-
-
 
 function Page() {
 
@@ -86,8 +82,8 @@ function Page() {
     // return function(){      
     //   window.removeEventListener('focus',saveItem)
     // }
-  }, [session]);
-
+  }, [session, tripData]);
+  
 
 
 
@@ -173,8 +169,9 @@ function Page() {
   return (
     <div className={style.all}>
 
-      {isPlan ? (
 
+      {tripData?.status==='draft' || tripData?.status==='complete' ? (
+        !isPlan ? <Loading/>:
         <div className={style.content}>
 
           <div className={style.attrantionsLeft}>
@@ -222,16 +219,7 @@ function Page() {
         </div>
 
       ) : (
-        <div className={style.noneAll}>
-          <h1 className={style.title}>추천관광지</h1>
-          <div className={style.noneContent}>
-            <h2 className={style.subtitle}>여행 일정을 등록하세요!</h2>
-            <a href='/planner'>
-              <span>일정 등록하러 가기</span>
-              <img src='/imgs/attrantions/fluent_calendar-edit-16-regular.svg' />
-            </a>
-          </div>
-        </div>
+        <Guide/>
       )}
 
 
@@ -285,51 +273,14 @@ function Popup({ showPopup, setShowPopup, selectItem, listItemsDetail, setSelect
   // return 둘 중에 하나만 실행 (데이터 가져오는데 오래걸리면 로딩중 출력)
   if (!selectItem) {
     return (
-      <div className={`loading ${showPopup ? 'on' : ''}`}>
-        <svg
-          version="1.1"
-          id="loader-1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          width="50px"
-          height="50px"
-          viewBox="0 0 40 40"
-          xmlSpace="preserve"
-        >
-          <path
-            opacity="0.2"
-            fill="#000"
-            d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
-          s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
-          c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"
-          />
-          <path
-            fill="#000"
-            d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
-          C22.32,8.481,24.301,9.057,26.013,10.047z"
-          >
-            <animateTransform
-              attributeType="xml"
-              attributeName="transform"
-              type="rotate"
-              from="0 20 20"
-              to="360 20 20"
-              dur="0.5s"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
-        <span className='loadingText'>로딩중...</span>
-      </div>
+      <Loading />
     );
   }
   // 배경 div(overlay)하나 더 만들어서 배경을 클릭해도 팝업이 닫히도록 함
   // e.stopPropagation() 사용해서 팝업 열리면 다른 버튼 클릭 막음
   return (
     <div className={`${style.overlay} ${showPopup ? style.on : style.off}`} onClick={() => setShowPopup(false)}>
-
+ 
       <div className={style.popup} onClick={(e) => e.stopPropagation()}>
 
         <div className={style.pHeader}>
