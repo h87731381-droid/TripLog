@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Login from "../comp/loginModal/Login";
 import { signOut, useSession } from "next-auth/react";
 import { authStore } from "../store/authStore";
+import { tripStore } from "../store/tripStore";
 
 export default function Header() {
   const {showLogin,setShowLogin, saveSession, deleteSession} = authStore();
@@ -17,6 +18,7 @@ export default function Header() {
   
   const [isLog, setIsLog] = useState(false);
   const { data: session } = useSession();
+  const { tripData } = tripStore();
   
   // 로그인 팝업 열릴 때 스크롤 방지
     useEffect(() => {
@@ -81,7 +83,7 @@ export default function Header() {
                 <span className="comment">님, 나만의 여행 지도를 그려볼까요?✨</span>
 
                 <div className="user-bnt">
-                  <Link href="/before">나의 기록</Link>ㅣ
+                  <Link href="/before" className={tripData?.status === 'draft' ? '' : 'active'} >나의 기록</Link>ㅣ
                   <button className="logout" onClick={() => { signOut() }}>로그아웃</button>
                 </div>
               </div>
