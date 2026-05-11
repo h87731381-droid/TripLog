@@ -11,7 +11,7 @@ import { authStore } from "../store/authStore";
 export default function Header() {
   const {showLogin,setShowLogin, saveSession, deleteSession} = authStore();
   
-  const [pinned, setPinned] = useState(false); // 고정 여부 상태
+  const [pinned, setPinned] = useState(true); // 고정 여부 상태
   const [isOpen, setIsOpen] = useState(false); 
   const pathname = usePathname();
   

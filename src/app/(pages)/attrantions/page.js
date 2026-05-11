@@ -1,13 +1,15 @@
 "use client";
 
-import GeocoderMap from '@/app/comp/GeocoderMap'
-import React, { useEffect, useState } from 'react'
-import style from './attrantions.module.scss'
-import './loadingLoof.css'
+import GeocoderMap from '@/app/comp/GeocoderMap';
+import React, { useEffect, useState } from 'react';
+import style from './attrantions.module.scss';
+import './loadingLoof.css';
 import { FiX } from "react-icons/fi";
 import { authStore } from '@/app/store/authStore';
 import axios from 'axios';
 import { tripStore } from '@/app/store/tripStore';
+import Guide from '@/app/comp/Guide';
+
 
 
 
@@ -18,7 +20,7 @@ import { tripStore } from '@/app/store/tripStore';
 
 
 function Page() {
-  
+
   const [isPlan, setIsPlan] = useState(false); // 플랜 여부⭐
   const { tripData, setTripData } = tripStore(); // 플랜 스토어⭐
   const { session, setShowLogin } = authStore(); // 로그인 여부
@@ -31,29 +33,29 @@ function Page() {
   const [showPopup, setShowPopup] = useState(false); // 팝업
   const [region, setRegion] = useState("");//⭐
   //const [tripSchedule, setTripSchedule] = useState([]);
-  
+
 
   // 마커 생성/삭제
   const handleToggleItem = async (item) => {
-    
+
     const exists = itemMarkers.find((p) => p.contentid === item.contentid);
     let changeItem = [];
 
-      if (exists) {
-        // 제거 (비활성화)
-        changeItem =  itemMarkers.filter((p) => p.contentid !== item.contentid);
-      } else {
-        // 추가 (활성화)
-        changeItem =  [...itemMarkers, item];
-      }
+    if (exists) {
+      // 제거 (비활성화)
+      changeItem = itemMarkers.filter((p) => p.contentid !== item.contentid);
+    } else {
+      // 추가 (활성화)
+      changeItem = [...itemMarkers, item];
+    }
 
-    await axios.post('/api/attrantions',{userId:session?.user?.email, itemMarkers:changeItem});
+    await axios.post('/api/attrantions', { userId: session?.user?.email, itemMarkers: changeItem });
     setItemMarkers(changeItem);
-    
-    setTripData({...tripData,places:changeItem})
+
+    setTripData({ ...tripData, places: changeItem })
   };
 
-console.log(tripData,'=====changeItem')
+  console.log(tripData, '=====changeItem')
 
   // api 호출
   useEffect(() => {
@@ -65,27 +67,27 @@ console.log(tripData,'=====changeItem')
       setIsPlan(true);
       setRegion(result.selectedAddress);
       //console.log(result.userAttrantions);
-      
+
       setItemMarkers(result.userAttrantions)
-      
+
     };
 
-    if(session && tripData) fetchData();
+    if (session && tripData) fetchData();
 
 
 
     //페이지 언마운팅
-    async function saveItem(){
-      await axios.post('/api/attrantions',{userId:session?.user?.email, itemMarkers});
-      
-    }    
+    async function saveItem() {
+      await axios.post('/api/attrantions', { userId: session?.user?.email, itemMarkers });
+
+    }
     // if(navigator) window.addEventListener('focus',saveItem);
 
     // return function(){      
     //   window.removeEventListener('focus',saveItem)
     // }
   }, [session]);
-  
+
 
 
 
@@ -100,7 +102,7 @@ console.log(tripData,'=====changeItem')
 
 
 
-  
+
 
   // 메뉴 카테고리 고유값 만들기 (json)
   const menuItems = [
@@ -128,7 +130,7 @@ console.log(tripData,'=====changeItem')
   });
 
 
-  
+
 
 
   // 샘플 팝업 열릴 때 스크롤 방지
@@ -141,60 +143,35 @@ console.log(tripData,'=====changeItem')
   }, [samplePopup]); */
 
 
- 
 
 
+  // 가이드
+  /* return (
 
+    <>
+      <div className={style.all}>
+
+        <div className={style.content}>
+
+          <div className={style.attrantionsLeft}>
+            <div>
+              <h1 className={style.title}>추천관광지</h1>
+            </div>
+
+          </div>
+        </div>
+
+        <Guide/>
+
+      </div>
+    </>
+
+  ) */
 
 
   // 화면 출력 시작
   return (
     <div className={style.all}>
-
-      {/* {samplePopup &&
-        <div className={style.SamplePopup}>
-          <button className={style.sampleClose} onClick={() => setSamplePopup(false)}>
-            <span>샘플 닫기</span>
-            <FiX />
-          </button>
-
-          <picture>
-            <source srcSet="/imgs/attrantions/attSample-1900.jpg" media="(min-width: 1920px)" />
-            <source srcSet="/imgs/attrantions/attSample-1024.jpg" media="(min-width: 1024px)" />
-            <source srcSet="/imgs/attrantions/attSample-951.jpg" media="(min-width: 951px)" />
-            <source srcSet="/imgs/attrantions/attSample-481.jpg" media="(min-width: 481px)" />
-            <source srcSet="/imgs/attrantions/attSample-360.jpg" media="(min-width: 360px)" />
-            <img src="attSample-360.jpg" alt="이미지" />
-          </picture>
-
-          <div className={style.SampleGuide}>
-
-            <div className={style.guideRegion}>
-              <div></div>
-              <p>여행지를 확인하세요.</p>
-            </div>
-
-            <div className={style.guideMap}>
-              <div>
-                <img src='/imgs/attrantions/bxs_map.svg' />
-              </div>
-              <p>내가 등록한 관광명소의 위치를 확인할 수 있어요.</p>
-            </div>
-
-            <div className={style.guideDetile}>
-              <div></div>
-              <p>자세히 보기를 통해 상세정보를 확인하세요.</p>
-            </div>
-
-            <div className={style.guideUpdate}>
-              <div></div>
-              <p>여행일정에 등록한 관광명소를 추가하거나 삭제할 수 있어요.</p>
-            </div> 
-
-          </div>
-
-        </div>
-      } */}
 
       {isPlan ? (
 
@@ -205,11 +182,6 @@ console.log(tripData,'=====changeItem')
               <h1 className={style.title}>추천관광지</h1>
               <div className={style.region}>
                 <h3 style={{ color: "black" }}>{region}</h3>
-                {/* <div className={style.regionCategory}>
-                  <span>애월</span>
-                  <span>제주시</span>
-                  <span>서귀포시</span>
-                </div> */}
               </div>
             </div>
             <div className={style.map}>
@@ -272,7 +244,7 @@ console.log(tripData,'=====changeItem')
 export default Page;
 
 // 관광지 리스트
-function Item({ i, tripData,isActive, handleToggleItem, handleClickItem }) {
+function Item({ i, tripData, isActive, handleToggleItem, handleClickItem }) {
   return (
     <div className={style.item}>
       <p
@@ -301,7 +273,6 @@ function Item({ i, tripData,isActive, handleToggleItem, handleClickItem }) {
     </div>
   );
 }
-
 
 
 /* 팝업 - 자세히보기 */
