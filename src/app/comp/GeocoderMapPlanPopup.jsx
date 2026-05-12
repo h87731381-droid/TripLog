@@ -74,7 +74,7 @@ export default function GeocoderMapPlanPopup({ itemMarkers , selectedAddress,set
   //검색하면 지도이동
   useEffect(() => {
   if (!geocoderRef.current || !selectedAddress) return;
-  
+  console.log('=======34=====');
   //마커 있으면 주소 이동 막기
   /* if (itemMarkers.length > 0) return; */
 

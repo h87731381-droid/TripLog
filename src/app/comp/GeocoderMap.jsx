@@ -47,24 +47,34 @@ export default function GeocoderMap({ itemMarkers }) {
     setMapReady(true);
   }, []);
 
+
   /** ✅ 지도 이동 로직 (완전 안전 버전) */
   useEffect(() => {
     if (!isLoaded || !mapReady || !mapRef.current || !window.google) return;
 
     // 🔹 마커 없음 → 현재 위치
     if (markers.length === 0) {
-      navigator.geolocation?.getCurrentPosition((pos) => {
+
+
+        mapRef.current.setCenter({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+        mapRef.current.setZoom(15);
+/*       navigator.geolocation?.getCurrentPosition((pos) => {
         mapRef.current.setCenter({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         });
         mapRef.current.setZoom(15);
       });
+ */      
+      
       return;
     }
 
     // 🔹 마커 1개
-    if (markers.length === 1) {
+    if (markers.length === 1) {      
       mapRef.current.setCenter(markers[0]);
       mapRef.current.setZoom(17);
       return;
@@ -112,6 +122,7 @@ export default function GeocoderMap({ itemMarkers }) {
 
   if (!isLoaded) return <div>Loading map...</div>;
 
+  console.log(2);
   return (
     <div>
       <GoogleMap

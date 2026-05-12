@@ -20,6 +20,9 @@ const defaultCenter = {
 export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMapCenter,mapCenter}) {
 
   const [center, setCenter] = useState(mapCenter || defaultCenter);
+
+  
+  
   
   // 마커를 여러개 찍히도록 배열로 만들기
   const markers = useMemo(() => {
@@ -81,6 +84,10 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
   
   //마커 있으면 주소 이동 막기
   /* if (itemMarkers.length > 0) return; */
+
+  
+      console.log('=======34=====');
+      
   geocoderRef.current
     .geocode({ address: selectedAddress })
     .then((result) => {
@@ -90,7 +97,7 @@ export default function GeocoderMapOneDay({ itemMarkers , selectedAddress,setMap
         lat: location.lat(),
         lng: location.lng()
       };
-      
+
 
       mapRef.current.panTo(newCenter);
       mapRef.current.setZoom(10);
