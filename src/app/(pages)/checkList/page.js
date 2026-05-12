@@ -10,6 +10,8 @@ import { authStore } from '@/app/store/authStore';
 import { tripStore } from "@/app/store/tripStore";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/comp/Loading";
+import Guide from "@/app/comp/Guide";
+import Link from "next/link";
 
 function Check() {
   const [items, setItems] = useState([]);
@@ -17,7 +19,7 @@ function Check() {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const {session, setShowLogin} = authStore();
-  const {tripData, setTripData} = tripStore();
+  const {tripData, setTripData, isGuide} = tripStore();
   const nodeRefs = useRef({});
   const router = useRouter();
   // [GET] 페이지 로드 시 DB 데이터 호출
@@ -235,7 +237,7 @@ function Check() {
       <div className="title">
 
         {
-        tripData?.status==='draft' ?
+        tripData?.status==='draft' && isGuide ?
         <>
           <div className="title2">
             <h1>체크리스트</h1>
@@ -256,8 +258,7 @@ function Check() {
         }
       </div>
 
-      {
-        tripData?.status==='draft' || tripData?.status==='complete' ?
+      {(tripData?.status==='draft' || tripData?.status==='complete') && isGuide ? 
           <div className={`list ${isResize ? 'active' : ''}`}>
             {items.map((bundle) => (
               <Draggable key={bundle.id}
@@ -329,7 +330,31 @@ function Check() {
             ))}
           </div>
         :
-        <div>가이드</div>
+          <Guide>
+            <figure className="sampleGuide">
+                  <p><img src="/imgs/all/guide_checkList.jpg" /></p>
+
+                  <figcaption className="sampleTitle">
+                      <b>여행 준비 체크도 스마트하게!</b>
+
+                      <div className="sampleCaption">
+                          <div className="sampleNote">
+                              <p>여행 전 필수 준비, 한 곳에서 준비물을 기록하고 화면에 자유롭게 배치해보세요.</p>
+                              <span>* 작성이 끝났다면 저장 버튼을 꼭 눌러주세요.</span>
+                          </div>
+                          
+                              <div className="sampleButton">
+                                  <Link href='/planner'>
+                                      <span>일정 등록하러 가기</span>
+                                      <img src='/imgs/attrantions/fluent_calendar-edit-16-regular.svg' />
+                                  </Link>
+                              </div>
+                          
+                    
+                      </div>
+                  </figcaption>
+              </figure>
+          </Guide>
       }
 
       {showModal && (

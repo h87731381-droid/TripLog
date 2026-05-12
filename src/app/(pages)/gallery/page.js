@@ -9,13 +9,15 @@ import axios from 'axios';
 import { authStore } from '@/app/store/authStore'; 
 import { tripStore } from '@/app/store/tripStore';
 import Loading from '@/app/comp/Loading';
+import Guide from '@/app/comp/Guide';
+import Link from 'next/link';
 
 /**
  * [메인 컴포넌트] S_gallery
  */
 function S_gallery() {
     // 1. 상태 및 스토어 설정
-    const { tripData } = tripStore();
+    const { tripData, isGuide } = tripStore();
     const {session, setShowLogin } = authStore();
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState('등록');
@@ -119,7 +121,7 @@ function S_gallery() {
             <div className='gallery_title'>
                 <h1>갤러리</h1>
                 {
-                    (tripData?.status==='draft') && 
+                    (tripData?.status==='draft' && isGuide) && 
                     <p className='gsub_button'>
                         <span>
                             <button onClick={handleOpenUpload}>등록하기</button>
@@ -128,8 +130,7 @@ function S_gallery() {
                 }
             </div>            
 
-            {
-                tripData?.status==='draft' || tripData?.status==='complete' ?
+             {(tripData?.status==='draft' || tripData?.status==='complete') && isGuide ?  
                     <div className='gsub_list_wrap'>
                         {/* 1. 이미지 상세보기 모달 */}
                         {selectedImage && (
@@ -201,7 +202,30 @@ function S_gallery() {
                         </div>
                     </div>
                 :
-                <div>가이드</div>
+                 <Guide>
+                    <figure className="sampleGuide">
+                        <p><img src="/imgs/all/guide_gallery.jpg" /></p>
+
+                        <figcaption className="sampleTitle">
+                            <b>여행의 순간을 한곳에!</b>
+
+                            <div className="sampleCaption">
+                                <div className="sampleNote">
+                                    <p>쿠폰, 입장권부터 추억의 장소까지 간편하게 기록해보세요.</p>
+                                    <span>* 이미지를 누르면 크게 볼 수 있어요.</span>
+                                </div>
+                                    
+                                        <div className="sampleButton">
+                                            <Link href='/planner'>
+                                                <span>일정 등록하러 가기</span>
+                                                <img src='/imgs/attrantions/fluent_calendar-edit-16-regular.svg' />
+                                            </Link>
+                                        </div>
+                                
+                            </div>
+                        </figcaption>
+                    </figure>
+                </Guide>
             }
 
             {/* 3. 등록/추가 팝업 모달 */}

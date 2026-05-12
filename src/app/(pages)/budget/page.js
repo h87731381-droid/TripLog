@@ -6,10 +6,12 @@ import { TbPencil } from "react-icons/tb";
 import { authStore } from '@/app/store/authStore'; 
 import { tripStore } from '@/app/store/tripStore';
 import Loading from '@/app/comp/Loading';
+import Guide from '@/app/comp/Guide';
+import Link from 'next/link';
 
 function Budget() {
   /** 1. 상태 관리 (State) 및 초기화 **/
-  const { tripData } = tripStore();
+  const { tripData, isGuide } = tripStore();
   const { session, setShowLogin } = authStore(); // 로그인 세션 및 로그인 모달 제어 함수
   const [items, setItems] = useState(null);       // DB에서 가져온 전체 경비 내역 목록
   const [isManageMode, setIsManageMode] = useState(false);  // '수정' 버튼 클릭 시 아이콘 노출 여부
@@ -166,8 +168,7 @@ function Budget() {
       <div className='budget_background'></div>
 
       {/* 상단 입력 영역 */}
-      {
-        tripData?.status === 'draft' || tripData?.status==='complete' ? 
+      {(tripData?.status==='draft' || tripData?.status==='complete') && isGuide ?  
           !items ? <Loading/> :
           <>
           {
@@ -227,7 +228,32 @@ function Budget() {
             </div>
           </>
         :
-          <div>가이드</div>
+          <div>
+             <Guide>
+              <figure className="sampleGuide">
+                    <p><img src="/imgs/all/guide_budget.jpg" /></p>
+
+                    <figcaption className="sampleTitle">
+                        <b>여행 비용 정산, 한 번에 끝내세요!</b>
+
+                        <div className="sampleCaption">
+                            <div className="sampleNote">
+                                <p>여행 중 발생한 비용을 간편하게 정리하고, 더치페이도 한눈에 확인하세요.</p>
+                            </div>
+
+                            
+                                <div className="sampleButton">
+                                    <Link href='/planner'>
+                                        <span>일정 등록하러 가기</span>
+                                        <img src='/imgs/attrantions/fluent_calendar-edit-16-regular.svg' />
+                                    </Link>
+                                </div>
+                            
+                        </div>
+                    </figcaption>
+                </figure>
+            </Guide>
+          </div>
       }
     </>
   );

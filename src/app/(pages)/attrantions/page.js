@@ -9,6 +9,7 @@ import axios from 'axios';
 import { tripStore } from '@/app/store/tripStore';
 import Guide from '@/app/comp/Guide';
 import Loading from '@/app/comp/Loading';
+import Link from 'next/link';
 
 
 
@@ -18,7 +19,7 @@ import Loading from '@/app/comp/Loading';
 function Page() {
 
   const [isPlan, setIsPlan] = useState(false); // 플랜 여부⭐
-  const { tripData, setTripData } = tripStore(); // 플랜 스토어⭐
+  const { tripData, setTripData, isGuide } = tripStore(); // 플랜 스토어⭐
   const { session, setShowLogin } = authStore(); // 로그인 여부
   //const [samplePopup, setSamplePopup] = useState(true); // 샘플
   const [activeMenu, setActiveMenu] = useState(1); // 카테고리 기본값:1(전체)
@@ -51,7 +52,7 @@ function Page() {
     setTripData({ ...tripData, places: changeItem })
   };
 
-  console.log(tripData, '=====changeItem')
+  
 
   // api 호출
   useEffect(() => {
@@ -140,37 +141,12 @@ function Page() {
 
 
 
-
-  // 가이드
-  /* return (
-
-    <>
-      <div className={style.all}>
-
-        <div className={style.content}>
-
-          <div className={style.attrantionsLeft}>
-            <div>
-              <h1 className={style.title}>추천관광지</h1>
-            </div>
-
-          </div>
-        </div>
-
-        <Guide/>
-
-      </div>
-    </>
-
-  ) */
-
-
   // 화면 출력 시작
   return (
     <div className={style.all}>
 
 
-      {tripData?.status==='draft' || tripData?.status==='complete' ? (
+      {(tripData?.status==='draft' || tripData?.status==='complete') && isGuide ? (
         !isPlan ? <Loading/>:
         <div className={style.content}>
 
@@ -219,7 +195,44 @@ function Page() {
         </div>
 
       ) : (
-        <Guide/>
+         <div className={style.all}>
+          <div className={style.content}>
+
+            <div className={style.attrantionsLeft}>
+              <div>
+                <h1 className={style.title}>추천관광지</h1>
+              </div>
+            </div>
+          </div>
+
+            <Guide>
+              <figure className="sampleGuide">
+                    <p><img src="/imgs/all/guide_attrantions.jpg" /></p>
+
+                    <figcaption className="sampleTitle">
+                        <b>어디로 갈 지 고민하지 않아도 괜찮아요!</b>
+
+                        <div className="sampleCaption">
+                            <div className="sampleNote">
+                                <p>선택한 지역의 추천 관광지를 한눈에 보고, 일정에 바로 추가해보세요. 지도에서 간략한 위치와 거리도 확인할 수 있어요.</p>
+                                <span>* 지도는 위치·거리 확인용이며 클릭은 지원되지 않습니다.</span>
+                            </div>
+                            
+                                <div className="sampleButton">
+                                    <Link href='/planner'>
+                                        <span>일정 등록하러 가기</span>
+                                        <img src='/imgs/attrantions/fluent_calendar-edit-16-regular.svg' />
+                                    </Link>
+                                </div>
+                            
+                        </div>
+                    </figcaption>
+                </figure>
+            </Guide>
+        </div>
+      
+
+
       )}
 
 

@@ -14,6 +14,8 @@ import { useRouter } from 'next/navigation';
 import { FiCalendar } from "react-icons/fi";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Guide from '@/app/comp/Guide';
+import Link from 'next/link';
 
 function page() {
   const [isOpen,setIsOpen]=useState(false)
@@ -21,8 +23,8 @@ function page() {
   const [pickedPlace, setPickedPlace] = useState([]); //배열 데이터
   const [mapCenter, setMapCenter] = useState(null);
   
-  const { session } = authStore();//zustand 스토어 관리
-  const { tripData, setTripData } = tripStore();//zustand 스토어 관리
+  const { session, setShowLogin } = authStore();//zustand 스토어 관리
+  const { tripData, setTripData, isGuide } = tripStore();//zustand 스토어 관리
   //const [tripData, setTripData]=useState(null)//현재 작업중이라 수정가능한 여행(화면 분기용)
 
   const [tripList, setTripList]=useState([])//완료된 여행으로 보관함페이지에서 씀(수정 불가)
@@ -77,6 +79,15 @@ function page() {
     })
   }
 
+  //로그인 전 각 항목 클릭시 로그인창 뜨게
+  const handleAdd = async () => {
+    //e.preventDefault(); 
+    if (!session || !session.user) {
+      setShowLogin(); 
+      return;
+    }
+  };
+
   // 여행 완료 버튼
   const handleComplete = async () => {
 
@@ -100,6 +111,45 @@ function page() {
     return true;
   };
   
+  if(!session || !isGuide){
+    return(
+      <div className='planEdit'>
+        <div className='planEditTitle'>
+          <h1>여행일정</h1>
+        </div>
+        <div>
+          <Guide>
+            <figure className="sampleGuide">
+                  <p><img src="/imgs/all/guide_planner.jpg" /></p>
+
+                  <figcaption className="sampleTitle">
+                      <b>내가 만드는 여행 가이드!</b>
+
+                      <div className="sampleCaption">
+                          <div className="sampleNote">
+                              <p>자유롭게 일정을 추가하고 여행을 계획해보세요. 미리 찜해둔 장소는 물론, 선택한 지역의 다양한 명소도 함께 추천해드려요. 지도에서 위치까지 한눈에 확인할 수 있어요.</p>
+                              <span>* 지도는 위치 확인용이며 클릭은 지원되지 않습니다.</span>
+                          </div>
+
+                          <div className="sampleButton">
+                            {
+                              !session &&
+                                <Link href='/planner' onClick={()=>handleAdd()}>
+                                    <span onClick={()=>handleAdd}>로그인하러 가기</span>
+                                    {/* <img src='/imgs/attrantions/fluent_calendar-edit-16-regular.svg' /> */}
+                                </Link>
+                            }
+                          </div>
+                      </div>
+                  </figcaption>
+              </figure>
+          </Guide>       
+        </div>
+      </div>
+    )
+  }
+
+
   //db데이터 기준 여행일정 없었으면 첫 일정입력 화면으로
   if(!tripData)
   return (

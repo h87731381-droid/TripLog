@@ -418,6 +418,7 @@ input{ outline: none; }
                         font-size: 1.1em;
                         color: black;
                     }
+                    span{color:#767676;}
                 }
             }
         }
@@ -447,9 +448,10 @@ input{ outline: none; }
 
 /* 가이드 버튼 */
 .guideOpen {
-    position: absolute;
+    position: fixed;
     top: 8%;
     right: 1.5%;
+    z-index:2;
     display: flex;
     gap: 10px;
     padding: 5px 17px;
@@ -459,13 +461,15 @@ input{ outline: none; }
     color: white;
     background-color: #27678E;
 
-    // &:after {
-    //     content: "가이드닫기";
-    //     background-color: white;
-    //     color: #27678E;
-    //     font-weight: 500;
-    // }
+
+    
+    &.active {
+        background-color: white;
+        color: #27678E;
+        font-weight: 500;
+    }
 }
+
 
 
 .loading {
